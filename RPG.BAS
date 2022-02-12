@@ -1,6 +1,16 @@
-'- Colocar enemigos nuevos cuando el ataque o la defensa est‚n por encima
+'- Colocar enemigos nuevos cuando el ataque o la defensa estÂ‚n por encima
 '  de 20.
 '- CREAR NUEVAS PARTES DE LA HISTORIA
+
+'======================== MUSICS and SOUNDS =========================
+
+chance$ = "b5e"
+endfight$ = "O2b5ebo3c4o2eo3"
+enemy$ = "e20 e20"
+chime$ = "d20 d20"
+
+levelup$ = "c20 d20 e20 c20 d20 e20"
+
 
 
 '======================== MAIN MENU =========================
@@ -30,14 +40,12 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 9
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 34
 COLOR 15
 PRINT " GET READY FOR "
 LOCATE 11, 34
 PRINT "A NEW ADVENTURE"
-LOOP
-DO WHILE INKEY$ = ""
 LOOP
 x = 0
 DO UNTIL x = 4000
@@ -47,7 +55,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 34
 COLOR 15
 PRINT "   MS-DOS    "
@@ -126,6 +134,7 @@ inicio:
 RANDOMIZE TIMER
 d1 = (INT(RND * 6) + 1) / 10
 hp = hp + d1
+mana = mana + d1
 
 inicio2:
 
@@ -154,7 +163,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "±"
+PRINT "Â±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -260,7 +269,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "±"
+PRINT "Â±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -799,6 +808,9 @@ END IF
 
 PRINT
 PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
+
+PLAY enemy$
+
 DO WHILE INKEY$ = ""
 LOOP
 CLS
@@ -889,6 +901,9 @@ RANDOMIZE TIMER
 d1 = INT(RND * 6) + 1
 xpoints = xpoints + d1
 PRINT "You receive"; d1; "expert points."
+
+PLAY endfight$
+
 DO WHILE INKEY$ = ""
 LOOP
 
@@ -903,6 +918,9 @@ PRINT
 PRINT "1) ATTACK      2)DEFENCE"
 PRINT "3) HEALTH PTS  4)MANA"
 PRINT
+
+PLAY levelup$
+
 INPUT opcion
 
 IF opcion = 1 THEN
@@ -938,11 +956,11 @@ COLOR 3
 PRINT "You realize that there is a chance for you to:"
 PRINT ""
 PRINT "1) Try to escape"
-'PRINT "2) Try to use your mental power (mana energy)"
+PRINT "2) Use your concentration [mana pts]"
 PRINT "3) Just continue with the combat"
 PRINT ""
-BEEP
-INPUT "What would you do...", opcion
+PLAY chance$
+INPUT "What will you do...", opcion
 
 	IF opcion = 1 THEN          ' ==== OPCION 1 ====
 	d1 = INT(RND * 6) + 1
@@ -992,6 +1010,95 @@ INPUT "What would you do...", opcion
 
 	END IF
 
+	IF opcion = 2 THEN
+	PRINT ""
+	COLOR 3
+	PRINT "Using your concentration:"
+	PRINT ""
+	PRINT "1) Use energy to attack [3pts]"
+	PRINT "2) Use energy to recover HP [3pts]"
+	PRINT "3) Use energy to escape [3pts]"
+	PRINT ""
+	PRINT
+	PLAY chime$
+	INPUT "What will you do...", opcion
+
+		IF opcion = 1 AND mana < 3 THEN
+		COLOR 2
+		PRINT
+		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "body for that attack!"
+		PRINT
+		PRINT "--------------------------------------------"
+		PLAY chime$
+		END IF
+
+		IF opcion = 1 AND mana >= 3 THEN
+		mana = mana - 3
+		enemnyDF = enemyDF - AT
+		COLOR 2
+		PRINT
+		PRINT "You use your energy and concentration to attack"
+		PRINT "the "; Enemyname$; "! Your attack is very effective!"
+		PRINT "The "; Enemyname$; " gets "; AT; " points of damage!"
+		PRINT "It's HP is"; enemyDF; " now!"
+		PRINT
+		PRINT "--------------------------------------------"
+		PLAY chime$
+		END IF
+
+		IF opcion = 2 AND mana < 3 THEN
+		COLOR 2
+		PRINT
+		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "body to recover your health!"
+		PRINT
+		PRINT "--------------------------------------------"
+		PLAY chime$
+		END IF
+
+		IF opcion = 2 AND mana >= 3 THEN
+		mana = mana - 3
+		hp = maxHP
+		COLOR 2
+		PRINT
+		PRINT "You use your energy and concentration to recover your health"
+		PRINT "Your HP is now "; hp; "! You feel much better and renewed!"
+		PRINT "Ready to fight back!"
+		PRINT
+		PRINT "--------------------------------------------"
+		PLAY chime$
+		END IF
+
+		IF opcion = 3 AND mana < 3 THEN
+		COLOR 2
+		PRINT
+		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "body to run away like that!"
+		PRINT
+		PRINT "--------------------------------------------"
+		PLAY chime$
+		END IF
+
+		IF opcion = 3 AND mana >= 3 THEN
+		mana = mana - 3
+		COLOR 2
+		PRINT
+		PRINT "You use your energy and concentration to run away!"
+		PRINT "The "; Enemyname$; " runs behind you but fails!"
+		PRINT "You succeed and escape!"
+		PRINT
+		PLAY chime$
+		DO WHILE INKEY$ = ""
+		LOOP
+		combatloop = 0
+		GOTO inicio2
+		END IF
+
+
+	END IF
+
+
 	IF opcion = 3 THEN
 	PRINT
 	COLOR 2
@@ -1018,14 +1125,12 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 4
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
 LOCATE 11, 34
 PRINT "-GAME OVER-"
-LOOP
-DO WHILE INKEY$ = ""
 LOOP
 
 x = 0
@@ -1036,7 +1141,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
