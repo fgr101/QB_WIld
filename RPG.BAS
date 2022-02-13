@@ -1,17 +1,26 @@
-'- Colocar enemigos nuevos cuando el ataque o la defensa estÂ‚n por encima
-'  de 20.
 '- CREAR NUEVAS PARTES DE LA HISTORIA
+'- COMPLETAR EVENTOS DE ACCIDENTES
+'- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
+'- CREAR HISTORIA INICIAL, INTRO
+'- AGREGAR MAS SONIDOS
+'- AGREGAR CIUDADES AL MAPA EN DONDE SE PUEDA DESCANSAR, COMER, ENTRENAR, COMPRAR.
+'- AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
+'- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
+'- CREAR ALGUNAS NUEVAS TRANSICIONES
+'- TERMINAR DE ORGANIZAR EL CODIFO EN FUNCIONES/SUBS
 
-'======================== MUSICS and SOUNDS =========================
+'======================== SUBS AND FUNCTIONS =========================
+
+DECLARE SUB DisplayWeather ()
+DECLARE FUNCTION rolld6 ()
+
+'======================== MUSIC and SOUNDS =========================
 
 chance$ = "b5e"
 endfight$ = "O2b5ebo3c4o2eo3"
 enemy$ = "e20 e20"
 chime$ = "d20 d20"
-
 levelup$ = "c20 d20 e20 c20 d20 e20"
-
-
 
 '======================== MAIN MENU =========================
 
@@ -34,13 +43,12 @@ IF opcion = 1 THEN
 CLS
 x = 0
 DO UNTIL x = 4000
-RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
 D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 9
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
 PRINT " GET READY FOR "
@@ -49,13 +57,12 @@ PRINT "A NEW ADVENTURE"
 LOOP
 x = 0
 DO UNTIL x = 4000
-RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
 D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
 PRINT "   MS-DOS    "
@@ -73,7 +80,6 @@ END IF
 IF NOT (opcion = 1) AND NOT (opcion = 2) THEN
 GOTO mainmenu
 END IF
-
 
 '======================== START NEW GAME =========================
 
@@ -110,33 +116,32 @@ LOOP
 'VARIABLES (Gold, attack, defence, HP, etc.) ================================
 
 PRINT "Generating random gold values..."
-RANDOMIZE TIMER                                          'ALL THESE VARIABLES
-Gold = (INT(RND * 6) + 1) * (INT(RND * 6) + 1)      'HAVE BEEN RANDOMIZED, SO
-PRINT "Generating random attack value..."           'EVERYTIME YOU PLAY A NEW
-RANDOMIZE TIMER                                 'GAME IT'S GONNA BE SOMETHING
-AT = (INT(RND * 6) + 1) * 2                     'DIFFERENT. I USED THE VALUE
-PRINT "Generating random defence value..."   '6 TO RANDOMIZE THEM, SIMULATING
-RANDOMIZE TIMER                              'A NORMAL SOLO RPG GAME, USING A
-DF = (INT(RND * 6) + 1) * 2               'SIMPLE D6 DICE.I'VE USED D6 RANDOM
+						   'ALL THESE VARIABLES
+Gold = rolld6 * rolld6                             'HAVE BEEN RANDOMIZED, SO
+PRINT "Generating random attack value..."          'EVERYTIME YOU PLAY A NEW
+					       'GAME IT'S GONNA BE SOMETHING
+AT = rolld6 * 2                                'DIFFERENT. I USED THE VALUE
+PRINT "Generating random defence value..."  '6 TO RANDOMIZE THEM, SIMULATING
+					   'A NORMAL SOLO RPG GAME, USING A
+DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
-RANDOMIZE TIMER                             'RANDOMIZATION SYSTEM IN THE GAME,
-maxHP = (INT(RND * 6) + 1) + 5                        'JUST TO KEEP IT SIMPLE.
-hp = maxHP
+maxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
+hp = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
-RANDOMIZE TIMER
-maxmana = 5 + (INT(RND * 6) + 1)
+
+maxmana = 5 + rolld6
 mana = maxmana
 
 SLEEP 1
 
 inicio:
 
-RANDOMIZE TIMER
-d1 = (INT(RND * 6) + 1) / 10
+d1 = (rolld6) / 10
 hp = hp + d1
 mana = mana + d1
 
 inicio2:
+RANDOMIZE TIMER
 
 IF hp <= 0 THEN
 GOTO gameover
@@ -163,7 +168,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "Â±"
+PRINT "±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -179,13 +184,12 @@ lugary = 5
 turno = turno + 1
 position = 0
 
+'MENU ==========================       
 
-'MENU ==========================           'THE PLAYER INPUTS A DIRECTION OR
-					   'GIVES OTHER KINDS OF ORDERS USING
-					   'THIS MENU.
+'THE PLAYER INPUTS A DIRECTION OR GIVES OTHER KINDS OF ORDERS
+'USING THE MENU. THE DIRECTIONS ARE PROCESSED HERE.
 
 COLOR 3
-
 LOCATE 1, 1
 PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
 LOCATE 2, 1
@@ -203,50 +207,62 @@ PRINT
 COLOR 3
 INPUT "Where to go? ", direction
 PRINT
-
 COLOR 2
 
-'DIRECTIONS ==========================     'THE DIRECTIONS ARE PROCESSED HERE
+
+'DIRECTIONS ==========================
 
 IF direction = 3 THEN
-IF positionCH = 39 OR positionCH = (39 + 40) OR positionCH = (39 + (40 * 2)) THEN
-positionCH = positionCH - 40
-END IF
-IF positionCH = (39 + (40 * 3)) OR positionCH = (39 + (40 * 4)) OR positionCH = (39 + (40 * 5)) THEN
-positionCH = positionCH - 40
-END IF
-IF positionCH = (39 + (40 * 7)) OR positionCH = (39 + (40 * 8)) OR positionCH = (39 + (40 * 9)) THEN
-positionCH = positionCH - 40
-END IF
-positionCH = positionCH + 1
+
+	IF positionCH = 39 OR positionCH = (39 + 40) OR positionCH = (39 + (40 * 2)) THEN
+	positionCH = positionCH - 40
+	END IF
+
+	IF positionCH = (39 + (40 * 3)) OR positionCH = (39 + (40 * 4)) OR positionCH = (39 + (40 * 5)) THEN
+	positionCH = positionCH - 40
+	END IF
+
+	IF positionCH = (39 + (40 * 7)) OR positionCH = (39 + (40 * 8)) OR positionCH = (39 + (40 * 9)) THEN
+	positionCH = positionCH - 40
+	END IF
+
+	positionCH = positionCH + 1
+
 END IF
 
 IF direction = 4 THEN
-IF positionCH = 0 OR positionCH = 40 OR positionCH = 80 THEN
-positionCH = positionCH + 40
-END IF
-IF positionCH = 120 OR positionCH = 160 OR positionCH = 200 THEN
-positionCH = positionCH + 40
-END IF
-IF positionCH = 240 OR positionCH = 280 OR positionCH = 320 OR positionCH = 360 THEN
-positionCH = positionCH + 40
-END IF
 
-positionCH = positionCH - 1
+	IF positionCH = 0 OR positionCH = 40 OR positionCH = 80 THEN
+	positionCH = positionCH + 40
+	END IF
+
+	IF positionCH = 120 OR positionCH = 160 OR positionCH = 200 THEN
+	positionCH = positionCH + 40
+	END IF
+
+	IF positionCH = 240 OR positionCH = 280 OR positionCH = 320 OR positionCH = 360 THEN
+	positionCH = positionCH + 40
+	END IF
+
+	positionCH = positionCH - 1
+
 END IF
 
 IF direction = 1 THEN
 positionCH = positionCH - 40
-IF positionCH < 0 THEN
-positionCH = positionCH + (40 * 10)
-END IF
+
+	IF positionCH < 0 THEN
+	positionCH = positionCH + (40 * 10)
+	END IF
+
 END IF
 
 IF direction = 2 THEN
 positionCH = positionCH + 40
-IF positionCH > 399 THEN
-positionCH = positionCH - (40 * 10)
-END IF
+
+	IF positionCH > 399 THEN
+	positionCH = positionCH - (40 * 10)
+	END IF
 
 END IF
 
@@ -269,7 +285,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "Â±"
+PRINT "±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -287,11 +303,14 @@ position = 0
 
 'TERRAIN ===========================================
 
-RANDOMIZE TIMER
+d1 = rolld6
+IF d1 > 3 THEN
+positionCOL(positionCH) = lastterrain  '| It increases the probabilities of
+d1 = copyd1                            '| repeating the last terrain in order
+GOTO SkipRest                          '| to have a less randomized map.
+END IF
 
-d1 = INT(RND * 9) + 1
-
-
+d1 = rolld6
 IF positionCOL(positionCH) = 2 THEN
 d1 = 1
 END IF
@@ -311,13 +330,9 @@ IF positionCOL(positionCH) = 6 THEN
 d1 = 6
 END IF
 
-IF d1 = 7 OR d1 = 8 OR d1 = 9 THEN     '| It increases the probabilities of
-positionCOL(positionCH) = lastterrain  '| repeating the last terrain in order
-d1 = copyd1                            '| to have a less randomized map.
-END IF
-
+SkipRest:
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 = 1 THEN
@@ -361,48 +376,17 @@ lastterrain = positionCOL(positionCH)
 'WEATHER ---------------------------------
 
 weather:
-
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
-
-COLOR 3
-PRINT "Dice:"; d1;
-COLOR 2
-
-IF d1 = 1 THEN
-PRINT "It's sunny and mild."
-END IF
-
-IF d1 = 2 THEN
-PRINT "It's cloudy and breezy."
-END IF
-
-IF d1 = 3 THEN
-PRINT "It's snowy and cold."
-END IF
-
-IF d1 = 4 THEN
-PRINT "It's dry and very hot."
-END IF
-
-IF d1 = 5 THEN
-PRINT "It's stormy, heavy rain."
-END IF
-
-IF d1 = 6 THEN
-PRINT "Windy and cold."
-END IF
+CALL DisplayWeather
 
 
 '---------------------------------------------------------
 
 situations:
 
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 = 1 THEN
@@ -444,11 +428,10 @@ GOTO inicio
 '---------------------------------------------------------
 negative:
 
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 > 0 AND d1 < 4 THEN
@@ -457,74 +440,74 @@ PRINT "You see two red points and a thin blood string coming out from your leg."
 PRINT "You wish it was only an insect and not a snake."
 DO WHILE INKEY$ = ""
 LOOP
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 '''''''''''
-IF d1 = 1 THEN
-COLOR 2
-PRINT "Some meters ahead you see it... it was a snake! (-6 HP)"
-hp = hp - 6
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 1 THEN
+	COLOR 2
+	PRINT "Some meters ahead you see it... it was a snake! (-6 HP)"
+	hp = hp - 6
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
-IF d1 = 2 THEN
-COLOR 2
-PRINT "Some meters ahead you see it... it was a brown spider! (-3 HP)"
-hp = hp - 3
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 2 THEN
+	COLOR 2
+	PRINT "Some meters ahead you see it... it was a brown spider! (-3 HP)"
+	hp = hp - 3
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
-IF d1 = 3 THEN
-COLOR 2
-PRINT "You don't see anything... well maybe it was just a plant or a rock."
-PRINT "The pain goes away..."
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 3 THEN
+	COLOR 2
+	PRINT "You don't see anything... well maybe it was just a plant or a rock."
+	PRINT "The pain goes away..."
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
-IF d1 = 4 THEN
-COLOR 2
-PRINT "It hurst a lot at the beginning! Then it feels better but the area"
-PRINT "seems to be infected... It's swelling! "
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
-COLOR 3
-PRINT "Dice:"; d1; "| you get -"; d1; "HP."
-hp = hp - d1
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 4 THEN
+	COLOR 2
+	PRINT "It hurst a lot at the beginning! Then it feels better but the area"
+	PRINT "seems to be infected... It's swelling! "
+	RANDOMIZE TIMER
+	d1 = INT(RND * 6) + 1
+	COLOR 3
+	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+	hp = hp - d1
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
-IF d1 = 5 THEN
-COLOR 2
-PRINT "Oh... it's nothing. Probably you cut your leg against a rock."
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 5 THEN
+	COLOR 2
+	PRINT "Oh... it's nothing. Probably you cut your leg against a rock."
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
-IF d1 = 6 THEN
-COLOR 2
-PRINT "Some centimeters away from your leg there's a huge poisonous centipede..."
-PRINT "It's in attack position, seems to be annoyed. It's an horrible and disgusting"
-PRINT "animal. That creepy thing bit you!"
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
-COLOR 3
-PRINT "Dice:"; d1; "| you get -"; d1; "HP."
-hp = hp - d1
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
+	IF d1 = 6 THEN
+	COLOR 2
+	PRINT "Some centimeters away from your leg there's a huge poisonous centipede..."
+	PRINT "It's in attack position, seems to be annoyed. It's an horrible and disgusting"
+	PRINT "animal. That creepy thing bit you!"
+
+	d1 = rolld6
+
+	COLOR 3
+	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+	hp = hp - d1
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO inicio
+	END IF
 '''''''''''
 END IF
 
@@ -547,11 +530,10 @@ GOTO inicio
 '---------------------------------------------------------
 accident:
 
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 > 0 AND d1 < 4 THEN
@@ -578,11 +560,10 @@ GOTO inicio
 '---------------------------------------------------------
 positive:
 
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 > 0 AND d1 < 3 THEN
@@ -685,11 +666,10 @@ GOTO inicio
 '---------------------------------------------------------
 information:
 
-RANDOMIZE TIMER
 d1 = INT(RND * 7) + 1
 
 COLOR 3
-PRINT "Dice:"; d1;
+PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 > 0 AND d1 < 3 THEN
@@ -738,72 +718,120 @@ GOTO inicio
 '---------------------------------------------------------
 enemy:
 
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 
 IF d1 = 1 THEN
 Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
-IF AT > 10 THEN
-Enemyname$ = "Black Panther"
-enemyAT = 6
-enemyDF = 10
-END IF
+
+	IF AT > 10 THEN
+	Enemyname$ = "Black Panther"
+	enemyAT = 6
+	enemyDF = 10
+	END IF
+
+	IF AT > 20 THEN
+	Enemyname$ = "Demonic Mogmurch"
+	enemyAT = 6
+	enemyDF = 10
+	END IF
+	
 END IF
 
 IF d1 = 2 THEN
 Enemyname$ = "Wild Bugio"
 enemyAT = 4
 enemyDF = 6
-IF AT > 10 THEN
-Enemyname$ = "Damned Walker"
-enemyAT = 6
-enemyDF = 15
-END IF
+
+	IF AT > 10 THEN
+	Enemyname$ = "Damned Walker"
+	enemyAT = 6
+	enemyDF = 15
+	END IF
+
+	IF AT > 20 THEN
+	Enemyname$ = "Demonic Rat"
+	enemyAT = 6
+	enemyDF = 10
+	END IF
+
 END IF
 
 IF d1 = 3 THEN
 Enemyname$ = "Witch"
 enemyAT = 4
 enemyDF = 6
-IF AT > 10 THEN
-Enemyname$ = "Tortured Soul"
-enemyAT = 8
-enemyDF = 12
-END IF
+	
+	IF AT > 10 THEN
+	Enemyname$ = "Tortured Soul"
+	enemyAT = 8
+	enemyDF = 12
+	END IF
+
+	IF AT > 20 THEN
+	Enemyname$ = "Estirge"
+	enemyAT = 6
+	enemyDF = 10
+	END IF
+
 END IF
 
 IF d1 = 4 THEN
 Enemyname$ = "Crawler"
 enemyAT = 6
 enemyDF = 6
-IF AT > 10 THEN
-Enemyname$ = "Giant Acid Centipede"
-enemyAT = 30
-enemyDF = 54
-END IF
+
+	IF AT > 10 THEN
+	Enemyname$ = "Giant Acid Centipede"
+	enemyAT = 30
+	enemyDF = 54
+	END IF
+
+	IF AT > 20 THEN
+	Enemyname$ = "Demonic Goblin"
+	enemyAT = 35
+	enemyDF = 59
+	END IF
+
 END IF
 
 IF d1 = 5 THEN
 Enemyname$ = "Criminal"
 enemyAT = 4
 enemyDF = 6
-IF AT > 10 THEN
-Enemyname$ = "Forest Demon"
-enemyAT = 6
-enemyDF = 10
-END IF
+
+	IF AT > 10 THEN
+	Enemyname$ = "Forest Demon"
+	enemyAT = 6
+	enemyDF = 10
+	END IF
+	
+	IF AT > 20 THEN
+	Enemyname$ = "Demonic Draco"
+	enemyAT = 11
+	enemyDF = 15
+	END IF
+
 END IF
 
 IF d1 = 6 THEN
 Enemyname$ = "Giant Black Scorpion"
 enemyAT = 7
 enemyDF = 8
-IF AT > 10 THEN
-Enemyname$ = "Corrupted Soul"
-enemyAT = 14
-enemyDF = 16
-END IF
+
+	IF AT > 10 THEN
+	Enemyname$ = "Corrupted Soul"
+	enemyAT = 14
+	enemyDF = 16
+	END IF
+
+	IF AT > 20 THEN
+	Enemyname$ = "Demonic Troll"
+	enemyAT = 19
+	enemyDF = 21
+	END IF
+
 END IF
 
 PRINT
@@ -816,7 +844,7 @@ LOOP
 CLS
 
 
-combatINI:    '================== COMBAT INI ==================
+combatINI:   '================== COMBAT INI ==================
 
 COLOR 2
 PRINT
@@ -829,17 +857,16 @@ LOOP
 
 PRINT
 PRINT "You ATTACK:"
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
+
 COLOR 3
-PRINT "Dice: "; d1;
+PRINT "Die: "; d1;
 COLOR 2
 damage1 = AT + d1
 PRINT " Damage: "; damage1
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 COLOR 3
-PRINT "Dice (enemy defence):"; d1;
+PRINT "Die (enemy defence):"; d1;
 COLOR 2
 def2 = enemyDF + d1
 PRINT "Enemy Defence: "; def2
@@ -858,17 +885,17 @@ PRINT
 PRINT "--------------------------------------------"
 PRINT
 PRINT "THE "; Enemyname$; " ATTACKS YOU:"
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+'RANDOMIZE TIMER
+
+d1 = rolld6
 COLOR 3
-PRINT "Dice: "; d1;
+PRINT "Die: "; d1;
 COLOR 2
 damageEN = enemyAT + d1
 PRINT "Enemy Damage: "; damageEN
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+d1 = rolld6
 COLOR 3
-PRINT "Dice (for YOUR defence):"; d1;
+PRINT "Die (for YOUR defence):"; d1;
 COLOR 2
 yourdefence = DF + d1
 PRINT "YOUR Defence: "; yourdefence
@@ -893,12 +920,12 @@ END IF
 IF enemyDF <= 0 THEN                             'WHEN YOU WIN A COMBAT
 PRINT
 PRINT "GOOD JOB! The "; Enemyname$; " has been defeated!"
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+' RANDOMIZE TIMER
+d1 = rolld6
 Gold = Gold + d1
 PRINT "You receive"; d1; "gold coins."
-RANDOMIZE TIMER
-d1 = INT(RND * 6) + 1
+' RANDOMIZE TIMER
+d1 = rolld6
 xpoints = xpoints + d1
 PRINT "You receive"; d1; "expert points."
 
@@ -962,12 +989,12 @@ PRINT ""
 PLAY chance$
 INPUT "What will you do...", opcion
 
-	IF opcion = 1 THEN          ' ==== OPCION 1 ====
-	d1 = INT(RND * 6) + 1
+	IF opcion = 1 THEN
+	d1 = rolld6
 	COLOR 2
 	PRINT "You decide to run and try to escape..."
 	COLOR 3
-	PRINT "Dice:"; d1; "[1 to 3 means failure - 4 to 6 means success]"
+	PRINT "Die:"; d1; "[1 to 3 means failure - 4 to 6 means success]"
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -1023,7 +1050,7 @@ INPUT "What will you do...", opcion
 	PLAY chime$
 	INPUT "What will you do...", opcion
 
-		IF opcion = 1 AND mana < 3 THEN
+		IF opcion = 1 AND mana < 3 THEN ' ====  MANA OPTION 1 ====
 		COLOR 2
 		PRINT
 		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
@@ -1035,19 +1062,19 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 1 AND mana >= 3 THEN
 		mana = mana - 3
-		enemnyDF = enemyDF - AT
+		enemyDF = enemyDF - AT
 		COLOR 2
 		PRINT
 		PRINT "You use your energy and concentration to attack"
 		PRINT "the "; Enemyname$; "! Your attack is very effective!"
 		PRINT "The "; Enemyname$; " gets "; AT; " points of damage!"
-		PRINT "It's HP is"; enemyDF; " now!"
+		PRINT "Its HP is"; enemyDF; " now!"
 		PRINT
 		PRINT "--------------------------------------------"
 		PLAY chime$
 		END IF
 
-		IF opcion = 2 AND mana < 3 THEN
+		IF opcion = 2 AND mana < 3 THEN ' ====  MANA OPTION 2 ====
 		COLOR 2
 		PRINT
 		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
@@ -1070,7 +1097,7 @@ INPUT "What will you do...", opcion
 		PLAY chime$
 		END IF
 
-		IF opcion = 3 AND mana < 3 THEN
+		IF opcion = 3 AND mana < 3 THEN ' ====  MANA OPTION 3 ====
 		COLOR 2
 		PRINT
 		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
@@ -1119,13 +1146,13 @@ gameover:
 CLS
 x = 0
 DO UNTIL x = 4000
-RANDOMIZE TIMER
+'RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
 D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 4
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
@@ -1135,13 +1162,13 @@ LOOP
 
 x = 0
 DO UNTIL x = 4000
-RANDOMIZE TIMER
+'RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
 D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
@@ -1151,4 +1178,33 @@ LOOP
 CLS
 
 GOTO mainmenu
+
+SUB DisplayWeather
+
+d1 = rolld6
+COLOR 3
+PRINT "Die:"; d1;
+COLOR 2
+
+SELECT CASE d1
+CASE 1
+PRINT "It's sunny and mild."
+CASE 2
+PRINT "It's cloudy and breezy."
+CASE 3
+PRINT "It's snowy and cold."
+CASE 4
+PRINT "It's dry and very hot."
+CASE 5
+PRINT "It's stormy, heavy rain."
+CASE 6
+PRINT "Windy and cold."
+END SELECT
+
+END SUB
+
+FUNCTION rolld6
+RANDOMIZE TIMER
+rolld6 = INT(RND * 6) + 1
+END FUNCTION
 
