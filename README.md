@@ -16,4 +16,4 @@ I'd be very glad you could help with:
 Thanks to the contributors:
 ===========================
 
-Allan Monroe from Ohio, USA.
+Alan Monroe from Ohio, USA.
