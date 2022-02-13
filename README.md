@@ -12,3 +12,8 @@ I'd be very glad you could help with:
 - Help me with English, making corrections in the different paragraphs and parts of the story if you think they can be written better.
 - Help me with the code making it more efficient.
 - Any other ideas, suggestions or feedback are welcome.  
+
+Thanks to the contributors:
+===========================
+
+Allan Monroe from Ohio, USA.
