@@ -48,7 +48,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 9
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 34
 COLOR 15
 PRINT " GET READY FOR "
@@ -62,7 +62,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 34
 COLOR 15
 PRINT "   MS-DOS    "
@@ -168,7 +168,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "±"
+PRINT "Â±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -285,7 +285,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "±"
+PRINT "Â±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -1152,7 +1152,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 4
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
@@ -1168,7 +1168,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "°±²"
+PRINT "Â°Â±Â²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
