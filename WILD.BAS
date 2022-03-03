@@ -1,5 +1,4 @@
 '- CREAR NUEVAS PARTES DE LA HISTORIA
-'- COMPLETAR EVENTOS DE ACCIDENTES
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
 '- AGREGAR MAS SONIDOS
@@ -7,11 +6,12 @@
 '- AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
 '- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
 '- CREAR ALGUNAS NUEVAS TRANSICIONES
-'- TERMINAR DE ORGANIZAR EL CODIFO EN FUNCIONES/SUBS
+'- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
 
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB DisplayWeather ()
+DECLARE SUB decision ()
 DECLARE FUNCTION rolld6 ()
 
 '======================== MUSIC and SOUNDS =========================
@@ -48,7 +48,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 9
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
 PRINT " GET READY FOR "
@@ -62,7 +62,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
 PRINT "   MS-DOS    "
@@ -88,6 +88,10 @@ CLS
 COLOR 2
 
 DIM SHARED positionCOL(500) AS INTEGER
+
+'| GLOBAL VARIABLES FOR SUBS |
+DIM SHARED DecisionResult, mana, HP, gold
+
 RANDOMIZE TIMER
 
 
@@ -117,7 +121,7 @@ LOOP
 
 PRINT "Generating random gold values..."
 						   'ALL THESE VARIABLES
-Gold = rolld6 * rolld6                             'HAVE BEEN RANDOMIZED, SO
+gold = rolld6 * rolld6                             'HAVE BEEN RANDOMIZED, SO
 PRINT "Generating random attack value..."          'EVERYTIME YOU PLAY A NEW
 					       'GAME IT'S GONNA BE SOMETHING
 AT = rolld6 * 2                                'DIFFERENT. I USED THE VALUE
@@ -126,31 +130,34 @@ PRINT "Generating random defence value..."  '6 TO RANDOMIZE THEM, SIMULATING
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
 maxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
-hp = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
+HP = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
 
-maxmana = 5 + rolld6
-mana = maxmana
+MaxMana = 5 + rolld6
+mana = MaxMana
 
 SLEEP 1
 
 inicio:
 
 d1 = (rolld6) / 10
-hp = hp + d1
+HP = HP + d1
 mana = mana + d1
 
 inicio2:
 RANDOMIZE TIMER
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO gameover
 END IF
 
-IF hp > maxHP THEN
-hp = maxHP
+IF HP > maxHP THEN
+HP = maxHP
 END IF
 
+IF mana > MaxMana THEN
+mana = MaxMana
+END IF
 
 'MAP ==========================    'THE MAP IS GENERATED FOR THE FIRST TIME
 				   'THEN IT WILL BE GENERATED AGAIN IN ORDER
@@ -168,7 +175,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "Â±"
+PRINT "±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -184,16 +191,16 @@ lugary = 5
 turno = turno + 1
 position = 0
 
-'MENU ==========================       
+'MENU ==========================    
 
 'THE PLAYER INPUTS A DIRECTION OR GIVES OTHER KINDS OF ORDERS
 'USING THE MENU. THE DIRECTIONS ARE PROCESSED HERE.
 
 COLOR 3
 LOCATE 1, 1
-PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "| ( LEVEL"; level; ")"
 LOCATE 2, 1
-PRINT "Mana"; mana; "| Expert Points:"; xpoints; "| Gold:"; Gold
+PRINT "Mana"; mana; "| Expert Points:"; xpoints; "| Gold:"; gold
 
 COLOR 2
 PRINT
@@ -285,7 +292,7 @@ COLOR 4
 END IF
 
 LOCATE lugary, lugarx
-PRINT "Â±"
+PRINT "±"
 lugarx = lugarx + 1
 position = position + 1
 LOOP
@@ -390,8 +397,8 @@ PRINT "Die:"; d1;
 COLOR 2
 
 IF d1 = 1 THEN
-PRINT " - ACCIDENT -"
-GOTO accident
+PRINT " - DECISION -"
+GOTO decision
 END IF
 
 IF d1 = 2 THEN
@@ -434,7 +441,21 @@ COLOR 3
 PRINT "Die:"; d1;
 COLOR 2
 
-IF d1 > 0 AND d1 < 4 THEN
+IF d1 = 1 THEN
+PRINT "You are trying to climb a huge rock that blocks the way and end up falling down."
+PRINT "You hurt your back when falling (-1 HP)."
+HP = HP - 1
+END IF
+
+IF d1 = 2 THEN
+PRINT "You are walking around the place and hear the sound of an animal coming"
+PRINT "towards you from behind. When you turn, you see a GIANT BUGIO (a huge"
+PRINT "and violent monkey) coming. You run, you run and save your life but in"
+PRINT "the escape you lose all your gold coins (Gold = 0)."
+gold = 0
+END IF
+
+IF d1 = 3 THEN
 PRINT "You feel something like a bite in your leg. You stop and check what was it."
 PRINT "You see two red points and a thin blood string coming out from your leg."
 PRINT "You wish it was only an insect and not a snake."
@@ -447,7 +468,7 @@ PRINT "Die:"; d1;
 	IF d1 = 1 THEN
 	COLOR 2
 	PRINT "Some meters ahead you see it... it was a snake! (-6 HP)"
-	hp = hp - 6
+	HP = HP - 6
 	DO WHILE INKEY$ = ""
 	LOOP
 	GOTO inicio
@@ -456,7 +477,7 @@ PRINT "Die:"; d1;
 	IF d1 = 2 THEN
 	COLOR 2
 	PRINT "Some meters ahead you see it... it was a brown spider! (-3 HP)"
-	hp = hp - 3
+	HP = HP - 3
 	DO WHILE INKEY$ = ""
 	LOOP
 	GOTO inicio
@@ -479,7 +500,7 @@ PRINT "Die:"; d1;
 	d1 = INT(RND * 6) + 1
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
-	hp = hp - d1
+	HP = HP - d1
 	DO WHILE INKEY$ = ""
 	LOOP
 	GOTO inicio
@@ -503,7 +524,7 @@ PRINT "Die:"; d1;
 
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
-	hp = hp - d1
+	HP = HP - d1
 	DO WHILE INKEY$ = ""
 	LOOP
 	GOTO inicio
@@ -518,7 +539,7 @@ PRINT "There is a huge storm coming. You seem worried cause it looks very bad."
 PRINT "You try to hurry up and find a place to hide. However, you are not lucky today."
 PRINT "All your clothes get wet and you feel terrible after walking so much with"
 PRINT "wet feet and wet clothes. You also feel very cold. (-1 HP)"
-hp = hp - 1.5
+HP = HP - 1.5
 END IF
 
 DO WHILE INKEY$ = ""
@@ -528,34 +549,16 @@ GOTO inicio
 
 
 '---------------------------------------------------------
-accident:
 
-d1 = rolld6
+decision:
+CALL decision
 
-COLOR 3
-PRINT "Die:"; d1;
-COLOR 2
-
-IF d1 > 0 AND d1 < 4 THEN
-PRINT "You are trying to climb a huge rock that blocks the way and end up falling down."
-PRINT "You hurt your back when falling (-1 HP)."
-hp = hp - 1
-END IF
-
-IF d1 > 3 AND d1 < 7 THEN
-PRINT "You are walking around the place and hear the sound of an animal coming"
-PRINT "towards you from behind. When you turn, you see a GIANT BUGIO (a huge"
-PRINT "and violent monkey) coming. You run, you run and save your life but in"
-PRINT "the escape you lose all your gold coins (Gold = 0)."
-Gold = 0
-END IF
-
-
-DO WHILE INKEY$ = ""
-LOOP
-
+SELECT CASE DecisionResult
+CASE 0
 GOTO inicio
-
+CASE 1
+GOTO enemy
+END SELECT
 
 '---------------------------------------------------------
 positive:
@@ -566,17 +569,31 @@ COLOR 3
 PRINT "Die:"; d1;
 COLOR 2
 
-IF d1 > 0 AND d1 < 3 THEN
+IF d1 = 1 THEN
 PRINT "You find a good place to sleep and spend the night there. It's an inn."
 PRINT "You've been there before and know the owner. You feel much better"
 PRINT "the next day. (+1 HP)"
-hp = hp + 1
+HP = HP + 1
+END IF
+
+IF d1 = 2 THEN
+PRINT "You find an abandoned house in the place. It's an old house but seems"
+PRINT "to be in perfect conditions. The front door is open. You get in. The place"
+PRINT "is clean, there's even a room with a bed, old chairs and a big table. You "
+PRINT "even find a shelf with many old books. Books about black and white magic,"
+PRINT "the natural world, about creatures, the kingdom's history, music, poetry"
+PRINT "and even short stories. You also find some old gold coins around the place."
+PRINT "You spend the rest of the day resting and reading. Seems to be a safe and "
+PRINT "good place to spend the night too. (+5 HP) (+20 GOLD) (100% MANA pts)"
+HP = HP + 5
+gold = gold + 20
+mana = MaxMana
 END IF
 
 IF d1 = 3 THEN
 PRINT "You see something shiny in the middle of the path."
 PRINT "Some gold coins are spread all over the place!!! (+10 GOLD)"
-Gold = Gold + 10
+gold = gold + 10
 END IF
 
 IF d1 = 4 THEN
@@ -586,7 +603,7 @@ PRINT "knives and sword. The mission has been pretty rough and hard, so difficul
 PRINT "You needed to take some time for you, to rest and relax a little bit. It's"
 PRINT "always a good thing to practice with your weapons and improve your fighting"
 PRINT "techniques. (HP + 3) (AT + 0.5) "
-hp = hp + 3
+HP = HP + 3
 AT = AT + .5
 END IF
 
@@ -606,7 +623,7 @@ LOOP
 GOTO inicio
 END IF
 
-IF Gold < 25 THEN
+IF gold < 25 THEN
 PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
 DO WHILE INKEY$ = ""
 LOOP
@@ -621,8 +638,8 @@ LOOP
 PRINT
 PRINT "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
 PRINT "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
-hp = hp + 5
-Gold = Gold - 25
+HP = HP + 5
+gold = gold - 25
 DO WHILE INKEY$ = ""
 LOOP
 GOTO inicio
@@ -637,7 +654,7 @@ PRINT "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
 PRINT "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
 PRINT "PRETTY GOOD."
 mana = mana + 5
-Gold = Gold - 25
+gold = gold - 25
 DO WHILE INKEY$ = ""
 LOOP
 GOTO inicio
@@ -646,14 +663,14 @@ END IF
 END IF
 
 IF d1 = 6 THEN
-PRINT "You find by the road a family of travelers. They've heard about you and"
-PRINT "they know you are there to help. The husband invites to join them. You"
+PRINT "You find a family of travelers by the road. They've heard about you and"
+PRINT "they know you are there to help. The husband invites you to join them. You"
 PRINT "rest, eat good food and take a shower. You stay a good time with them."
 PRINT "The man also teaches you some fighting and defensive techniques. Before"
 PRINT "you leave, they give you some food and gold coins to support you. "
 PRINT "You thank them and continue with your travel. (Gold + 25) (HP + 10) (AT + 0.5) "
-Gold = Gold + 25
-hp = hp + 10
+gold = gold + 25
+HP = HP + 10
 AT = AT + .5
 END IF
 
@@ -848,7 +865,7 @@ combatINI:   '================== COMBAT INI ==================
 
 COLOR 2
 PRINT
-PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ")"
+PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ")"
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
 PRINT
 PRINT "--------------------------------------------"
@@ -905,7 +922,7 @@ finaldamage = 0
 END IF
 PRINT "YOU receive"; finaldamage; "points of damage."
 
-hp = hp - finaldamage
+HP = HP - finaldamage
 
 
 DO WHILE INKEY$ = ""
@@ -913,7 +930,7 @@ LOOP
 
 PRINT "--------------------------------------------"
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO gameover
 END IF
 
@@ -922,7 +939,7 @@ PRINT
 PRINT "GOOD JOB! The "; Enemyname$; " has been defeated!"
 ' RANDOMIZE TIMER
 d1 = rolld6
-Gold = Gold + d1
+gold = gold + d1
 PRINT "You receive"; d1; "gold coins."
 ' RANDOMIZE TIMER
 d1 = rolld6
@@ -960,11 +977,11 @@ IF opcion = 3 THEN
 maxHP = maxHP + 1
 END IF
 IF opcion = 4 THEN
-maxmana = maxmana + 1
+MaxMana = MaxMana + 1
 END IF
 
-mana = maxmana
-hp = maxHP
+mana = MaxMana
+HP = maxHP
 
 END IF
 
@@ -1006,8 +1023,8 @@ INPUT "What will you do...", opcion
 		PRINT "[FAILURE]"
 		PRINT "You try to escape but can't. It seems you aren't fast enough for that."
 		PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-		hp = hp - enemyAT
-		PRINT "Your HP is "; hp; " now."
+		HP = HP - enemyAT
+		PRINT "Your HP is "; HP; " now."
 		PRINT
 		COLOR 2
 		PRINT "--------------------------------------------"
@@ -1015,7 +1032,7 @@ INPUT "What will you do...", opcion
 		DO WHILE INKEY$ = ""
 		LOOP
 
-			IF hp <= 0 THEN
+			IF HP <= 0 THEN
 			GOTO gameover
 			END IF
 
@@ -1086,11 +1103,11 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 2 AND mana >= 3 THEN
 		mana = mana - 3
-		hp = maxHP
+		HP = maxHP
 		COLOR 2
 		PRINT
 		PRINT "You use your energy and concentration to recover your health"
-		PRINT "Your HP is now "; hp; "! You feel much better and renewed!"
+		PRINT "Your HP is now "; HP; "! You feel much better and renewed!"
 		PRINT "Ready to fight back!"
 		PRINT
 		PRINT "--------------------------------------------"
@@ -1152,7 +1169,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 4
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
@@ -1168,7 +1185,7 @@ D2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
 LOCATE D2, d1
-PRINT "Â°Â±Â²"
+PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
 PRINT "YOU HAVE DIED"
@@ -1178,6 +1195,156 @@ LOOP
 CLS
 
 GOTO mainmenu
+
+SUB decision
+d1 = rolld6
+DecisionResult = 0
+
+'-----------------------  1  -----------------------------
+
+IF d1 > 0 AND d1 < 4 THEN
+PRINT "The road divides in two different directions in front of you."
+PRINT "One way goes west and the other east. Both roads seem to be"
+PRINT "dangerous as the area is infested with creatures and dark souls."
+PRINT
+PRINT "1) Go WEST"
+PRINT "2) Go EAST"
+PRINT
+INPUT "What is your choose?", opcion
+PRINT
+
+	IF opcion = 1 THEN
+	PRINT "You continue walking by the road and after some kilometers"
+	PRINT "you see that the road goes through a huge and dangerous forest."
+	PRINT "You hear the sounds of creatures all around you, but can't see"
+	PRINT "them."
+	PRINT
+	PRINT "Do you think running is an option?"
+	PRINT "1) RUN"
+	PRINT "2) DO NOT RUN"
+	PRINT
+ask1:
+	INPUT "What do you do?", opcion
+
+
+		SELECT CASE opcion
+
+		CASE 1
+		PRINT
+		PRINT "You RUN with all your energy. You hear things running"
+		PRINT "by your side in the woods. You probably made the right"
+		PRINT "decision. This things were ready to attack and you escaped"
+		PRINT "at the right momment."
+		PRINT
+
+		CASE 2
+		PRINT
+		PRINT "You decide to continue walking at a low pace."
+		PRINT "You hear noises inside the woods, among the trees and"
+		PRINT "the darkness of the forest. Suddenly, something jumps"
+		PRINT "quickly right in front of you, blocking the way!"
+		PRINT
+		DO WHILE INKEY$ = ""
+		LOOP
+		DecisionResult = 1
+		GOTO EndSub
+		CASE ELSE
+		GOTO ask1
+		END SELECT
+
+	END IF
+
+	IF opcion = 2 THEN
+	PRINT
+	PRINT "You decide to take the road that goes east. The road is"
+	PRINT "calm and silent. Things seem to be pretty quiet around here."
+	PRINT "The land is flat, you can hear birds and the sound of the wind."
+	PRINT "The weather seems to be better now. You even decide to stop by "
+	PRINT "the road, rest a little bit under a tree and then continue walking."
+	PRINT
+	PRINT "(+5 MANA pts)"
+	mana = mana + 5
+	DO WHILE INKEY$ = ""
+	LOOP
+	END IF
+
+
+END IF
+
+'-----------------------  2  -----------------------------
+
+IF d1 > 3 AND d1 < 7 THEN
+PRINT "You find a small cave entrance. Looks like it's a small place."
+PRINT "It goes inside the ground and rocks, and you can't see inside."
+PRINT "Are you going to get in this cave and look for some objects, items "
+PRINT "or maybe gold?"
+PRINT
+PRINT "1) ENTER the cave."
+PRINT "2) DO NOT ENTER the cave."
+PRINT
+INPUT "What is your choose?", opcion
+PRINT
+
+     IF opcion = 1 THEN
+     d1 = rolld6
+
+     SELECT CASE d1
+
+     CASE 1
+     PRINT ""
+     PRINT "There's an enemy or creature inside this cave!"
+     PRINT ""
+     DO WHILE INKEY$ = ""
+     LOOP
+     DecisionResult = 1
+     GOTO EndSub
+
+     CASE 2
+     d1 = rolld6
+     addgold = d1 * 2
+     PRINT ""
+     PRINT "There are some items in this cave!"
+     PRINT "You found "; addgold; " GOLD!"
+     PRINT ""
+     DO WHILE INKEY$ = ""
+     LOOP
+     gold = gold + addgold
+     GOTO EndSub
+
+     CASE 3
+     d1 = rolld6
+     addmana = d1 * 2
+     PRINT ""
+     PRINT "There is a dim blue light coming from somewhere in this cave!"
+     PRINT "You don't know what it means, however it makes you feel better."
+     PRINT "Seems like your body (all muscles) and mind are relaxed and healed."
+     PRINT
+     PRINT "(+ "; addmana; " MANA pts)"
+     PRINT ""
+     DO WHILE INKEY$ = ""
+     LOOP
+     mana = mana + addmana
+     GOTO EndSub
+     
+     CASE ELSE
+     PRINT ""
+     PRINT "The cave is empty... Nothing interesting to see here."
+     PRINT ""
+     DO WHILE INKEY$ = ""
+     LOOP
+     GOTO EndSub
+     END SELECT
+
+     END IF
+
+
+END IF
+
+DO WHILE INKEY$ = ""
+LOOP
+
+EndSub:
+END SUB
 
 SUB DisplayWeather
 
