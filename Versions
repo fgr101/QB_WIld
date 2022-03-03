@@ -1,6 +1,13 @@
+Version 0.1
+
+- Very basic prototype of the game created.
+- Basic D6 mechanics implemented.
+- Enemies added and fighting mechanics.
+- Randomized map added.
+- First parts of the story added.
 
 Version 0.2
 
+- Code structure improved (Organized in subs and functions) ---> Suggested by @amonroejj
 - Simple and small sounds added.
 - 'DECISIONS' made by the player added.
-- Code structure improved (Organized in subs and functions) ---> Suggested by @amonroejj
