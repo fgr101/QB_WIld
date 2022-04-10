@@ -1,3 +1,4 @@
+DECLARE SUB Trans1 ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -13,6 +14,10 @@
 DECLARE SUB DisplayWeather ()
 DECLARE SUB decision ()
 DECLARE FUNCTION rolld6 ()
+
+'| GLOBAL VARIABLES FOR SUBS |
+DIM SHARED DecisionResult, mana, HP, gold, chance$
+
 
 '======================== MUSIC and SOUNDS =========================
 
@@ -87,16 +92,15 @@ startnewgame:
 CLS
 COLOR 2
 
-DIM SHARED positionCOL(500) AS INTEGER
-
-'| GLOBAL VARIABLES FOR SUBS |
-DIM SHARED DecisionResult, mana, HP, gold
+DIM SHARED PositionCol(500) AS INTEGER
+DIM SHARED PositionCH
 
 RANDOMIZE TIMER
 
-
 level = 0
 xpoints = 0
+
+d1 = 2
 
 turno = 0
 lugary = 5
@@ -104,18 +108,15 @@ lugarx = 25
 
 position = 0
 PRINT "Generating a random position..."
-positionCH = (INT(RND * 400) + 1)
-positionCOL(positionCH) = 6
+PositionCH = (INT(RND * 400) + 1)
+PositionCol(PositionCH) = 6
 lasttextposition$ = "MOUNTAINS"
-
-
 
 x = 0
 DO UNTIL x = 500
-positionCOL(x) = 3
+PositionCol(x) = 3
 x = x + 1
 LOOP
-
 
 'VARIABLES (Gold, attack, defence, HP, etc.) ================================
 
@@ -169,8 +170,8 @@ x = 0
 
 DO UNTIL x = 40
 x = x + 1
-COLOR positionCOL(position)
-IF position = positionCH THEN
+COLOR PositionCol(position)
+IF position = PositionCH THEN
 COLOR 4
 END IF
 
@@ -191,7 +192,7 @@ lugary = 5
 turno = turno + 1
 position = 0
 
-'MENU ==========================    
+'MENU ==========================  
 
 'THE PLAYER INPUTS A DIRECTION OR GIVES OTHER KINDS OF ORDERS
 'USING THE MENU. THE DIRECTIONS ARE PROCESSED HERE.
@@ -221,54 +222,54 @@ COLOR 2
 
 IF direction = 3 THEN
 
-	IF positionCH = 39 OR positionCH = (39 + 40) OR positionCH = (39 + (40 * 2)) THEN
-	positionCH = positionCH - 40
+	IF PositionCH = 39 OR PositionCH = (39 + 40) OR PositionCH = (39 + (40 * 2)) THEN
+	PositionCH = PositionCH - 40
 	END IF
 
-	IF positionCH = (39 + (40 * 3)) OR positionCH = (39 + (40 * 4)) OR positionCH = (39 + (40 * 5)) THEN
-	positionCH = positionCH - 40
+	IF PositionCH = (39 + (40 * 3)) OR PositionCH = (39 + (40 * 4)) OR PositionCH = (39 + (40 * 5)) THEN
+	PositionCH = PositionCH - 40
 	END IF
 
-	IF positionCH = (39 + (40 * 7)) OR positionCH = (39 + (40 * 8)) OR positionCH = (39 + (40 * 9)) THEN
-	positionCH = positionCH - 40
+	IF PositionCH = (39 + (40 * 7)) OR PositionCH = (39 + (40 * 8)) OR PositionCH = (39 + (40 * 9)) THEN
+	PositionCH = PositionCH - 40
 	END IF
 
-	positionCH = positionCH + 1
+	PositionCH = PositionCH + 1
 
 END IF
 
 IF direction = 4 THEN
 
-	IF positionCH = 0 OR positionCH = 40 OR positionCH = 80 THEN
-	positionCH = positionCH + 40
+	IF PositionCH = 0 OR PositionCH = 40 OR PositionCH = 80 THEN
+	PositionCH = PositionCH + 40
 	END IF
 
-	IF positionCH = 120 OR positionCH = 160 OR positionCH = 200 THEN
-	positionCH = positionCH + 40
+	IF PositionCH = 120 OR PositionCH = 160 OR PositionCH = 200 THEN
+	PositionCH = PositionCH + 40
 	END IF
 
-	IF positionCH = 240 OR positionCH = 280 OR positionCH = 320 OR positionCH = 360 THEN
-	positionCH = positionCH + 40
+	IF PositionCH = 240 OR PositionCH = 280 OR PositionCH = 320 OR PositionCH = 360 THEN
+	PositionCH = PositionCH + 40
 	END IF
 
-	positionCH = positionCH - 1
+	PositionCH = PositionCH - 1
 
 END IF
 
 IF direction = 1 THEN
-positionCH = positionCH - 40
+PositionCH = PositionCH - 40
 
-	IF positionCH < 0 THEN
-	positionCH = positionCH + (40 * 10)
+	IF PositionCH < 0 THEN
+	PositionCH = PositionCH + (40 * 10)
 	END IF
 
 END IF
 
 IF direction = 2 THEN
-positionCH = positionCH + 40
+PositionCH = PositionCH + 40
 
-	IF positionCH > 399 THEN
-	positionCH = positionCH - (40 * 10)
+	IF PositionCH > 399 THEN
+	PositionCH = PositionCH - (40 * 10)
 	END IF
 
 END IF
@@ -286,8 +287,8 @@ x = 0
 
 DO UNTIL x = 40
 x = x + 1
-COLOR positionCOL(position)
-IF position = positionCH THEN
+COLOR PositionCol(position)
+IF position = PositionCH THEN
 COLOR 4
 END IF
 
@@ -312,28 +313,28 @@ position = 0
 
 d1 = rolld6
 IF d1 > 3 THEN
-positionCOL(positionCH) = lastterrain  '| It increases the probabilities of
+PositionCol(PositionCH) = lastterrain  '| It increases the probabilities of
 d1 = copyd1                            '| repeating the last terrain in order
 GOTO SkipRest                          '| to have a less randomized map.
 END IF
 
 d1 = rolld6
-IF positionCOL(positionCH) = 2 THEN
+IF PositionCol(PositionCH) = 2 THEN
 d1 = 1
 END IF
-IF positionCOL(positionCH) = 8 THEN
+IF PositionCol(PositionCH) = 8 THEN
 d1 = 2
 END IF
-IF positionCOL(positionCH) = 7 THEN
+IF PositionCol(PositionCH) = 7 THEN
 d1 = 3
 END IF
-IF positionCOL(positionCH) = 14 THEN
+IF PositionCol(PositionCH) = 14 THEN
 d1 = 4
 END IF
-IF positionCOL(positionCH) = 1 THEN
+IF PositionCol(PositionCH) = 1 THEN
 d1 = 5
 END IF
-IF positionCOL(positionCH) = 6 THEN
+IF PositionCol(PositionCH) = 6 THEN
 d1 = 6
 END IF
 
@@ -342,43 +343,48 @@ COLOR 3
 PRINT "Die:"; d1;
 COLOR 2
 
+
+IF d1 = 0 THEN
+d1 = 1
+END IF
+
 IF d1 = 1 THEN
 PRINT "FOREST"
-positionCOL(positionCH) = 2
+PositionCol(PositionCH) = 2
 copyd1 = d1
 END IF
 
 IF d1 = 2 THEN
 PRINT "SWAMP"
-positionCOL(positionCH) = 8
+PositionCol(PositionCH) = 8
 copyd1 = d1
 END IF
 
 IF d1 = 3 THEN
 PRINT "FROZEN LANDS"
-positionCOL(positionCH) = 7
+PositionCol(PositionCH) = 7
 copyd1 = d1
 END IF
 
 IF d1 = 4 THEN
 PRINT "DESERT"
-positionCOL(positionCH) = 14
+PositionCol(PositionCH) = 14
 copyd1 = d1
 END IF
 
 IF d1 = 5 THEN
 PRINT "WATER (sea, lake or river)"
-positionCOL(positionCH) = 1
+PositionCol(PositionCH) = 1
 copyd1 = d1
 END IF
 
 IF d1 = 6 THEN
 PRINT "MOUNTAINS"
-positionCOL(positionCH) = 6
+PositionCol(PositionCH) = 6
 copyd1 = d1
 END IF
 
-lastterrain = positionCOL(positionCH)
+lastterrain = PositionCol(PositionCH)
 
 'WEATHER ---------------------------------
 
@@ -403,6 +409,10 @@ END IF
 
 IF d1 = 2 THEN
 PRINT " - ENEMY -"
+LOCATE 11, 32
+COLOR 15, PositionCol(PositionCH)
+PRINT "ENEMY ENCOUNTER!"
+SLEEP 3
 GOTO enemy
 END IF
 
@@ -735,6 +745,9 @@ GOTO inicio
 '---------------------------------------------------------
 enemy:
 
+
+PLAY enemy$
+CALL Trans1
 d1 = rolld6
 
 IF d1 = 1 THEN
@@ -852,9 +865,8 @@ enemyDF = 8
 END IF
 
 PRINT
+COLOR 2
 PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
-
-PLAY enemy$
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -1236,6 +1248,7 @@ ask1:
 		PRINT "decision. This things were ready to attack and you escaped"
 		PRINT "at the right momment."
 		PRINT
+		PLAY chance$
 
 		CASE 2
 		PRINT
@@ -1244,6 +1257,7 @@ ask1:
 		PRINT "the darkness of the forest. Suddenly, something jumps"
 		PRINT "quickly right in front of you, blocking the way!"
 		PRINT
+		PLAY chance$
 		DO WHILE INKEY$ = ""
 		LOOP
 		DecisionResult = 1
@@ -1263,6 +1277,7 @@ ask1:
 	PRINT "the road, rest a little bit under a tree and then continue walking."
 	PRINT
 	PRINT "(+5 MANA pts)"
+	PLAY chance$
 	mana = mana + 5
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -1294,6 +1309,7 @@ PRINT
      PRINT ""
      PRINT "There's an enemy or creature inside this cave!"
      PRINT ""
+     PLAY chance$
      DO WHILE INKEY$ = ""
      LOOP
      DecisionResult = 1
@@ -1306,6 +1322,7 @@ PRINT
      PRINT "There are some items in this cave!"
      PRINT "You found "; addgold; " GOLD!"
      PRINT ""
+     PLAY chance$
      DO WHILE INKEY$ = ""
      LOOP
      gold = gold + addgold
@@ -1321,11 +1338,29 @@ PRINT
      PRINT
      PRINT "(+ "; addmana; " MANA pts)"
      PRINT ""
+     PLAY chance$
      DO WHILE INKEY$ = ""
      LOOP
      mana = mana + addmana
      GOTO EndSub
      
+     CASE 4
+     d1 = rolld6
+     DiscountHP = d1 / 2
+     PRINT ""
+     PRINT "There's nothing interesting to see there..."
+     PRINT "However, while exploring the cave you slip and fall over some rocks."
+     PRINT "You get out from the cave with one of your arms hurting really bad."
+     PRINT "It was a wrong decision to get in there."
+     PRINT
+     PRINT "(-"; DiscountHP; " HP pts)"
+     PRINT ""
+     PLAY chance$
+     DO WHILE INKEY$ = ""
+     LOOP
+     HP = HP - DiscountHP
+     GOTO EndSub
+
      CASE ELSE
      PRINT ""
      PRINT "The cave is empty... Nothing interesting to see here."
@@ -1333,6 +1368,7 @@ PRINT
      DO WHILE INKEY$ = ""
      LOOP
      GOTO EndSub
+
      END SELECT
 
      END IF
@@ -1374,4 +1410,45 @@ FUNCTION rolld6
 RANDOMIZE TIMER
 rolld6 = INT(RND * 6) + 1
 END FUNCTION
+
+'============================ SCREEN TRANSITION 1 ===========================
+SUB Trans1
+
+transicion1:
+
+COLOR PositionCol(PositionCH), 0
+CLS
+
+vueltas = 0
+
+DO UNTIL vueltas = 2
+vueltas = vueltas + 1
+CLS
+
+yloop = 1
+xloop = 1
+
+DO UNTIL xloop = 79
+
+DO UNTIL yloop = 25
+LOCATE yloop, xloop
+PRINT "²²°"
+yloop = yloop + 1
+
+SELECT CASE INKEY$
+	CASE CHR$(27)
+	END
+END SELECT
+LOOP
+
+xloop = xloop + 1
+yloop = 1
+LOOP
+
+
+LOOP
+
+COLOR 2, 0
+CLS
+END SUB
 
