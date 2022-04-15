@@ -1,4 +1,3 @@
-DECLARE SUB About ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -11,6 +10,9 @@ DECLARE SUB About ()
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB Information ()
+DECLARE SUB Character ()
+DECLARE SUB About ()
 DECLARE SUB Pause ()
 DECLARE SUB Intro ()
 DECLARE SUB Trans1 ()
@@ -19,14 +21,15 @@ DECLARE SUB Decision ()
 DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
-DIM SHARED DecisionResult, mana, hp, gold, chance$, chime$, IntroMusic$
+DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold, Chance$, Chime$, IntroMusic$
+DIM SHARED AT, DF, maxHP, MaxMana
 
 '======================== MUSIC and SOUNDS =========================
 
-chance$ = "b5e"
+Chance$ = "b5e"
 endfight$ = "O2b5ebo3c4o2eo3"
 ENEMY$ = "e20 e20"
-chime$ = "MB o5 d20 d20"
+Chime$ = "MB o5 d20 d20"
 levelup$ = "c20 d20 e20 c20 d20 e20"
 IntroMusic$ = "MB o1ag#g#baao2co1bo2co1aecde o1g#g#baao2co1bo1o1a6a5a2"
 
@@ -107,7 +110,7 @@ startnewgame:
 CALL Intro 'GAME INTRO - STORY PRESENTATION
 
 CLS
-COLOR 2
+COLOR 7
 
 DIM SHARED PositionCol(500) AS INTEGER
 DIM SHARED PositionCH
@@ -129,6 +132,10 @@ PositionCH = (INT(RND * 400) + 1)
 PositionCol(PositionCH) = 6
 lasttextposition$ = "MOUNTAINS"
 
+PRINT "Generating cities position..."
+PositionCity1 = (INT(RND * 400) + 1)
+
+
 x = 0
 DO UNTIL x = 500
 PositionCol(x) = 3
@@ -138,9 +145,9 @@ LOOP
 'VARIABLES (Gold, attack, defence, HP, etc.) ================================
 
 PRINT "Generating random gold values..."
-						   'ALL THESE VARIABLES
-gold = rolld6 * rolld6                             'HAVE BEEN RANDOMIZED, SO
-PRINT "Generating random attack value..."          'EVERYTIME YOU PLAY A NEW
+					       'ALL THESE VARIABLES
+gold = rolld6 * rolld6                         'HAVE BEEN RANDOMIZED, SO
+PRINT "Generating random attack value..."      'EVERYTIME YOU PLAY A NEW
 					       'GAME IT'S GONNA BE SOMETHING
 AT = rolld6 * 2                                'DIFFERENT. I USED THE VALUE
 PRINT "Generating random defence value..."  '6 TO RANDOMIZE THEM, SIMULATING
@@ -154,7 +161,11 @@ PRINT "Generating random mana value..."
 MaxMana = 5 + rolld6
 mana = MaxMana
 
-SLEEP 1
+Pause
+
+
+CALL Character
+
 
 inicio:
 
@@ -192,15 +203,34 @@ IF position = PositionCH THEN
 COLOR 4
 END IF
 
-LOCATE lugary, lugarx
-PRINT "�"
+LOCATE lugary, lugarx                'Shows normal tiles or cities.
+SELECT CASE position
+
+	CASE PositionCity1
+
+	IF PositionCH = PositionCity1 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+
+	CASE ELSE
+	PRINT "�"
+
+END SELECT
+
 lugarx = lugarx + 1
 position = position + 1
+
 LOOP
 
 y = y + 1
 lugary = lugary + 1
 lugarx = 25
+
 LOOP
 
 lugarx = 25
@@ -214,10 +244,18 @@ position = 0
 'THE PLAYER INPUTS A DIRECTION OR GIVES OTHER KINDS OF ORDERS
 'USING THE MENU. THE DIRECTIONS ARE PROCESSED HERE.
 
-COLOR 3
+COLOR 15, 4
 LOCATE 1, 1
+PRINT "[10] Exit"
+LOCATE 1, 11
+PRINT "[11] Character"
+
+COLOR , 0
+
+COLOR 3
+LOCATE 3, 1
 PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
-LOCATE 2, 1
+LOCATE 4, 1
 PRINT "Mana"; mana; "| Expert Points:"; xpoints; "| Gold:"; gold
 
 COLOR 2
@@ -227,7 +265,12 @@ PRINT "2- South"
 PRINT "3- East"
 PRINT "4- West"
 PRINT
-PRINT "10- Exit"
+
+IF PositionCH = PositionCity1 THEN
+PRINT "5 - Enter in the city."
+END IF
+
+PRINT
 PRINT
 COLOR 3
 INPUT "Where to go? ", direction
@@ -295,6 +338,10 @@ IF direction = 10 THEN
 GOTO mainmenu
 END IF
 
+IF direction = 11 THEN
+CALL Character
+GOTO inicio
+END IF
 
 'MAP UPDATE ========================== 'AFTER THE PLAYER GIVES A NEW DIRECTION
 				       'THE MAP GETS UPDATED. IT IS GENERATED
@@ -309,22 +356,42 @@ IF position = PositionCH THEN
 COLOR 4
 END IF
 
-LOCATE lugary, lugarx
-PRINT "�"
+
+
+LOCATE lugary, lugarx                'Shows normal tiles or cities.
+SELECT CASE position
+
+	CASE PositionCity1
+
+	IF PositionCH = PositionCity1 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+
+	CASE ELSE
+	PRINT "�"
+
+END SELECT
+
 lugarx = lugarx + 1
 position = position + 1
+
 LOOP
 
 y = y + 1
 lugary = lugary + 1
 lugarx = 25
+
 LOOP
 
 lugarx = 25
 lugary = 5
 
 position = 0
-
 
 'TERRAIN ===========================================
 
@@ -410,8 +477,12 @@ CALL DisplayWeather
 
 
 '---------------------------------------------------------
-
 situations:
+
+IF PositionCH = PositionCity1 THEN
+PLAY Chime$
+GOTO inicio
+END IF
 
 d1 = rolld6
 
@@ -450,7 +521,8 @@ END IF
 
 IF d1 = 6 THEN
 PRINT " - INFORMATION -"
-GOTO information
+CALL Information
+GOTO inicio
 END IF
 
 
@@ -464,6 +536,11 @@ GOTO inicio
 negative:
 
 d1 = rolld6
+
+IF d1 = LastNegativeEvent THEN      'This part of the code should avoid
+GOTO negative                       'the same negative event repeating twice
+END IF                              'in a very short period of time.
+LastNegativeEvent = d1
 
 COLOR 3
 PRINT "Die:"; d1;
@@ -588,6 +665,8 @@ END IF
 DO WHILE INKEY$ = ""
 LOOP
 
+
+
 GOTO inicio
 
 
@@ -607,6 +686,12 @@ END SELECT
 positive:
 
 d1 = rolld6
+
+IF d1 = LastPositiveEvent THEN   'This part of the code should avoid
+GOTO positive                    'the same positive event repeating twice
+END IF                           'in a very short period of time.
+LastPositiveEvent = d1
+
 
 COLOR 3
 PRINT "Die:"; d1;
@@ -763,80 +848,6 @@ GOTO inicio
 
 
 '---------------------------------------------------------
-information:
-
-d1 = INT(RND * 7) + 1
-
-COLOR 3
-PRINT "Die:"; d1;
-COLOR 10
-
-IF d1 > 0 AND d1 < 3 THEN
-Pause
-PRINT "Peasant: So, you are looking for some terrible criminals, right?"
-Pause
-PRINT "Well, some of them hide in places like forests or in the mountains"
-Pause
-PRINT "if you are lucky, you'll find them in those places."
-END IF
-
-IF d1 = 3 THEN
-Pause
-PRINT "Tavern owner: Good to know you are taking care of those terrible killers."
-Pause
-PRINT "Some of them are wizards who practice the arts of the dark side. People"
-Pause
-PRINT "even say they kidnap kids and young women for their sacrifices, offering"
-Pause
-PRINT "them to the black lord."
-END IF
-
-IF d1 = 4 THEN
-Pause
-PRINT "Farmer: Be very a careful man, we all know what you're doing over here"
-Pause
-PRINT "and they know too. They expect to meet you soon, so I guess they are ready."
-Pause
-PRINT "Don't be a fool, don't think they are weak. Get ready as much as you can."
-Pause
-PRINT "These people are dark and they aren't ordinary ones, they posses supernatural"
-Pause
-PRINT "powers, and this power doesn't come from light. Many families around here"
-Pause
-PRINT "lost some of their children... and we all know they took them."
-END IF
-
-IF d1 = 5 THEN
-Pause
-PRINT "Priest: They are part of a satanic order. These black sorcerers have already"
-Pause
-PRINT "carried out thousands of killings and murders, terrifying our village. They"
-Pause
-PRINT "They kidnap babies, kids and young women. We have already found the places"
-Pause
-PRINT "where these beasts celebrate their bloody rituals and hideous feasts."
-END IF
-
-IF d1 = 6 THEN
-Pause
-PRINT "You're following a narrow path, seeing huge vultures above in the sky. "
-Pause
-PRINT "Something is not ok. A strong and awful smell gets to you. You continue"
-Pause
-PRINT "walking not knowing what you're about to find. Behind some rocks, hidden "
-Pause
-PRINT "by high grass, you find a rotten corpse. Rotten bones and flesh. You vomit,"
-Pause
-PRINT "the view is overwhelming, disgusting. Danger seems to be near."
-END IF
-
-DO WHILE INKEY$ = ""
-LOOP
-
-GOTO inicio
-
-
-'---------------------------------------------------------
 ENEMY:
 
 CALL Trans1
@@ -847,13 +858,13 @@ Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
 
-	IF AT > 10 THEN
-	Enemyname$ = "Black Panther"
+	IF AT > 12 THEN
+	Enemyname$ = "Demonic Black Panther"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 
-	IF AT > 20 THEN
+	IF AT > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
 	enemyAT = 6
 	enemyDF = 10
@@ -863,16 +874,16 @@ END IF
 
 IF d1 = 2 THEN
 Enemyname$ = "Wild Bugio"
-enemyAT = 4
+enemyAT = 4.5
 enemyDF = 6
 
-	IF AT > 10 THEN
+	IF AT > 12 THEN
 	Enemyname$ = "Damned Walker"
 	enemyAT = 6
 	enemyDF = 15
 	END IF
 
-	IF AT > 20 THEN
+	IF AT > 22 THEN
 	Enemyname$ = "Demonic Rat"
 	enemyAT = 6
 	enemyDF = 10
@@ -883,16 +894,16 @@ END IF
 IF d1 = 3 THEN
 Enemyname$ = "Witch"
 enemyAT = 4
-enemyDF = 6
+enemyDF = 5.5
 	
-	IF AT > 10 THEN
+	IF AT > 12 THEN
 	Enemyname$ = "Tortured Soul"
 	enemyAT = 8
 	enemyDF = 12
 	END IF
 
-	IF AT > 20 THEN
-	Enemyname$ = "Estirge"
+	IF AT > 22 THEN
+	Enemyname$ = "Giant Flying Spider"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
@@ -901,16 +912,16 @@ END IF
 
 IF d1 = 4 THEN
 Enemyname$ = "Crawler"
-enemyAT = 6
-enemyDF = 6
+enemyAT = 5
+enemyDF = 5
 
-	IF AT > 10 THEN
+	IF AT > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
 	enemyAT = 30
 	enemyDF = 54
 	END IF
 
-	IF AT > 20 THEN
+	IF AT > 22 THEN
 	Enemyname$ = "Demonic Goblin"
 	enemyAT = 35
 	enemyDF = 59
@@ -921,15 +932,15 @@ END IF
 IF d1 = 5 THEN
 Enemyname$ = "Criminal"
 enemyAT = 4
-enemyDF = 6
+enemyDF = 5
 
-	IF AT > 10 THEN
+	IF AT > 12 THEN
 	Enemyname$ = "Forest Demon"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 	
-	IF AT > 20 THEN
+	IF AT > 22 THEN
 	Enemyname$ = "Demonic Draco"
 	enemyAT = 11
 	enemyDF = 15
@@ -939,17 +950,17 @@ END IF
 
 IF d1 = 6 THEN
 Enemyname$ = "Giant Black Scorpion"
-enemyAT = 7
-enemyDF = 8
+enemyAT = 6
+enemyDF = 7
 
-	IF AT > 10 THEN
+	IF AT > 12 THEN
 	Enemyname$ = "Corrupted Soul"
 	enemyAT = 14
 	enemyDF = 16
 	END IF
 
-	IF AT > 20 THEN
-	Enemyname$ = "Demonic Troll"
+	IF AT > 22 THEN
+	Enemyname$ = "Giant Flying Centipede"
 	enemyAT = 19
 	enemyDF = 21
 	END IF
@@ -967,10 +978,13 @@ CLS
 
 combatINI:   '================== COMBAT INI ==================
 
+
 COLOR 2
 PRINT
-PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ")"
+PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; mana; ")"
+COLOR 4
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
+COLOR 2
 PRINT
 PRINT "--------------------------------------------"
 DO WHILE INKEY$ = ""
@@ -995,15 +1009,18 @@ finaldamage = damage1 - def2
 IF finaldamage < 0 THEN
 finaldamage = 0
 END IF
+COLOR 15
 PRINT "The "; Enemyname$; " receives"; finaldamage; "points of damage."
+COLOR 2
 
 enemyDF = enemyDF - finaldamage
+
+PRINT
+PRINT "--------------------------------------------"
 
 DO WHILE INKEY$ = ""
 LOOP
 
-PRINT
-PRINT "--------------------------------------------"
 PRINT
 PRINT "THE "; Enemyname$; " ATTACKS YOU:"
 'RANDOMIZE TIMER
@@ -1024,7 +1041,11 @@ finaldamage = damageEN - yourdefence
 IF finaldamage < 0 THEN
 finaldamage = 0
 END IF
+
+COLOR 15
 PRINT "YOU receive"; finaldamage; "points of damage."
+COLOR 2
+
 
 hp = hp - finaldamage
 
@@ -1033,6 +1054,7 @@ DO WHILE INKEY$ = ""
 LOOP
 
 PRINT "--------------------------------------------"
+
 
 IF hp <= 0 THEN
 GOTO gameover
@@ -1120,8 +1142,13 @@ PRINT "2) Use your concentration [mana pts]"
 Pause
 PRINT "3) Just continue with the combat"
 PRINT ""
-PLAY chance$
+PLAY Chance$
+askagain:
 INPUT "What will you do...", opcion
+
+	IF opcion = 0 THEN
+	GOTO askagain
+	END IF
 
 	IF opcion = 1 THEN
 	d1 = rolld6
@@ -1194,8 +1221,13 @@ INPUT "What will you do...", opcion
 	PRINT "3) Use energy to escape [3pts]"
 	PRINT ""
 	PRINT
-	PLAY chime$
+	PLAY Chime$
+1248 :
 	INPUT "What will you do...", opcion
+
+		IF opcion = 0 THEN
+		GOTO 1248
+		END IF
 
 		IF opcion = 1 AND mana < 3 THEN ' ====  MANA OPTION 1 ====
 		COLOR 2
@@ -1207,7 +1239,7 @@ INPUT "What will you do...", opcion
 		PRINT
 		Pause
 		PRINT "--------------------------------------------"
-		PLAY chime$
+		PLAY Chime$
 		END IF
 
 		IF opcion = 1 AND mana >= 3 THEN
@@ -1226,7 +1258,7 @@ INPUT "What will you do...", opcion
 		PRINT
 		Pause
 		PRINT "--------------------------------------------"
-		PLAY chime$
+		PLAY Chime$
 		END IF
 
 		IF opcion = 2 AND mana < 3 THEN ' ====  MANA OPTION 2 ====
@@ -1239,7 +1271,7 @@ INPUT "What will you do...", opcion
 		PRINT
 		Pause
 		PRINT "--------------------------------------------"
-		PLAY chime$
+		PLAY Chime$
 		END IF
 
 		IF opcion = 2 AND mana >= 3 THEN
@@ -1256,7 +1288,7 @@ INPUT "What will you do...", opcion
 		PRINT
 		Pause
 		PRINT "--------------------------------------------"
-		PLAY chime$
+		PLAY Chime$
 		END IF
 
 		IF opcion = 3 AND mana < 3 THEN ' ====  MANA OPTION 3 ====
@@ -1269,7 +1301,7 @@ INPUT "What will you do...", opcion
 		PRINT
 		Pause
 		PRINT "--------------------------------------------"
-		PLAY chime$
+		PLAY Chime$
 		END IF
 
 		IF opcion = 3 AND mana >= 3 THEN
@@ -1283,7 +1315,7 @@ INPUT "What will you do...", opcion
 		Pause
 		PRINT "You succeed and escape!"
 		PRINT
-		PLAY chime$
+		PLAY Chime$
 		DO WHILE INKEY$ = ""
 		LOOP
 		combatloop = 0
@@ -1369,9 +1401,75 @@ LOOP
 
 END SUB
 
+SUB Character
+
+CLS
+
+LOCATE 6, 1
+COLOR , 9
+PRINT "                       "
+PRINT "                       "
+PRINT "                       "
+PRINT "                       "
+
+
+
+COLOR 9, 0
+LOCATE 3, 1
+PRINT "CHARACTER"
+COLOR 15, 0
+PRINT "Type: Explorer / Demons Hunter"
+PRINT
+COLOR 15, 9
+LOCATE 6, 1
+PRINT "  AT   = "; AT; "    "
+PRINT "  DEF  = "; DF; "    "
+PRINT "  HP   = "; maxHP; "    "
+PRINT "  MANA = "; MaxMana; "    "
+COLOR , 0
+PRINT
+COLOR 14, 9
+PRINT "  GOLD   = "; gold; "   "
+COLOR , 0
+
+COLOR 4
+LOCATE 1, 1
+PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
+
+LOCATE 23, 1
+PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
+
+
+DO WHILE INKEY$ = ""
+LOOP
+
+END SUB
+
+SUB City
+'city1x = 45
+'city1y = 10
+
+'COLOR PositionCol(position)
+'LOCATE city1y, city1x
+'PRINT "C"
+
+'LOCATE 15, 1
+END SUB
+
 SUB Decision
+
+DecisionsIni:
 d1 = rolld6
+
+IF d1 = LastDecisionEvent THEN     'This part of the code should avoid
+GOTO DecisionsIni                  'the same decision event repeating twice
+END IF                             'in a very short period of time.
+LastDecisionEvent = d1
+
 DecisionResult = 0
+
+
+
 COLOR 10
 
 '-----------------------  1  -----------------------------
@@ -1483,12 +1581,45 @@ COLOR 10
 		CASE 3
 		'SOMEONE SHOTS YOU
 		Pause
-		PRINT "SOMEONE SHOTS YOU"
+		PRINT
+		Pause
+		PRINT "You've been praying for a while now, trying to get in contact"
+		Pause
+		PRINT "with the spirits of nature. Escape as soon as you can... That"
+		Pause
+		PRINT "thought came suddendly to your mind but you don't know why."
 
 		DO WHILE INKEY$ = ""
 		LOOP
-		GOTO EndSub
 
+		PRINT
+		PRINT "BOOM! A strong explosion behind you. You realize that someone"
+		Pause
+		PRINT "is attacking you with a fire gun from the distance! "
+
+		DO WHILE INKEY$ = ""
+		LOOP
+
+		PRINT
+		PRINT "You stand up and try to run away!"
+		Pause
+		PRINT "When you finally escape, you stop, breathe... and realize that you've"
+		Pause
+		PRINT "been shot in the shoulder and are heavily wounded."
+
+		d1 = 5 + rolld6
+		hp = hp - d1
+		
+		Pause
+		COLOR 3
+		PRINT
+		PRINT "(-"; d1; "HP pts)"
+		COLOR 2
+
+		DO WHILE INKEY$ = ""
+		LOOP
+
+		GOTO EndSub
 
 		CASE 4
 		'ENEMY
@@ -1548,9 +1679,17 @@ Pause
 PRINT "2) Go EAST"
 PRINT
 Pause
+224 :
+COLOR 3
 INPUT "What is your choose?", opcion
 COLOR 10
-PRINT
+
+	IF opcion = 0 THEN
+	GOTO 224
+	END IF
+
+
+	PRINT
 
 	IF opcion = 1 THEN
 	Pause
@@ -1589,7 +1728,7 @@ ask1:
 		Pause
 		PRINT "at the right momment."
 		PRINT
-		PLAY chance$
+		PLAY Chance$
 
 		CASE 2
 		PRINT
@@ -1602,7 +1741,7 @@ ask1:
 		Pause
 		PRINT "quickly right in front of you, blocking the way!"
 		PRINT
-		PLAY chance$
+		PLAY Chance$
 		DO WHILE INKEY$ = ""
 		LOOP
 		DecisionResult = 1
@@ -1629,7 +1768,7 @@ ask1:
 	Pause
 	PRINT "(+5 MANA pts)"
 	COLOR 10
-	PLAY chance$
+	PLAY Chance$
 	mana = mana + 5
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -1657,9 +1796,14 @@ Pause
 PRINT "2) DO NOT ENTER the cave."
 PRINT
 Pause
+333 :
+COLOR 3
 INPUT "What is your choose?", opcion
 COLOR 10
-PRINT
+
+     IF opcion = 0 THEN
+     GOTO 333
+     END IF
 
      IF opcion = 1 THEN
      d1 = rolld6
@@ -1671,7 +1815,7 @@ PRINT
      Pause
      PRINT "There's an enemy or creature inside this cave!"
      PRINT ""
-     PLAY chance$
+     PLAY Chance$
      DO WHILE INKEY$ = ""
      LOOP
      DecisionResult = 1
@@ -1686,7 +1830,7 @@ PRINT
      Pause
      PRINT "You found "; addgold; " GOLD!"
      PRINT ""
-     PLAY chance$
+     PLAY Chance$
      DO WHILE INKEY$ = ""
      LOOP
      gold = gold + addgold
@@ -1706,7 +1850,7 @@ PRINT
      Pause
      PRINT "(+ "; addmana; " MANA pts)"
      PRINT ""
-     PLAY chance$
+     PLAY Chance$
      DO WHILE INKEY$ = ""
      LOOP
      mana = mana + addmana
@@ -1728,7 +1872,7 @@ PRINT
      Pause
      PRINT "(-"; DiscountHP; " HP pts)"
      PRINT ""
-     PLAY chance$
+     PLAY Chance$
      DO WHILE INKEY$ = ""
      LOOP
      hp = hp - DiscountHP
@@ -1780,6 +1924,79 @@ END SELECT
 
 END SUB
 
+SUB Information
+
+d1 = INT(RND * 7) + 1
+
+COLOR 3
+PRINT "Die:"; d1;
+COLOR 10
+
+IF d1 > 0 AND d1 < 3 THEN
+Pause
+PRINT "Peasant: So, you are looking for some terrible criminals, right?"
+Pause
+PRINT "Well, some of them hide in places like forests or in the mountains"
+Pause
+PRINT "if you are lucky, you'll find them in those places."
+END IF
+
+IF d1 = 3 THEN
+Pause
+PRINT "Tavern owner: Good to know you are taking care of those terrible killers."
+Pause
+PRINT "Some of them are wizards who practice the arts of the dark side. People"
+Pause
+PRINT "even say they kidnap kids and young women for their sacrifices, offering"
+Pause
+PRINT "them to the black lord."
+END IF
+
+IF d1 = 4 THEN
+Pause
+PRINT "Farmer: Be very a careful man, we all know what you're doing over here"
+Pause
+PRINT "and they know too. They expect to meet you soon, so I guess they are ready."
+Pause
+PRINT "Don't be a fool, don't think they are weak. Get ready as much as you can."
+Pause
+PRINT "These people are dark and they aren't ordinary ones, they posses supernatural"
+Pause
+PRINT "powers, and this power doesn't come from light. Many families around here"
+Pause
+PRINT "lost some of their children... and we all know they took them."
+END IF
+
+IF d1 = 5 THEN
+Pause
+PRINT "Priest: They are part of a satanic order. These black sorcerers have already"
+Pause
+PRINT "carried out thousands of killings and murders, terrifying our village. They"
+Pause
+PRINT "They kidnap babies, kids and young women. We have already found the places"
+Pause
+PRINT "where these beasts celebrate their bloody rituals and hideous feasts."
+END IF
+
+IF d1 = 6 THEN
+Pause
+PRINT "You're following a narrow path, seeing huge vultures above in the sky. "
+Pause
+PRINT "Something is not ok. A strong and awful smell gets to you. You continue"
+Pause
+PRINT "walking not knowing what you're about to find. Behind some rocks, hidden "
+Pause
+PRINT "by high grass, you find a rotten corpse. Rotten bones and flesh. You vomit,"
+Pause
+PRINT "the view is overwhelming, disgusting. Danger seems to be near."
+END IF
+
+DO WHILE INKEY$ = ""
+LOOP
+
+
+END SUB
+
 SUB Intro
 
 LOCATE 11, 34
@@ -1807,7 +2024,7 @@ LOCATE 5, 1
 PRINT "never seen."
 PRINT
 
-PLAY chime$
+PLAY Chime$
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -1820,7 +2037,7 @@ LOCATE 8, 1
 PRINT "stories, demons, witchery and satanic rituals."
 PRINT
 
-PLAY chime$
+PLAY Chime$
 
 
 DO WHILE INKEY$ = ""
@@ -1845,7 +2062,7 @@ LOCATE 15, 1
 PRINT "mountains."
 PRINT
 
-PLAY chime$
+PLAY Chime$
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -1859,7 +2076,7 @@ Pause
 LOCATE 19, 1
 PRINT "use of human blood and flesh."
 
-PLAY chime$
+PLAY Chime$
 
 DO WHILE INKEY$ = ""
 LOOP
