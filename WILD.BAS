@@ -1,3 +1,4 @@
+DECLARE SUB GameOver ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -10,6 +11,7 @@
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB City ()
 DECLARE SUB Information ()
 DECLARE SUB Character ()
 DECLARE SUB About ()
@@ -23,6 +25,7 @@ DECLARE FUNCTION rolld6 ()
 '| GLOBAL VARIABLES FOR SUBS |
 DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold, Chance$, Chime$, IntroMusic$
 DIM SHARED AT, DF, maxHP, MaxMana
+DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 
 '======================== MUSIC and SOUNDS =========================
 
@@ -132,15 +135,51 @@ PositionCH = (INT(RND * 400) + 1)
 PositionCol(PositionCH) = 6
 lasttextposition$ = "MOUNTAINS"
 
-PRINT "Generating cities position..."
-PositionCity1 = (INT(RND * 400) + 1)
-
-
 x = 0
 DO UNTIL x = 500
 PositionCol(x) = 3
 x = x + 1
 LOOP
+
+
+'============= RANDOM CITIES =============
+
+PRINT "Randomizing number of cities..."
+
+City1Exists = 1
+
+d1 = rolld6
+IF d1 > 3 THEN
+City2Exists = 1
+END IF
+
+d1 = rolld6
+IF d1 > 3 THEN
+City3Exists = 1
+END IF
+
+d1 = rolld6
+IF d1 > 3 THEN
+City4Exists = 1
+END IF
+
+d1 = rolld6
+IF d1 > 3 THEN
+City5Exists = 1
+END IF
+
+d1 = rolld6
+IF d1 > 3 THEN
+City6Exists = 1
+END IF
+
+PRINT "Generating cities position..."
+PositionCity1 = (INT(RND * 400) + 1)
+PositionCity2 = (INT(RND * 400) + 1)
+PositionCity3 = (INT(RND * 400) + 1)
+PositionCity4 = (INT(RND * 400) + 1)
+PositionCity5 = (INT(RND * 400) + 1)
+PositionCity6 = (INT(RND * 400) + 1)
 
 'VARIABLES (Gold, attack, defence, HP, etc.) ================================
 
@@ -177,7 +216,7 @@ inicio2:
 RANDOMIZE TIMER
 
 IF hp <= 0 THEN
-GOTO gameover
+GOTO GameOver
 END IF
 
 IF hp > maxHP THEN
@@ -215,9 +254,92 @@ SELECT CASE position
 	END IF
 
 	PRINT "C"
+	
+	CASE PositionCity2
+
+	IF City2Exists = 1 THEN
+	IF PositionCH = PositionCity2 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	ELSE
 	COLOR , 0
+	PRINT "±"
+	END IF
+
+	CASE PositionCity3
+
+	IF City3Exists = 1 THEN
+	IF PositionCH = PositionCity3 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+
+	ELSE
+	COLOR , 0
+	PRINT "±"
+
+	END IF
+
+	CASE PositionCity4
+
+	IF City4Exists = 1 THEN
+	IF PositionCH = PositionCity4 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+
+	ELSE
+	COLOR , 0
+	PRINT "±"
+
+	END IF
+
+	CASE PositionCity5
+
+	IF City5Exists = 5 THEN
+	IF PositionCH = PositionCity5 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+
+	ELSE
+	COLOR , 0
+	PRINT "±"
+
+	END IF
+
+	CASE PositionCity6
+
+	IF City6Exists = 6 THEN
+	IF PositionCH = PositionCity6 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+
+	ELSE
+	COLOR , 0
+	PRINT "±"
+
+	END IF
 
 	CASE ELSE
+	COLOR , 0
 	PRINT "±"
 
 END SELECT
@@ -266,7 +388,10 @@ PRINT "3- East"
 PRINT "4- West"
 PRINT
 
-IF PositionCH = PositionCity1 THEN
+IF PositionCH = PositionCity1 OR PositionCH = PositionCity2 OR PositionCH = PositionCity3 THEN
+PRINT "5 - Enter in the city."
+END IF
+IF PositionCH = PositionCity4 OR PositionCH = PositionCity5 OR PositionCH = PositionCity6 THEN
 PRINT "5 - Enter in the city."
 END IF
 
@@ -334,6 +459,17 @@ PositionCH = PositionCH + 40
 
 END IF
 
+IF direction = 5 THEN
+
+CALL City
+
+	IF hp <= 0 THEN
+	GOTO mainmenu
+	END IF
+
+GOTO inicio
+END IF
+
 IF direction = 10 THEN
 GOTO mainmenu
 END IF
@@ -372,6 +508,71 @@ SELECT CASE position
 	PRINT "C"
 	COLOR , 0
 
+	CASE PositionCity2
+
+	IF City2Exists = 1 THEN
+	IF PositionCH = PositionCity2 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+	END IF
+
+	CASE PositionCity3
+
+	IF City3Exists = 1 THEN
+	IF PositionCH = PositionCity3 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+	END IF
+
+	CASE PositionCity4
+
+	IF City4Exists = 1 THEN
+	IF PositionCH = PositionCity4 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+	END IF
+
+	CASE PositionCity5
+
+	IF City5Exists = 5 THEN
+	IF PositionCH = PositionCity5 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+	END IF
+
+	CASE PositionCity6
+
+	IF City6Exists = 6 THEN
+	IF PositionCH = PositionCity6 THEN
+	COLOR 15, 4
+	ELSE
+	COLOR 15, PositionCol(position)
+	END IF
+
+	PRINT "C"
+	COLOR , 0
+	END IF
+
 	CASE ELSE
 	PRINT "±"
 
@@ -396,10 +597,15 @@ position = 0
 'TERRAIN ===========================================
 
 d1 = rolld6
+
 IF d1 > 3 THEN
-PositionCol(PositionCH) = lastterrain  '| It increases the probabilities of
-d1 = copyd1                            '| repeating the last terrain in order
-GOTO SkipRest                          '| to have a less randomized map.
+
+	IF NOT PositionCol(PositionCH) = 2 AND NOT PositionCol(PositionCH) = 8 AND NOT PositionCol(PositionCH) = 7 AND NOT PositionCol(PositionCH) = 14 AND NOT PositionCol(PositionCH) = 1 AND NOT PositionCol(PositionCH) = 6 THEN
+	PositionCol(PositionCH) = lastterrain
+	d1 = copyd1                            '| It increases the probabilities of
+	GOTO SkipRest                          '| repeating the last terrain in order
+	END IF                                 '| to have a less randomized map.
+
 END IF
 
 d1 = rolld6
@@ -426,7 +632,6 @@ SkipRest:
 COLOR 3
 PRINT "Die:"; d1;
 COLOR 2
-
 
 IF d1 = 0 THEN
 d1 = 1
@@ -479,10 +684,43 @@ CALL DisplayWeather
 '---------------------------------------------------------
 situations:
 
-IF PositionCH = PositionCity1 THEN
-PLAY Chime$
-GOTO inicio
-END IF
+SELECT CASE PositionCH        'If you get to a city don't show any events, just
+			      'play a sound and show the menu with the option to
+	CASE PositionCity1    'get into the city.
+	PLAY Chime$
+	GOTO inicio
+
+	CASE PositionCity2
+	IF City2Exists = 1 THEN
+	PLAY Chime$
+	GOTO inicio
+	END IF
+
+	CASE PositionCity3
+	IF City3Exists = 1 THEN
+	PLAY Chime$
+	GOTO inicio
+	END IF
+
+	CASE PositionCity4
+	IF City4Exists = 1 THEN
+	PLAY Chime$
+	GOTO inicio
+	END IF
+
+	CASE PositionCity5
+	IF City5Exists = 1 THEN
+	PLAY Chime$
+	GOTO inicio
+	END IF
+
+	CASE PositionCity6
+	IF City6Exists = 1 THEN
+	PLAY Chime$
+	GOTO inicio
+	END IF
+
+END SELECT
 
 d1 = rolld6
 
@@ -1057,7 +1295,7 @@ PRINT "--------------------------------------------"
 
 
 IF hp <= 0 THEN
-GOTO gameover
+GOTO GameOver
 END IF
 
 IF enemyDF <= 0 THEN                             'WHEN YOU WIN A COMBAT
@@ -1183,7 +1421,7 @@ INPUT "What will you do...", opcion
 		LOOP
 
 			IF hp <= 0 THEN
-			GOTO gameover
+			GOTO GameOver
 			END IF
 
 		END IF
@@ -1341,42 +1579,8 @@ GOTO combatINI
 
 
 'GAME OVER ======================================
-gameover:
-
-CLS
-x = 0
-DO UNTIL x = 4000
-'RANDOMIZE TIMER
-d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 4
-LOCATE D2, d1
-PRINT "°±²"
-LOCATE 10, 33
-COLOR 15
-PRINT "YOU HAVE DIED"
-LOCATE 11, 34
-PRINT "-GAME OVER-"
-LOOP
-
-x = 0
-DO UNTIL x = 4000
-'RANDOMIZE TIMER
-d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 0
-LOCATE D2, d1
-PRINT "°±²"
-LOCATE 10, 33
-COLOR 15
-PRINT "YOU HAVE DIED"
-LOCATE 11, 34
-PRINT "-GAME OVER-"
-LOOP
-CLS
-
+GameOver:
+CALL GameOver
 GOTO mainmenu
 
 SUB About
@@ -1446,14 +1650,159 @@ LOOP
 END SUB
 
 SUB City
-'city1x = 45
-'city1y = 10
+CityIni:
 
-'COLOR PositionCol(position)
-'LOCATE city1y, city1x
-'PRINT "C"
+IF hp <= 0 THEN
+CALL GameOver
+GOTO EndOfSub
+END IF
 
-'LOCATE 15, 1
+CLS
+
+COLOR 15, 9
+
+PRINT "         WELCOME TO THE CITY             "
+PRINT
+PRINT "1) Rest for one night at the local hotel."
+PRINT "2) Go for some beers at the local pub.   "
+PRINT "3) See if you can steal something.       "
+PRINT "4) Talk to strangers.                    "
+PRINT "5) Get out of the city.                  "
+PRINT
+INPUT "What to do", opcion
+
+SELECT CASE opcion
+
+     CASE 1
+     COLOR 10, 0
+     PRINT
+     PRINT "You spend the night at the local hotel. You eat something, have some"
+     Pause
+     PRINT "free coffee as well. You even take a look at some local newspapers."
+     Pause
+     PRINT "It is always nice to take a shower and feel clean again."
+     Pause
+     PRINT
+     PRINT "You finally sleep very well and have a good night of sleep after"
+     Pause
+     PRINT "many days sleeping on trees, in abandoned buildings and inside bushes."
+     PRINT
+     Pause
+     COLOR 3
+     PRINT
+     PRINT "(HP 100% / MANA 100%)"
+     hp = maxHP
+     mana = MaxMana
+     DO WHILE INKEY$ = ""
+     LOOP
+     
+     CASE 3
+	
+     COLOR 10, 0
+     PRINT
+     PRINT "You walk around the streets of the city looking for an expensive store."
+     Pause
+     PRINT "There are several shops with expensive items. You see one that is "
+     Pause
+     PRINT "almost crowded, people are distracted there. It's a good option."
+     Pause
+     PRINT
+     PRINT "You get in, and look around until you see something that looks"
+     Pause
+     PRINT "interesting. People don't seem to care about you being there. "
+     PRINT
+     Pause
+     COLOR 3
+     PRINT "Do you want to try now?"
+     Pause
+1517 :
+     INPUT "1) Yes - 2) No", opcion
+     
+	SELECT CASE opcion
+
+		CASE 1
+		d1 = rolld6
+		
+		IF d1 < 4 THEN
+		COLOR 10
+		PRINT
+		Pause
+		PRINT "DOESNT WORK"
+		COLOR 10, 0
+		PRINT
+		PRINT "You don't realize but someone is looking at you, this woman is"
+		Pause
+		PRINT "suspicious of your intentions so she quietly communicates that to "
+		Pause
+		PRINT "one of the shop owners."
+		Pause
+		PRINT
+		PRINT "They wait until you try to grab something. Two big guys appear and with"
+		Pause
+		PRINT "the help of the rest of the costumers they give you a lesson."
+		PRINT
+
+		COLOR 3
+		Pause
+		d1 = rolld6
+		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; "HP."
+		hp = hp - (d1 * 2)
+
+		d1 = rolld6
+		Pause
+		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; " GOLD."
+		gold = gold - (d1 * 2)
+
+		Pause
+		d1 = rolld6
+		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; " MANA."
+		mana = mana - (d1 * 2)
+		
+		DO WHILE INKEY$ = ""
+		LOOP
+
+		GOTO CityIni
+		END IF
+		
+		IF d1 > 3 THEN
+		Pause
+		COLOR 10
+		PRINT "It works"
+		COLOR 3
+		Pause
+		PRINT "(Gold +25)"
+		gold = gold + 25
+		DO WHILE INKEY$ = ""
+		LOOP
+		GOTO CityIni
+		END IF
+		
+		DO WHILE INKEY$ = ""
+		LOOP
+
+		CASE 2
+		
+		COLOR 10
+		Pause
+		PRINT
+		PRINT "It doesn't seem to be a good idea. Better get out of here."
+
+		DO WHILE INKEY$ = ""
+		LOOP
+
+	END SELECT
+     
+     CASE 5
+     GOTO EndOfSub
+     CASE ELSE
+     GOTO CityIni
+
+END SELECT
+
+GOTO CityIni
+
+EndOfSub:
+COLOR , 0
 END SUB
 
 SUB Decision
@@ -1924,6 +2273,43 @@ END SELECT
 
 END SUB
 
+SUB GameOver
+CLS
+x = 0
+DO UNTIL x = 4000
+'RANDOMIZE TIMER
+d1 = INT(RND * 75) + 1
+D2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 4
+LOCATE D2, d1
+PRINT "°±²"
+LOCATE 10, 33
+COLOR 15
+PRINT "YOU HAVE DIED"
+LOCATE 11, 34
+PRINT "-GAME OVER-"
+LOOP
+
+x = 0
+DO UNTIL x = 4000
+'RANDOMIZE TIMER
+d1 = INT(RND * 75) + 1
+D2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 0
+LOCATE D2, d1
+PRINT "°±²"
+LOCATE 10, 33
+COLOR 15
+PRINT "YOU HAVE DIED"
+LOCATE 11, 34
+PRINT "-GAME OVER-"
+LOOP
+CLS
+
+END SUB
+
 SUB Information
 
 d1 = INT(RND * 7) + 1
@@ -2081,6 +2467,24 @@ PLAY Chime$
 DO WHILE INKEY$ = ""
 LOOP
 
+END SUB
+
+SUB Notes
+
+'================================================
+'
+' v 0.4
+'
+' - Cities added.
+' - Cities system and options under development
+'
+'
+'
+'
+'
+'
+'
+'
 END SUB
 
 SUB Pause
