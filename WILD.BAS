@@ -1,4 +1,3 @@
-DECLARE SUB GameOver ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -11,6 +10,8 @@ DECLARE SUB GameOver ()
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB Music ()
+DECLARE SUB GameOver ()
 DECLARE SUB City ()
 DECLARE SUB Information ()
 DECLARE SUB Character ()
@@ -23,19 +24,18 @@ DECLARE SUB Decision ()
 DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
-DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold, Chance$, Chime$, IntroMusic$
+DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
+DIM SHARED OptionMusic
 
-'======================== MUSIC and SOUNDS =========================
+'==================== MUSIC and SOUNDS ======================
 
-Chance$ = "b5e"
-endfight$ = "O2b5ebo3c4o2eo3"
-ENEMY$ = "e20 e20"
-Chime$ = "MB o5 d20 d20"
-levelup$ = "c20 d20 e20 c20 d20 e20"
-IntroMusic$ = "MB o1ag#g#baao2co1bo2co1aecde o1g#g#baao2co1bo1o1a6a5a2"
+DIM SHARED Chance$, endfight$, ENEMY$, Chime$, levelup$, negative$, positive$
+DIM SHARED IntroMusic$
 
+OptionMusic = 1      'BOOLEAN for Music ON and OFF
+CALL Music           'CREATES Music string variables
 
 '======================== MAIN MENU =========================
 
@@ -372,6 +372,17 @@ PRINT "[10] Exit"
 LOCATE 1, 11
 PRINT "[11] Character"
 
+IF OptionMusic = 1 THEN
+LOCATE 1, 26
+PRINT "[12] Turn Sound OFF"
+END IF
+
+IF OptionMusic = 0 THEN
+LOCATE 1, 26
+PRINT "[12] Turn Sound ON"
+END IF
+
+
 COLOR , 0
 
 COLOR 3
@@ -476,6 +487,29 @@ END IF
 
 IF direction = 11 THEN
 CALL Character
+GOTO inicio
+END IF
+
+
+IF direction = 12 THEN
+
+	IF OptionMusic = 1 THEN
+
+	     OptionMusic = 0
+	     CALL Music
+	     PRINT "Music OFF"
+	     Pause
+	     GOTO EndOptionMusic
+	END IF
+
+	IF OptionMusic = 0 THEN
+	     OptionMusic = 1
+	     CALL Music
+	     PRINT "Music ON"
+	     Pause
+	END IF
+
+EndOptionMusic:
 GOTO inicio
 END IF
 
@@ -1726,7 +1760,7 @@ SELECT CASE opcion
 		IF d1 < 4 THEN
 		COLOR 10
 		PRINT
-		Pause
+		PLAY negative$
 		PRINT "DOESNT WORK"
 		COLOR 10, 0
 		PRINT
@@ -1765,13 +1799,28 @@ SELECT CASE opcion
 		END IF
 		
 		IF d1 > 3 THEN
-		Pause
 		COLOR 10
-		PRINT "It works"
+		PLAY positive$
+		PRINT "SUCCES!"
+		Pause
+		PRINT
+		PRINT "You find something interesting. That looks very expensive and easy to sell! "
+		Pause
+		PRINT "When no one is looking you just grab the object, put it under your jacket"
+		Pause
+		PRINT "and get out quickly from the store."
+		Pause
+		PRINT
+		PRINT "You sell that item some hours later in the local street market where almost"
+		Pause
+		PRINT "anything can be bought and sold."
+		PRINT
+
 		COLOR 3
 		Pause
-		PRINT "(Gold +25)"
-		gold = gold + 25
+		d1 = rolld6
+		PRINT "Die:"; d1; "*5 | you get +"; d1 * 5; "GOLD."
+		gold = gold + (d1 * 5)
 		DO WHILE INKEY$ = ""
 		LOOP
 		GOTO CityIni
@@ -2469,6 +2518,33 @@ LOOP
 
 END SUB
 
+SUB Music
+
+IF OptionMusic = 1 THEN
+Chance$ = "b5e"
+endfight$ = "O2b5ebo3c4o2eo3"
+ENEMY$ = "e20 e20"
+Chime$ = "MB o5 d20 d20"
+levelup$ = "c20 d20 e20 c20 d20 e20"
+negative$ = "MB o1 D#8 E4 o0 C4 B9C8B3"
+positive$ = "MB o1 A8B8C7 A8D8D#8 o0 E4E4"
+IntroMusic$ = "MB o1ag#g#baao2co1bo2co1aecde o1g#g#baao2co1bo1o1a6a5a2"
+END IF
+
+IF OptionMusic = 0 THEN
+Chance$ = ""
+endfight$ = ""
+ENEMY$ = ""
+Chime$ = ""
+levelup$ = ""
+negative$ = ""
+positive$ = ""
+IntroMusic$ = ""
+END IF
+
+
+END SUB
+
 SUB Notes
 
 '================================================
@@ -2477,7 +2553,7 @@ SUB Notes
 '
 ' - Cities added.
 ' - Cities system and options under development
-'
+' - OPTIONS: Music ON/OFF added.
 '
 '
 '
