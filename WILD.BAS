@@ -1697,17 +1697,28 @@ COLOR 15, 9
 
 PRINT "         WELCOME TO THE CITY             "
 PRINT
-PRINT "1) Rest for one night at the local hotel."
-PRINT "2) Go for some beers at the local pub.   "
+PRINT "1) Rest for one night at the local hotel ($25 GOLD)"
+PRINT "2) Go for some beers at the local pub    ($10 GOLD)"
 PRINT "3) See if you can steal something.       "
 PRINT "4) Talk to strangers.                    "
 PRINT "5) Get out of the city.                  "
 PRINT
-INPUT "What to do", opcion
+INPUT "What to do? ", opcion
 
 SELECT CASE opcion
 
      CASE 1
+     
+     if gold < 25 then
+     COLOR 10, 0
+     print
+     Pause
+     print "You don't have enough money for that!"
+     do while inkey$ = ""
+     loop
+     goto CityIni
+     end if
+     
      COLOR 10, 0
      PRINT
      PRINT "You spend the night at the local hotel. You eat something, have some"
@@ -1725,10 +1736,45 @@ SELECT CASE opcion
      COLOR 3
      PRINT
      PRINT "(HP 100% / MANA 100%)"
+     gold = gold - 25
      hp = maxHP
      mana = MaxMana
      DO WHILE INKEY$ = ""
      LOOP
+     
+     case 2
+     
+     if gold < 10 then
+     COLOR 10, 0
+     print
+     Pause
+     print "You don't have enough money for that!"
+     do while inkey$ = ""
+     loop
+     goto CityIni
+     end if
+     
+     color 10, 0 
+     print
+     Print "You go to the local bar..."
+     Pause
+     print "You drink a couple beers and relax at the place..."
+     Pause
+     print "The beer costs you around 10 gold coins. You are having a good time."
+     Pause
+     print "You feel much better now. It was a fun night."
+     color 3
+     Pause
+     print "(+3 MANA)"
+     Pause
+     print "(-10 GOLD)"
+     gold = gold - 10
+     mana = mana + 3
+     
+     do while inkey$ = ""
+     loop
+     
+     goto CityIni
      
      CASE 3
 	
