@@ -1,3 +1,4 @@
+DECLARE SUB BetGame ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -1639,6 +1640,155 @@ LOOP
 
 END SUB
 
+SUB BetGame
+
+CLS
+
+COLOR 15, 7
+LOCATE 1, 10
+PRINT "Luciano the Huge"
+
+COLOR 10, 0
+
+PRINT
+PRINT "Hey foreigner! Sit there, common!"
+Pause
+PRINT "Let's see what you have!"
+PRINT
+Pause
+PRINT "This are MY rules! I roll a die, a D6... "
+PRINT
+Pause
+PRINT "- If you get a [6] I give you double."
+Pause
+PRINT "- If you get a [5] I give your money plus half of it."
+Pause
+PRINT "- If you get a [4] I give your money back. It's a tie."
+Pause
+PRINT "- If you get a [3] I give you half of it."
+Pause
+PRINT "- If you get a [2] I give nothing."
+Pause
+PRINT "- If you get a [1] I give you a sh*t."
+PRINT
+Pause
+PRINT "This is my table, these are my dice and these are my rules.."
+Pause
+PRINT "Take it or leave it."
+
+PRINT
+Pause
+
+PRINT "What are you going to do?"
+
+VolverAPreguntar:
+COLOR 3
+Pause
+INPUT "1) Play - 2) Forget it: ", BetOptions
+COLOR 10
+
+SELECT CASE BetOptions
+
+       CASE 1
+
+       PRINT
+       Pause
+       INPUT "How much money would you like to bet?", howmuch
+
+
+
+       IF gold < howmuch OR gold = 0 THEN
+       PRINT
+       Pause
+       PRINT "You don't have that money! Better get out of here!"
+       DO WHILE INKEY$ = ""
+       LOOP
+       GOTO BetEndOfSub
+       END IF
+
+       d1 = rolld6
+       
+       COLOR 10
+       Pause
+       PRINT
+       PRINT "OK... Let's see."
+       Pause
+       COLOR 3
+       PRINT "Rolling..."
+       Pause
+       PRINT "Die: "; d1
+       Pause
+       COLOR 10
+       PRINT "So you got a ["; d1; "]."
+
+	     SELECT CASE d1
+
+		   CASE 1
+		   PLAY negative$
+		   Pause
+		   PRINT
+		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
+		   gold = gold - howmuch
+
+		   CASE 2
+		   PLAY negative$
+		   Pause
+		   PRINT
+		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
+		   gold = gold - howmuch
+
+		   CASE 3
+		   PLAY negative$
+		   Pause
+		   PRINT
+		   PRINT "YOU LOSE 50% OF YOUR MONEY!"
+		   gold = gold - (howmuch / 2)
+
+
+		   CASE 4
+		   PLAY positive$
+		   PRINT
+		   PRINT "TIE! YOU KEEP YOUR MONEY!"
+
+		   CASE 5
+		   PLAY positive$
+		   PRINT
+		   PRINT "YOU WIN +50% OF YOUR BET!"
+		   gold = gold + (howmuch / 2)
+
+		   CASE 6
+		   PLAY positive$
+		   PRINT
+		   PRINT "YOU WIN +100% OF YOUR BET!"
+		   gold = gold + howmuch
+
+
+	     END SELECT
+
+       COLOR 3
+       PLAY Chime$
+       PRINT
+       PRINT "Your gold is"; gold; "now."
+       COLOR 10
+
+       DO WHILE INKEY$ = ""
+       LOOP
+
+       CASE 2
+       PRINT
+       Pause
+       PRINT "Better to keep my money safe..."
+       Pause
+       GOTO BetEndOfSub
+
+       CASE ELSE
+       GOTO VolverAPreguntar
+
+END SELECT
+
+BetEndOfSub:
+END SUB
+
 SUB Character
 
 CLS
@@ -1692,32 +1842,41 @@ GOTO EndOfSub
 END IF
 
 CLS
-
 COLOR 15, 9
 
-PRINT "         WELCOME TO THE CITY             "
+PRINT "         WELCOME TO THE CITY                    "
 PRINT
-PRINT "1) Rest for one night at the local hotel ($25 GOLD)"
-PRINT "2) Go for some beers at the local pub    ($10 GOLD)"
-PRINT "3) See if you can steal something.       "
-PRINT "4) Talk to strangers.                    "
-PRINT "5) Get out of the city.                  "
+PRINT "1) Sleep one night at the local hotel ($25 GOLD)"
+PRINT "2) Go for some beers at the local pub           "
+PRINT "3) See if you can steal something.              "
+PRINT "4) Talk to strangers.                           "
+PRINT "5) Get out of the city.                         "
 PRINT
+
+LOCATE 1, 50
+COLOR 14, 0
+PRINT "Gold: "; gold;
+
+LOCATE 9, 1
+COLOR 15, 9
 INPUT "What to do? ", opcion
+
+
+BarIni:
 
 SELECT CASE opcion
 
      CASE 1
-     
-     if gold < 25 then
+
+     IF gold < 25 THEN
      COLOR 10, 0
-     print
+     PRINT
      Pause
-     print "You don't have enough money for that!"
-     do while inkey$ = ""
-     loop
-     goto CityIni
-     end if
+     PRINT "You don't have enough money for that!"
+     DO WHILE INKEY$ = ""
+     LOOP
+     GOTO CityIni
+     END IF
      
      COLOR 10, 0
      PRINT
@@ -1742,40 +1901,83 @@ SELECT CASE opcion
      DO WHILE INKEY$ = ""
      LOOP
      
-     case 2
+     CASE 2
+	COLOR , 0
+	CLS
+	COLOR 15, 5
+
+	PRINT "           AT THE LOCAL BAR                    "
+	PRINT
+	PRINT "1) Grab a beer                       ($10 GOLD)"
+	PRINT "2) Try luck! Bet to get some money   ($?? GOLD)"
+   ''!  PRINT "3) Talk to strangers                           "
+	PRINT "4) Walk out of the bar                         "
+
+	LOCATE 1, 50
+	COLOR 14, 0
+	PRINT "Gold: "; gold;
+	PRINT
+
+	LOCATE 7, 1
+	COLOR 15, 5
+	INPUT "What to do? ", baroption
+
+	COLOR 10, 0
+
+	SELECT CASE baroption
+
+		CASE 1
+
+		IF gold < 10 THEN
+		COLOR 10, 0
+		PRINT
+		Pause
+		PRINT "You don't have enough money for that!"
+		DO WHILE INKEY$ = ""
+		LOOP
+		GOTO BarIni
+		END IF
      
-     if gold < 10 then
-     COLOR 10, 0
-     print
-     Pause
-     print "You don't have enough money for that!"
-     do while inkey$ = ""
-     loop
-     goto CityIni
-     end if
-     
-     color 10, 0 
-     print
-     Print "You go to the local bar..."
-     Pause
-     print "You drink a couple beers and relax at the place..."
-     Pause
-     print "The beer costs you around 10 gold coins. You are having a good time."
-     Pause
-     print "You feel much better now. It was a fun night."
-     color 3
-     Pause
-     print "(+3 MANA)"
-     Pause
-     print "(-10 GOLD)"
-     gold = gold - 10
-     mana = mana + 3
-     
-     do while inkey$ = ""
-     loop
-     
-     goto CityIni
-     
+		COLOR 10, 0
+		PRINT
+		PRINT "You go to the local bar..."
+		Pause
+		PRINT "Drink a couple beers and relax at the place..."
+		Pause
+		PRINT "The beer costs you around 10 gold coins. You are having a good time."
+		Pause
+		PRINT "You feel much better now. Are you gonna have another one?"
+		COLOR 3
+		Pause
+		PRINT "(+2 MANA)"
+		Pause
+		PRINT "(-10 GOLD)"
+		Pause
+		PRINT "(-0.5 HP)"
+		gold = gold - 10
+		mana = mana + 3
+		hp = hp - .5
+
+		DO WHILE INKEY$ = ""
+		LOOP
+		GOTO BarIni
+
+		CASE 2
+		CALL BetGame
+		GOTO BarIni
+
+		CASE 4
+		PRINT
+		PRINT "You walk out of the local pub.."
+		Pause
+		GOTO CityIni
+
+		CASE ELSE
+		GOTO BarIni
+
+		END SELECT
+
+
      CASE 3
 	
      COLOR 10, 0
@@ -1796,7 +1998,7 @@ SELECT CASE opcion
      PRINT "Do you want to try now?"
      Pause
 1517 :
-     INPUT "1) Yes - 2) No", opcion
+     INPUT "1) Yes - 2) No: ", opcion
      
 	SELECT CASE opcion
 
@@ -1888,8 +2090,14 @@ SELECT CASE opcion
 	END SELECT
      
      CASE 5
+     COLOR 10, 0
+     PRINT
+     PRINT "You decide to leave the city.."
+     Pause
      GOTO EndOfSub
+
      CASE ELSE
+     COLOR , 0
      GOTO CityIni
 
 END SELECT
