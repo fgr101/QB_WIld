@@ -1,4 +1,3 @@
-DECLARE SUB BetGame ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -11,6 +10,7 @@ DECLARE SUB BetGame ()
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB BetGame ()
 DECLARE SUB Music ()
 DECLARE SUB GameOver ()
 DECLARE SUB City ()
@@ -28,11 +28,11 @@ DECLARE FUNCTION rolld6 ()
 DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
-DIM SHARED OptionMusic
+DIM SHARED OptionMusic, barfight
 
 '==================== MUSIC and SOUNDS ======================
 
-DIM SHARED Chance$, endfight$, ENEMY$, Chime$, levelup$, negative$, positive$
+DIM SHARED Chance$, endfight$, enemy$, Chime$, levelup$, negative$, positive$
 DIM SHARED IntroMusic$
 
 OptionMusic = 1      'BOOLEAN for Music ON and OFF
@@ -417,6 +417,11 @@ COLOR 2
 
 'DIRECTIONS ==========================
 
+IF direction = 0 THEN
+GOTO inicio2
+END IF
+
+
 IF direction = 3 THEN
 
 	IF PositionCH = 39 OR PositionCH = (39 + 40) OR PositionCH = (39 + (40 * 2)) THEN
@@ -471,13 +476,39 @@ PositionCH = PositionCH + 40
 
 END IF
 
+
+
+
+DirectionCity:        '============= IF DIRECTION = 5, GO BACK TO THE CITY
 IF direction = 5 THEN
 
-CALL City
+SELECT CASE PositionCH
+
+	CASE PositionCity1
+	CALL City
+	CASE PositionCity2
+	CALL City
+	CASE PositionCity3
+	CALL City
+	CASE PositionCity4
+	CALL City
+	CASE PositionCity5
+	CALL City
+	CASE PositionCity6
+	CALL City
+	CASE ELSE
+	GOTO inicio
+
+END SELECT
 
 	IF hp <= 0 THEN
 	GOTO mainmenu
 	END IF
+
+
+IF barfight = 1 THEN
+GOTO enemy
+END IF
 
 GOTO inicio
 END IF
@@ -513,6 +544,28 @@ IF direction = 12 THEN
 EndOptionMusic:
 GOTO inicio
 END IF
+
+
+'=================== SHORTCUTS FOR DEBUGGING THE GAME ===============
+
+
+
+IF direction = 555 THEN
+
+	CALL City
+
+		IF hp <= 0 THEN
+		GOTO mainmenu
+		END IF
+
+		IF barfight = 1 THEN
+		GOTO enemy
+		END IF
+
+	GOTO inicio
+
+END IF
+
 
 'MAP UPDATE ========================== 'AFTER THE PLAYER GIVES A NEW DIRECTION
 				       'THE MAP GETS UPDATED. IT IS GENERATED
@@ -773,9 +826,9 @@ PRINT " - ENEMY -"
 LOCATE 11, 32
 COLOR 15, PositionCol(PositionCH)
 PRINT "ENEMY ENCOUNTER!"
-PLAY ENEMY$
+PLAY enemy$
 SLEEP 2
-GOTO ENEMY
+GOTO enemy
 END IF
 
 IF d1 = 3 THEN
@@ -952,7 +1005,7 @@ SELECT CASE DecisionResult
 CASE 0
 GOTO inicio
 CASE 1
-GOTO ENEMY
+GOTO enemy
 END SELECT
 
 '---------------------------------------------------------
@@ -1121,7 +1174,7 @@ GOTO inicio
 
 
 '---------------------------------------------------------
-ENEMY:
+enemy:
 
 CALL Trans1
 d1 = rolld6
@@ -1240,6 +1293,62 @@ enemyDF = 7
 
 END IF
 
+
+IF barfight = 1 THEN     '================ BAR FIGHT =================
+
+	d1 = rolld6
+
+	SELECT CASE d1
+
+		CASE 1
+		Enemyname$ = "Drunk Guy"
+		d1 = rolld6
+		enemyAT = 0 + d1
+		d1 = rolld6
+		enemyDF = 0 + d1
+	
+		CASE 2
+		Enemyname$ = "Random Guy"
+		d1 = rolld6
+		enemyAT = 5 + d1
+		d1 = rolld6
+		enemyDF = 5 + d1
+
+		CASE 3
+		Enemyname$ = "Strong Fat and Bald Guy"
+		d1 = rolld6
+		enemyAT = 10 + d1
+		d1 = rolld6
+		enemyDF = 10 + d1
+
+
+		CASE 4
+		Enemyname$ = "Guard"
+		d1 = rolld6
+		enemyAT = 15 + d1
+		d1 = rolld6
+		enemyDF = 15 + d1
+
+		CASE 5
+		Enemyname$ = "Huge Luciano"
+		d1 = rolld6
+		enemyAT = 20 + d1
+		d1 = rolld6
+		enemyDF = 20 + d1
+
+		CASE 6
+		Enemyname$ = "Soldier"
+		d1 = rolld6
+		enemyAT = 25 + d1
+		d1 = rolld6
+		enemyDF = 25 + d1
+
+
+	END SELECT
+
+END IF
+
+
 PRINT
 COLOR 2
 PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
@@ -1351,7 +1460,6 @@ PRINT "You receive"; d1; "expert points."
 COLOR 2
 
 PLAY endfight$
-
 DO WHILE INKEY$ = ""
 LOOP
 
@@ -1394,6 +1502,14 @@ hp = maxHP
 END IF
 
 combatloop = 0
+
+	IF barfight = 1 THEN '======= Turns the barfight BOOLEAN to FALSE(0)
+			     '======= and goes back to the city.
+		barfight = 0
+		GOTO DirectionCity
+
+	END IF
+
 GOTO inicio2
 END IF
 
@@ -1848,20 +1964,23 @@ PRINT "         WELCOME TO THE CITY                    "
 PRINT
 PRINT "1) Sleep one night at the local hotel ($25 GOLD)"
 PRINT "2) Go for some beers at the local pub           "
-PRINT "3) See if you can steal something.              "
-PRINT "4) Talk to strangers.                           "
-PRINT "5) Get out of the city.                         "
+PRINT "3) Train at the Local Fighting GYM              "
+PRINT "4) See if you can steal something.              "
+PRINT "5) Talk to strangers.                           "
+PRINT "6) Get out of the city.                         "
 PRINT
 
 LOCATE 1, 50
 COLOR 14, 0
 PRINT "Gold: "; gold;
 
-LOCATE 9, 1
+LOCATE 10, 1
 COLOR 15, 9
+PLAY Chime$
 INPUT "What to do? ", opcion
 
 
+CityOpcionIni:
 BarIni:
 
 SELECT CASE opcion
@@ -1911,20 +2030,22 @@ SELECT CASE opcion
 	PRINT "1) Grab a beer                       ($10 GOLD)"
 	PRINT "2) Try luck! Bet to get some money   ($?? GOLD)"
    ''!  PRINT "3) Talk to strangers                           "
-	PRINT "4) Walk out of the bar                         "
+	PRINT "4) Look for trouble, fight                     "
+	PRINT "5) Walk out of the bar                         "
 
 	LOCATE 1, 50
 	COLOR 14, 0
 	PRINT "Gold: "; gold;
 	PRINT
 
-	LOCATE 7, 1
+	LOCATE 10, 1
 	COLOR 15, 5
-	INPUT "What to do? ", baroption
+	INPUT "What to do? ", BarOption
+	PRINT
 
 	COLOR 10, 0
 
-	SELECT CASE baroption
+	SELECT CASE BarOption
 
 		CASE 1
 
@@ -1967,6 +2088,63 @@ SELECT CASE opcion
 		GOTO BarIni
 
 		CASE 4
+
+		COLOR 10
+
+		Pause
+		PRINT "You look around the place..."
+		PRINT
+		Pause
+		PRINT "There's a drunk guy falling asleep in one of the corners."
+		Pause
+		PRINT "There are some random guys and women having a beer, talking and smoking."
+		Pause
+		PRINT
+		PRINT "There's a big and bald guy who looks very strong, he's chatting with"
+		Pause
+		PRINT "some women and drinking beer with them."
+		Pause
+		PRINT
+		PRINT "There is another big and fat guy, he has only one eye. He is bald and he's"
+		Pause
+		PRINT "playing cards and rolling some dice. He looks huge!"
+		Pause
+		PRINT
+		PRINT "The security guard is standing next to the door. He's pretty tall "
+		Pause
+		PRINT "and looks very serious."
+		Pause
+		PRINT
+		PRINT "There's a lonely soldier, he's writing something on a paper while smoking "
+		Pause
+		PRINT "a cigarrete. He's wearing a navy blue military uniform."
+		PRINT
+		Pause
+		COLOR 3
+		PRINT "Are you sure you want to create trouble?"
+		Pause
+175 :
+		INPUT "1) Yes - 2) No: ", BarOption
+		COLOR 10
+
+		SELECT CASE BarOption
+
+			CASE 1
+			barfight = 1
+			GOTO EndOfSub
+
+			CASE 2
+			PRINT
+			PRINT "Maybe it's not a good idea..."
+			Pause
+			GOTO BarIni
+
+			CASE ELSE
+			GOTO 175
+
+		END SELECT
+
+		CASE 5
 		PRINT
 		PRINT "You walk out of the local pub.."
 		Pause
@@ -1979,6 +2157,102 @@ SELECT CASE opcion
 
 
      CASE 3
+
+     COLOR , 0
+     CLS
+     COLOR 15, 7
+     LOCATE 1, 10
+     PRINT "AT THE TRAINING GROUND"
+     COLOR 10, 0
+
+     PRINT
+     Pause
+     PRINT "What would you like to do?"
+     PRINT
+     Pause
+     PRINT "1) Train with Swords and Knives ($10 GOLD)"
+     Pause
+     PRINT "2) Train Attack and Resistance  ($10 GOLD)"
+     Pause
+     PRINT "3) Train Defensive Movements    ($10 GOLD)"
+     Pause
+     PRINT "4) Leave..."
+
+     LOCATE 1, 50
+     COLOR 14, 0
+     PRINT "Gold: "; gold;
+     PRINT
+
+
+     PRINT
+     COLOR 10
+     LOCATE 10, 1
+     INPUT "What would you like to practice? ", TrainingOptions
+     PRINT
+
+     IF gold < 10 AND NOT TrainingOptions = 4 THEN
+     PRINT
+     PLAY negative$
+     Pause
+     PRINT "You don't have any money to pay me!"
+     DO WHILE INKEY$ = ""
+     LOOP
+     GOTO CityIni
+     END IF
+
+     SELECT CASE TrainingOptions
+
+	CASE 1
+	PRINT "You train Swords and Knives"
+	d1 = rolld6 / 5
+	COLOR 3
+	PLAY Chance$
+	Pause
+	PRINT "(+"; d1; " AT)"
+	AT = AT + d1
+	gold = gold - 10
+
+	CASE 2
+	PRINT "You train Attack and Resistance"
+	d1 = rolld6 / 8
+	COLOR 3
+	PLAY Chance$
+	Pause
+	PRINT "(+"; d1; " AT / +"; d1; " DEF)"
+	AT = AT + d1
+	DF = DF + d1
+	gold = gold - 10
+
+	CASE 3
+	PRINT "You train Defensive Movements"
+
+	d1 = rolld6 / 5
+	COLOR 3
+	PLAY Chance$
+	Pause
+	PRINT "(+"; d1; " DEF)"
+	DF = DF + d1
+	gold = gold - 10
+
+	CASE 4
+
+	PRINT
+	PRINT "You walk out of the training ground..."
+	Pause
+	GOTO CityIni
+
+	CASE ELSE
+	GOTO CityOpcionIni
+
+     END SELECT
+
+     DO WHILE INKEY$ = ""
+     LOOP
+     GOTO CityOpcionIni
+
+
+
+     CASE 4
 	
      COLOR 10, 0
      PRINT
@@ -2089,7 +2363,8 @@ SELECT CASE opcion
 
 	END SELECT
      
-     CASE 5
+
+     CASE 6
      COLOR 10, 0
      PRINT
      PRINT "You decide to leave the city.."
@@ -2777,7 +3052,7 @@ SUB Music
 IF OptionMusic = 1 THEN
 Chance$ = "b5e"
 endfight$ = "O2b5ebo3c4o2eo3"
-ENEMY$ = "e20 e20"
+enemy$ = "e20 e20"
 Chime$ = "MB o5 d20 d20"
 levelup$ = "c20 d20 e20 c20 d20 e20"
 negative$ = "MB o1 D#8 E4 o0 C4 B9C8B3"
@@ -2788,7 +3063,7 @@ END IF
 IF OptionMusic = 0 THEN
 Chance$ = ""
 endfight$ = ""
-ENEMY$ = ""
+enemy$ = ""
 Chime$ = ""
 levelup$ = ""
 negative$ = ""
@@ -2805,16 +3080,21 @@ SUB Notes
 '
 ' v 0.4
 '
-' - Cities added.
+' - Cities added
 ' - Cities system and options under development
+' - Random number of cities (1 to 6)
+' - Random location of the cities in the map.
 ' - OPTIONS: Music ON/OFF added.
+' - HOTEL added to the cities.
+' - You can rest and spend the night at the HOTEL.
+' - LOCAL BAR added to cities
+' - You can BET at the bar
+' - You can FIGHT at the bar
+' - You can HAVE A BEER at the bar
+' - GYM/TRAINING GROUND added to cities
+' - You can train and improve your skills at the TRAINING GROUND.
 '
-'
-'
-'
-'
-'
-'
+
 END SUB
 
 SUB Pause
@@ -2837,6 +3117,11 @@ SUB Trans1
 transicion1:
 
 COLOR PositionCol(PositionCH), 0
+
+IF barfight = 1 THEN
+COLOR 11, 0
+END IF
+
 CLS
 
 vueltas = 0
