@@ -46,17 +46,31 @@ opcion = 0
 
 CLS
 COLOR 15
-PRINT ""
-PRINT "WILD 0.3 (2021 - 2022)"
+LOCATE 1, 1
+COLOR 10, 2
+PRINT "                              WILD 0.3 (2021 - 2022)                            "
+COLOR 15, 0
 PRINT
-Pause
+PRINT
 PRINT "1) NEW GAME"
-Pause
 PRINT "2) CREDITS"
-Pause
 PRINT "3) EXIT"
-Pause
 PRINT ""
+
+IF OptionMusic = 1 THEN
+COLOR 15, 4
+LOCATE 2, 26
+PRINT "[12] Turn Sound OFF"
+END IF
+
+IF OptionMusic = 0 THEN
+COLOR 15, 4
+LOCATE 2, 26
+PRINT "[12] Turn Sound ON"
+END IF
+
+LOCATE 10, 1
+COLOR 15, 0
 INPUT "Choose an option: ", opcion
 
 
@@ -101,6 +115,30 @@ END IF
 
 IF opcion = 3 THEN
 END
+END IF
+
+IF opcion = 12 THEN
+
+	IF OptionMusic = 1 THEN
+
+	     OptionMusic = 0
+	     CALL Music
+	     PRINT "Music OFF"
+	     Pause
+	     GOTO mainmenu
+
+	END IF
+
+	IF OptionMusic = 0 THEN
+
+	     OptionMusic = 1
+	     CALL Music
+	     PRINT "Music ON"
+	     Pause
+	     GOTO mainmenu
+
+	END IF
+
 END IF
 
 IF NOT (opcion = 1) AND NOT (opcion = 2) THEN
@@ -1742,7 +1780,7 @@ PRINT
 Pause
 PRINT "Wild 0.3 - 2021 / 2022"
 Pause
-PRINT "Created by Fernando Gaston Ramirez as an open source project."
+PRINT "Created by Fernando Gaston Ramirez as a free software and open source project."
 PRINT
 Pause
 PRINT "Contributors from GitHub:"
