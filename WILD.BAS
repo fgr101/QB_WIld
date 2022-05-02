@@ -10,6 +10,7 @@
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB TalkToStrangers ()
 DECLARE SUB BetGame ()
 DECLARE SUB Music ()
 DECLARE SUB GameOver ()
@@ -28,7 +29,7 @@ DECLARE FUNCTION rolld6 ()
 DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
-DIM SHARED OptionMusic, barfight
+DIM SHARED OptionMusic, barfight, line$(10)
 
 '==================== MUSIC and SOUNDS ======================
 
@@ -219,6 +220,16 @@ PositionCity3 = (INT(RND * 400) + 1)
 PositionCity4 = (INT(RND * 400) + 1)
 PositionCity5 = (INT(RND * 400) + 1)
 PositionCity6 = (INT(RND * 400) + 1)
+
+DIM SHARED City1Visited, City2Visited, City3Visited
+DIM SHARED City4Visited, City5Visited, City6Visited
+
+City1Visited = 0
+City2Visited = 0
+City3Visited = 0
+City4Visited = 0
+City5Visited = 0
+City6Visited = 0
 
 'VARIABLES (Gold, attack, defence, HP, etc.) ================================
 
@@ -523,17 +534,29 @@ IF direction = 5 THEN
 SELECT CASE PositionCH
 
 	CASE PositionCity1
+	City1Visited = 1
 	CALL City
+
 	CASE PositionCity2
+	City1Visited = 1
 	CALL City
+
 	CASE PositionCity3
+	City2Visited = 1
 	CALL City
+
 	CASE PositionCity4
+	City3Visited = 1
 	CALL City
+
 	CASE PositionCity5
+	City4Visited = 1
 	CALL City
+
 	CASE PositionCity6
+	City5Visited = 1
 	CALL City
+
 	CASE ELSE
 	GOTO inicio
 
@@ -631,72 +654,121 @@ SELECT CASE position
 	COLOR 15, PositionCol(position)
 	END IF
 
+	IF City1Visited = 1 THEN
 	PRINT "C"
+	END IF
+
+	IF City1Visited = 0 THEN
+	COLOR 3, 0
+	PRINT "±"
+	END IF
+
 	COLOR , 0
 
 	CASE PositionCity2
 
 	IF City2Exists = 1 THEN
-	IF PositionCH = PositionCity2 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
-	COLOR , 0
+		IF PositionCH = PositionCity2 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City2Visited = 0 THEN
+		COLOR 3, 0
+		PRINT "±"
+		END IF
+
+		IF City2Visited = 1 THEN
+		PRINT "C"
+		END IF
+		
 	END IF
+	COLOR , 0
 
 	CASE PositionCity3
 
 	IF City3Exists = 1 THEN
-	IF PositionCH = PositionCity3 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
-	COLOR , 0
+		IF PositionCH = PositionCity3 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City3Visited = 0 THEN
+		COLOR 3, 0
+		PRINT "±"
+		END IF
+
+		IF City3Visited = 1 THEN
+		PRINT "C"
+		END IF
+
 	END IF
 
 	CASE PositionCity4
 
 	IF City4Exists = 1 THEN
-	IF PositionCH = PositionCity4 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
-	COLOR , 0
+		IF PositionCH = PositionCity4 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City4Visited = 0 THEN
+		COLOR 3, 0
+		PRINT "±"
+		END IF
+
+		IF City4Visited = 1 THEN
+		PRINT "C"
+		END IF
+
 	END IF
 
 	CASE PositionCity5
 
 	IF City5Exists = 5 THEN
-	IF PositionCH = PositionCity5 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
-	COLOR , 0
+		IF PositionCH = PositionCity5 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City5Visited = 0 THEN
+		COLOR 3, 0
+		PRINT "±"
+		END IF
+
+		IF City5Visited = 1 THEN
+		PRINT "C"
+		END IF
+
 	END IF
 
 	CASE PositionCity6
 
 	IF City6Exists = 6 THEN
-	IF PositionCH = PositionCity6 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
-	COLOR , 0
+		IF PositionCH = PositionCity6 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City6Visited = 0 THEN
+		COLOR 3, 0
+		PRINT "±"
+		END IF
+
+		IF City6Visited = 1 THEN
+		PRINT "C"
+		END IF
+
 	END IF
 
 	CASE ELSE
@@ -813,35 +885,41 @@ situations:
 SELECT CASE PositionCH        'If you get to a city don't show any events, just
 			      'play a sound and show the menu with the option to
 	CASE PositionCity1    'get into the city.
+	City1Visited = 1
 	PLAY Chime$
 	GOTO inicio
 
 	CASE PositionCity2
 	IF City2Exists = 1 THEN
+	City2Visited = 1
 	PLAY Chime$
 	GOTO inicio
 	END IF
 
 	CASE PositionCity3
 	IF City3Exists = 1 THEN
+	City3Visited = 1
 	PLAY Chime$
 	GOTO inicio
 	END IF
 
 	CASE PositionCity4
 	IF City4Exists = 1 THEN
+	City4Visited = 1
 	PLAY Chime$
 	GOTO inicio
 	END IF
 
 	CASE PositionCity5
 	IF City5Exists = 1 THEN
+	City5Visited = 1
 	PLAY Chime$
 	GOTO inicio
 	END IF
 
 	CASE PositionCity6
 	IF City6Exists = 1 THEN
+	City6Visited = 1
 	PLAY Chime$
 	GOTO inicio
 	END IF
@@ -2067,7 +2145,7 @@ SELECT CASE opcion
 	PRINT
 	PRINT "1) Grab a beer                       ($10 GOLD)"
 	PRINT "2) Try luck! Bet to get some money   ($?? GOLD)"
-   ''!  PRINT "3) Talk to strangers                           "
+	PRINT "3) Talk to strangers                           "
 	PRINT "4) Look for trouble, fight                     "
 	PRINT "5) Walk out of the bar                         "
 
@@ -2125,11 +2203,17 @@ SELECT CASE opcion
 		CALL BetGame
 		GOTO BarIni
 
+
+		CASE 3
+		CALL TalkToStrangers
+		GOTO BarIni
+
 		CASE 4
 
 		COLOR 10
-
+		CLS
 		Pause
+		PRINT
 		PRINT "You look around the place..."
 		PRINT
 		Pause
@@ -2162,6 +2246,7 @@ SELECT CASE opcion
 		PRINT "Are you sure you want to create trouble?"
 		Pause
 175 :
+		COLOR 3
 		INPUT "1) Yes - 2) No: ", BarOption
 		COLOR 10
 
@@ -3126,9 +3211,10 @@ SUB Notes
 ' - HOTEL added to the cities.
 ' - You can rest and spend the night at the HOTEL.
 ' - LOCAL BAR added to cities
+' - You can HAVE A BEER at the bar
 ' - You can BET at the bar
 ' - You can FIGHT at the bar
-' - You can HAVE A BEER at the bar
+' - You can TALK TO STRANGERS at the bar.
 ' - GYM/TRAINING GROUND added to cities
 ' - You can train and improve your skills at the TRAINING GROUND.
 '
@@ -3148,6 +3234,59 @@ FUNCTION rolld6
 RANDOMIZE TIMER
 rolld6 = INT(RND * 6) + 1
 END FUNCTION
+
+SUB TalkToStrangers
+
+CLS
+d1 = rolld6
+
+
+
+SELECT CASE d1
+
+	CASE 1
+
+	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
+	line$(2) = "Some random foreigners come over here from time to time, some of them"
+	line$(3) = "come to this bar looking for fight and trouble. See that man next to"
+	line$(4) = "the door? He's crazy, have been in prison for many years and now is our"
+	line$(5) = "security guard. See that other huge guy playing games at that table?"
+	line$(6) = "Seems pretty quiet, but that's cause you don't know him well. However,"
+	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
+	line$(8) = "nothing to fear over here, people are usually friendly."
+
+	CASE ELSE
+
+	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
+	line$(2) = "Some random foreigners come over here from time to time, some of them"
+	line$(3) = "come to this bar looking for fight and trouble. See that man next to"
+	line$(4) = "the door? He's crazy, has been in prison for many years and now is our"
+	line$(5) = "security guard. See that other huge guy playing games at that table?"
+	line$(6) = "Seems pretty quiet, but that's cause you don't know him well. However,"
+	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
+	line$(8) = "nothing to fear over here, people are usually friendly."
+
+
+END SELECT
+
+
+PRINT
+PRINT
+
+
+loopx = 0               '========= LOOP for printing the line$() ARRAY
+DO UNTIL loopx = 9
+
+ Pause
+ PRINT line$(loopx)
+ loopx = loopx + 1
+
+LOOP
+
+DO WHILE INKEY$ = ""
+LOOP
+
+END SUB
 
 '============================ SCREEN TRANSITION 1 ===========================
 SUB Trans1
