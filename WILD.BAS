@@ -1,29 +1,58 @@
-DECLARE SUB NewCityText ()
-'- CREAR NUEVAS PARTES DE LA HISTORIA
+
+' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
+' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
+' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
+' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
+'   ALEATORIOS.
+' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
+' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
+' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
+'   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
+' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
+' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
+'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
+' - CONSEGUIR 10.000 DE ORO.
+' - LLEGAR AL NIVEL 50.
+
+' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
+
+'- CONTINUAR DESARROLLANDO LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
-'- CREAR HISTORIA INICIAL, INTRO
+'- AGREGAR MAS DETALLES EN LA HISTORIA INICIAL, INTRO.
 '- AGREGAR MAS SONIDOS
-'- AGREGAR CIUDADES AL MAPA EN DONDE SE PUEDA DESCANSAR, COMER, ENTRENAR, COMPRAR.
 '- AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
+'- AGREGAR DETALLES Y GRAFICOS ASCII
 '- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
 '- CREAR ALGUNAS NUEVAS TRANSICIONES
 '- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
 
+'- MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
+'- QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
+'  PARA EL PERSONAJE, OTRO TERRENO DEBE SER DESFAVORABLE.
+
+'- TRADUCIR JUEGO AL ESPANHOL
+'- TRADUCIR JUEGO A PT BRASIL
+
 '======================== SUBS AND FUNCTIONS =========================
 
-DECLARE SUB TalkToStrangers ()
-DECLARE SUB BetGame ()
 DECLARE SUB Music ()
 DECLARE SUB GameOver ()
-DECLARE SUB City ()
-DECLARE SUB Information ()
-DECLARE SUB Character ()
-DECLARE SUB About ()
 DECLARE SUB Pause ()
-DECLARE SUB Intro ()
 DECLARE SUB Trans1 ()
+
+DECLARE SUB About ()
+DECLARE SUB Intro ()
+DECLARE SUB Character ()
 DECLARE SUB DisplayWeather ()
+
+DECLARE SUB Information ()
 DECLARE SUB Decision ()
+
+DECLARE SUB City ()
+DECLARE SUB NewCityText ()
+DECLARE SUB TalkToStrangers ()
+DECLARE SUB BetGame ()
+
 DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
@@ -1385,13 +1414,13 @@ Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
 
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
 	enemyAT = 6
 	enemyDF = 10
@@ -1404,13 +1433,13 @@ Enemyname$ = "Wild Bugio"
 enemyAT = 4.5
 enemyDF = 6
 
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
 	enemyAT = 6
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
 	enemyAT = 6
 	enemyDF = 10
@@ -1423,13 +1452,13 @@ Enemyname$ = "Witch"
 enemyAT = 4
 enemyDF = 5.5
 	
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
 	enemyAT = 8
 	enemyDF = 12
 	END IF
 
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
 	enemyAT = 6
 	enemyDF = 10
@@ -1442,13 +1471,13 @@ Enemyname$ = "Crawler"
 enemyAT = 5
 enemyDF = 5
 
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
 	enemyAT = 30
 	enemyDF = 54
 	END IF
 
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Goblin"
 	enemyAT = 35
 	enemyDF = 59
@@ -1461,13 +1490,13 @@ Enemyname$ = "Criminal"
 enemyAT = 4
 enemyDF = 5
 
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Forest Demon"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 	
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Draco"
 	enemyAT = 11
 	enemyDF = 15
@@ -1480,13 +1509,13 @@ Enemyname$ = "Giant Black Scorpion"
 enemyAT = 6
 enemyDF = 7
 
-	IF AT > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Corrupted Soul"
 	enemyAT = 14
 	enemyDF = 16
 	END IF
 
-	IF AT > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Centipede"
 	enemyAT = 19
 	enemyDF = 21
@@ -3293,6 +3322,8 @@ LOCATE 22, 27
 PRINT "藩様様様様様様様様様様夕"
 COLOR , 0
 
+PLAY positive$
+
 DO WHILE INKEY$ = ""
 LOOP
 
@@ -3308,7 +3339,8 @@ SUB Notes
 ' - Cities system and options under development
 ' - Random number of cities (1 to 6)
 ' - Random location of the cities in the map.
-' - OPTIONS: Music ON/OFF added.
+' - Cities aren't shown until you discover them.
+' - "YOU DISCOVERED A CITY!" tex box when a city is found.
 ' - HOTEL added to the cities.
 ' - You can rest and spend the night at the HOTEL.
 ' - LOCAL BAR added to cities
@@ -3318,7 +3350,9 @@ SUB Notes
 ' - You can TALK TO STRANGERS at the bar.
 ' - GYM/TRAINING GROUND added to cities
 ' - You can train and improve your skills at the TRAINING GROUND.
-'
+' - OPTIONS: Music ON/OFF added. (during the game and in the main menu)
+' - Main menu and some visual details of the game improved.
+' - CHARACTER screen added (Statistics and Information about the character)
 
 END SUB
 
