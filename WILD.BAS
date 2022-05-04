@@ -1,3 +1,4 @@
+DECLARE SUB NewCityText ()
 '- CREAR NUEVAS PARTES DE LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
 '- CREAR HISTORIA INICIAL, INTRO
@@ -46,6 +47,7 @@ mainmenu:
 opcion = 0
 
 CLS
+
 COLOR 15
 LOCATE 1, 1
 COLOR 10, 2
@@ -288,12 +290,15 @@ x = 0
 DO UNTIL x = 40
 x = x + 1
 COLOR PositionCol(position)
-IF position = PositionCH THEN
-COLOR 4
-END IF
 
 LOCATE lugary, lugarx                'Shows normal tiles or cities.
+
 SELECT CASE position
+
+	CASE PositionCH
+	COLOR 20, 15
+	PRINT ""
+	COLOR , 0
 
 	CASE PositionCity1
 
@@ -302,54 +307,79 @@ SELECT CASE position
 	ELSE
 	COLOR 15, PositionCol(position)
 	END IF
-
-	PRINT "C"
 	
+	IF City1Visited = 1 THEN
+	PRINT "C"
+	ELSE
+	COLOR 3, 0 'change to color 3
+	PRINT "ฑ"
+	END IF
+
 	CASE PositionCity2
 
 	IF City2Exists = 1 THEN
-	IF PositionCH = PositionCity2 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
+		IF PositionCH = PositionCity2 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City2Visited = 1 THEN
+		PRINT "C"
+		ELSE
+		COLOR 3, 0 'change to color 3
+		PRINT "ฑ"
+		END IF
+
 	ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
+
 	END IF
 
 	CASE PositionCity3
 
 	IF City3Exists = 1 THEN
-	IF PositionCH = PositionCity3 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
+		IF PositionCH = PositionCity3 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City3Visited = 1 THEN
+		PRINT "C"
+		ELSE
+		COLOR 3, 0 'change to color 3
+		PRINT "ฑ"
+		END IF
 
 	ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
 
 	END IF
-
+	
 	CASE PositionCity4
 
 	IF City4Exists = 1 THEN
-	IF PositionCH = PositionCity4 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
+		IF PositionCH = PositionCity4 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City4Visited = 1 THEN
+		PRINT "C"
+		ELSE
+		COLOR 3, 0 'change to color 3
+		PRINT "ฑ"
+		END IF
 
 	ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
 
 	END IF
@@ -357,16 +387,22 @@ SELECT CASE position
 	CASE PositionCity5
 
 	IF City5Exists = 5 THEN
-	IF PositionCH = PositionCity5 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
+		IF PositionCH = PositionCity5 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City5Visited = 1 THEN
+		PRINT "C"
+		ELSE
+		COLOR 3, 0 'change to color 3
+		PRINT "ฑ"
+		END IF
 
 	ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
 
 	END IF
@@ -374,25 +410,35 @@ SELECT CASE position
 	CASE PositionCity6
 
 	IF City6Exists = 6 THEN
-	IF PositionCH = PositionCity6 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
 
-	PRINT "C"
+		IF PositionCH = PositionCity6 THEN
+		COLOR 15, 4
+		ELSE
+		COLOR 15, PositionCol(position)
+		END IF
+
+		IF City6Visited = 1 THEN
+		PRINT "C"
+		ELSE
+		COLOR 3, 0 'change to color 3
+		PRINT "ฑ"
+		END IF
 
 	ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
+
 
 	END IF
 
 	CASE ELSE
-	COLOR , 0
+	COLOR PositionCol(position)
 	PRINT "ฑ"
 
 END SELECT
+
+COLOR , 0
+
 
 lugarx = lugarx + 1
 position = position + 1
@@ -538,23 +584,23 @@ SELECT CASE PositionCH
 	CALL City
 
 	CASE PositionCity2
-	City1Visited = 1
-	CALL City
-
-	CASE PositionCity3
 	City2Visited = 1
 	CALL City
 
-	CASE PositionCity4
+	CASE PositionCity3
 	City3Visited = 1
 	CALL City
 
-	CASE PositionCity5
+	CASE PositionCity4
 	City4Visited = 1
 	CALL City
 
-	CASE PositionCity6
+	CASE PositionCity5
 	City5Visited = 1
+	CALL City
+
+	CASE PositionCity6
+	City6Visited = 1
 	CALL City
 
 	CASE ELSE
@@ -646,6 +692,11 @@ END IF
 LOCATE lugary, lugarx                'Shows normal tiles or cities.
 SELECT CASE position
 
+	CASE PositionCH
+	COLOR 20, 15
+	PRINT ""
+	COLOR , 0
+
 	CASE PositionCity1
 
 	IF PositionCH = PositionCity1 THEN
@@ -707,6 +758,7 @@ SELECT CASE position
 		END IF
 
 	END IF
+	COLOR , 0
 
 	CASE PositionCity4
 
@@ -728,6 +780,7 @@ SELECT CASE position
 		END IF
 
 	END IF
+	COLOR , 0
 
 	CASE PositionCity5
 
@@ -749,6 +802,7 @@ SELECT CASE position
 		END IF
 
 	END IF
+	COLOR , 0
 
 	CASE PositionCity6
 
@@ -770,6 +824,7 @@ SELECT CASE position
 		END IF
 
 	END IF
+	COLOR , 0
 
 	CASE ELSE
 	PRINT "ฑ"
@@ -885,12 +940,22 @@ situations:
 SELECT CASE PositionCH        'If you get to a city don't show any events, just
 			      'play a sound and show the menu with the option to
 	CASE PositionCity1    'get into the city.
+
+	IF City1Visited = 0 THEN
+	CALL NewCityText
+	END IF
+	
 	City1Visited = 1
 	PLAY Chime$
 	GOTO inicio
 
 	CASE PositionCity2
 	IF City2Exists = 1 THEN
+
+		IF City2Visited = 0 THEN
+		CALL NewCityText
+		END IF
+
 	City2Visited = 1
 	PLAY Chime$
 	GOTO inicio
@@ -898,6 +963,11 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	CASE PositionCity3
 	IF City3Exists = 1 THEN
+
+		IF City3Visited = 0 THEN
+		CALL NewCityText
+		END IF
+
 	City3Visited = 1
 	PLAY Chime$
 	GOTO inicio
@@ -905,6 +975,11 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	CASE PositionCity4
 	IF City4Exists = 1 THEN
+
+		IF City4Visited = 0 THEN
+		CALL NewCityText
+		END IF
+
 	City4Visited = 1
 	PLAY Chime$
 	GOTO inicio
@@ -912,6 +987,11 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	CASE PositionCity5
 	IF City5Exists = 1 THEN
+
+		IF City5Visited = 0 THEN
+		CALL NewCityText
+		END IF
+	
 	City5Visited = 1
 	PLAY Chime$
 	GOTO inicio
@@ -919,6 +999,11 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	CASE PositionCity6
 	IF City6Exists = 1 THEN
+
+		IF City6Visited = 0 THEN
+		CALL NewCityText
+		END IF
+
 	City6Visited = 1
 	PLAY Chime$
 	GOTO inicio
@@ -3194,6 +3279,22 @@ positive$ = ""
 IntroMusic$ = ""
 END IF
 
+
+END SUB
+
+SUB NewCityText
+
+COLOR 15, 15
+LOCATE 20, 27
+PRINT "ษออออออออออออออออออออออป"
+LOCATE 21, 27
+PRINT "บ  YOU FOUND A CITY!   บ"
+LOCATE 22, 27
+PRINT "ศออออออออออออออออออออออผ"
+COLOR , 0
+
+DO WHILE INKEY$ = ""
+LOOP
 
 END SUB
 
