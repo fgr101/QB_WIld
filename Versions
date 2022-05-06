@@ -11,3 +11,32 @@ Version 0.2
 - Code structure improved (Organized in subs and functions) ---> Suggested by @amonroejj
 - Simple and small sounds added.
 - 'DECISIONS' made by the player added.
+
+Version 0.3
+
+- ?????????
+- ?????????
+- ?????????
+- ?????????
+
+Version 0.4
+
+- Cities added
+- Cities system and options under development
+- Random number of cities (1 to 6)
+- Random location of the cities in the map.
+- Cities aren't shown until you discover them.
+- "YOU DISCOVERED A CITY!" tex box when a city is found.
+- HOTEL added to the cities.
+- You can rest and spend the night at the HOTEL.
+- LOCAL BAR added to cities
+- You can HAVE A BEER at the bar
+- You can BET at the bar
+- You can FIGHT at the bar
+- You can TALK TO STRANGERS at the bar.
+- GYM/TRAINING GROUND added to cities
+- You can train and improve your skills at the TRAINING GROUND.
+- OPTIONS: Music ON/OFF added. (during the game and in the main menu)
+- Main menu and some visual details of the game improved.
+- CHARACTER screen added (Statistics and Information about the character)
+
