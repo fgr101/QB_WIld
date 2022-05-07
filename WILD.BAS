@@ -1,3 +1,4 @@
+' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
@@ -13,8 +14,6 @@
 '   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
 ' - CONSEGUIR 10.000 DE ORO.
 ' - LLEGAR AL NIVEL 50.
-
-' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
 '- CONTINUAR DESARROLLANDO LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
@@ -53,9 +52,17 @@ DECLARE SUB NewCityText ()
 DECLARE SUB TalkToStrangers ()
 DECLARE SUB BetGame ()
 
+' CHALLENGES:
+
+DECLARE SUB SaveChallenges ()
+DECLARE SUB LoadChallenges ()
+DECLARE SUB CheckChallenges ()
+DECLARE SUB Challenges ()
+
 DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
+
 DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
@@ -69,6 +76,13 @@ DIM SHARED IntroMusic$
 OptionMusic = 1      'BOOLEAN for Music ON and OFF
 CALL Music           'CREATES Music string variables
 
+'======================== CHALLENGES =========================
+DIM SHARED FindACity, OneHundredGold
+
+FindACity = 0
+OneHundredGold = 0
+
+CALL LoadChallenges
 '======================== MAIN MENU =========================
 
 mainmenu:
@@ -85,8 +99,9 @@ COLOR 15, 0
 PRINT
 PRINT
 PRINT "1) NEW GAME"
-PRINT "2) CREDITS"
-PRINT "3) EXIT"
+PRINT "2) CHALLENGES"
+PRINT "3) CREDITS"
+PRINT "4) EXIT"
 PRINT ""
 
 IF OptionMusic = 1 THEN
@@ -141,11 +156,18 @@ GOTO startnewgame
 END IF
 
 IF opcion = 2 THEN
-CALL About
+CALL Challenges
 GOTO mainmenu
 END IF
 
 IF opcion = 3 THEN
+CALL About
+GOTO mainmenu
+END IF
+
+IF opcion = 4 THEN
+CALL SaveChallenges
+CLS
 END
 END IF
 
@@ -296,6 +318,8 @@ mana = mana + d1
 inicio2:
 RANDOMIZE TIMER
 
+CALL CheckChallenges     'Checks if there are challenges acomplished and
+			 'if so, shows a message.
 IF hp <= 0 THEN
 GOTO GameOver
 END IF
@@ -609,26 +633,38 @@ IF direction = 5 THEN
 SELECT CASE PositionCH
 
 	CASE PositionCity1
+	FindACity = 1
+	CALL CheckChallenges
 	City1Visited = 1
 	CALL City
 
 	CASE PositionCity2
+	FindACity = 1
+	CALL CheckChallenges
 	City2Visited = 1
 	CALL City
 
 	CASE PositionCity3
+	FindACity = 1
+	CALL CheckChallenges
 	City3Visited = 1
 	CALL City
 
 	CASE PositionCity4
+	FindACity = 1
+	CALL CheckChallenges
 	City4Visited = 1
 	CALL City
 
 	CASE PositionCity5
+	FindACity = 1
+	CALL CheckChallenges
 	City5Visited = 1
 	CALL City
 
 	CASE PositionCity6
+	FindACity = 1
+	CALL CheckChallenges
 	City6Visited = 1
 	CALL City
 
@@ -2135,6 +2171,35 @@ END SELECT
 BetEndOfSub:
 END SUB
 
+SUB Challenges
+
+CLS
+
+COLOR 4
+
+IF FindACity = 2 THEN
+COLOR 10
+END IF
+
+Pause
+PRINT
+PRINT "# Find a city for the first time."
+
+COLOR 4
+
+IF OneHundredGold = 1 THEN
+COLOR 10
+END IF
+
+Pause
+PRINT "# Get 100 gold."
+
+
+DO WHILE INKEY$ = ""
+LOOP
+
+END SUB
+
 SUB Character
 
 CLS
@@ -2172,6 +2237,31 @@ PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같�
 
 LOCATE 23, 1
 PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
+
+
+DO WHILE INKEY$ = ""
+LOOP
+
+END SUB
+
+SUB CheckChallenges
+
+IF gold >= 100 AND OneHundredGold = 0 THEN
+COLOR 14, 2
+LOCATE 10, 25
+PRINT "CHALLENGE GET 100 GOLD COMPLETED!"
+COLOR , 0
+OneHundredGold = 1
+END IF
+
+IF FindACity = 1 THEN
+COLOR 14, 2
+LOCATE 10, 25
+PRINT "CHALLENGE `FIND A CITY FOR THE FIRST TIME' COMPLETED!"
+COLOR , 0
+FindACity = 2
+END IF
+
 
 
 DO WHILE INKEY$ = ""
@@ -3284,6 +3374,40 @@ LOOP
 
 END SUB
 
+SUB LoadChallenges
+
+'Checking FILES +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'If FILES don't exist the program creates them. ++++++++++++++++++++++++++++
+
+OPEN "chl.dat" FOR BINARY AS #1
+IF LOF(1) = 0 THEN
+CLOSE #1
+
+OPEN "chl.dat" FOR OUTPUT AS #1
+
+loopx = 0
+DO UNTIL loopx = 100
+WRITE #1, ""
+loopx = loopx + 1
+LOOP
+
+CLS
+PRINT "Challenges file created..."
+Pause
+
+END IF
+CLOSE #1
+
+
+OPEN "chl.dat" FOR INPUT AS #1
+
+INPUT #1, OneHudredGold
+INPUT #1, FindACity
+
+CLOSE #1
+
+END SUB
+
 SUB Music
 
 IF OptionMusic = 1 THEN
@@ -3332,9 +3456,19 @@ END SUB
 SUB Notes
 
 '================================================
-'
+
+'v 0.5
+
+' - System of CHALLENGES created.
+' - First challenges added.
+' - GET 100 GOLD challenge, created.
+' - FIND A CITY FOR THE FIRST TIME challenge, created.
+' - The chl.dat file is created to save challenges variables.
+' - Challenges variables are saved everytime you exit the game.
+' - Challenges variables are loaded everytime you start the game.
+
 ' v 0.4
-'
+
 ' - Cities added
 ' - Cities system and options under development
 ' - Random number of cities (1 to 6)
@@ -3369,6 +3503,23 @@ FUNCTION rolld6
 RANDOMIZE TIMER
 rolld6 = INT(RND * 6) + 1
 END FUNCTION
+
+SUB SaveChallenges
+
+'========================== SAVES DATA ==========================
+
+OPEN "chl.dat" FOR OUTPUT AS #1
+
+WRITE #1, OneHundredGold
+WRITE #1, FindACity
+
+
+LOCATE , 30
+PRINT "Challenges saved..."
+Pause
+CLOSE #1
+
+END SUB
 
 SUB TalkToStrangers
 
