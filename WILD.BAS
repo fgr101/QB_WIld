@@ -1,3 +1,7 @@
+DECLARE SUB DrawCrawler ()
+DECLARE SUB FightIntro ()
+DECLARE SUB DrawGiantScorpion ()
+DECLARE SUB DrawCriminal ()
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
@@ -68,6 +72,10 @@ DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(10)
 
+' ENEMIES VARIABLES
+
+DIM SHARED Enemyname$, enemyAT, enemyDF
+
 '==================== MUSIC and SOUNDS ======================
 
 DIM SHARED Chance$, endfight$, enemy$, Chime$, levelup$, negative$, positive$
@@ -77,10 +85,12 @@ OptionMusic = 1      'BOOLEAN for Music ON and OFF
 CALL Music           'CREATES Music string variables
 
 '======================== CHALLENGES =========================
-DIM SHARED FindACity, OneHundredGold
+DIM SHARED FindACity, OneHundredGold, OneThousandGold, ReachLevelTen
 
 FindACity = 0
 OneHundredGold = 0
+OneThousandGold = 0
+ReachLevelTen = 0
 
 CALL LoadChallenges
 '======================== MAIN MENU =========================
@@ -633,37 +643,28 @@ IF direction = 5 THEN
 SELECT CASE PositionCH
 
 	CASE PositionCity1
-	FindACity = 1
-	CALL CheckChallenges
 	City1Visited = 1
 	CALL City
 
 	CASE PositionCity2
-	FindACity = 1
-	CALL CheckChallenges
 	City2Visited = 1
 	CALL City
 
 	CASE PositionCity3
-	FindACity = 1
-	CALL CheckChallenges
 	City3Visited = 1
 	CALL City
 
 	CASE PositionCity4
-	FindACity = 1
 	CALL CheckChallenges
 	City4Visited = 1
 	CALL City
 
 	CASE PositionCity5
-	FindACity = 1
 	CALL CheckChallenges
 	City5Visited = 1
 	CALL City
 
 	CASE PositionCity6
-	FindACity = 1
 	CALL CheckChallenges
 	City6Visited = 1
 	CALL City
@@ -1008,6 +1009,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	IF City1Visited = 0 THEN
 	CALL NewCityText
+	CALL CheckChallenges
 	END IF
 	
 	City1Visited = 1
@@ -1019,6 +1021,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City2Visited = 0 THEN
 		CALL NewCityText
+		CALL CheckChallenges
 		END IF
 
 	City2Visited = 1
@@ -1031,6 +1034,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City3Visited = 0 THEN
 		CALL NewCityText
+		CALL CheckChallenges
 		END IF
 
 	City3Visited = 1
@@ -1043,6 +1047,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City4Visited = 0 THEN
 		CALL NewCityText
+		CALL CheckChallenges
 		END IF
 
 	City4Visited = 1
@@ -1055,6 +1060,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City5Visited = 0 THEN
 		CALL NewCityText
+		CALL CheckChallenges
 		END IF
 	
 	City5Visited = 1
@@ -1067,6 +1073,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City6Visited = 0 THEN
 		CALL NewCityText
+		CALL CheckChallenges
 		END IF
 
 	City6Visited = 1
@@ -1541,7 +1548,7 @@ enemyDF = 5
 END IF
 
 IF d1 = 6 THEN
-Enemyname$ = "Giant Black Scorpion"
+Enemyname$ = "Giant Scorpion"
 enemyAT = 6
 enemyDF = 7
 
@@ -1615,17 +1622,12 @@ IF barfight = 1 THEN     '================ BAR FIGHT =================
 END IF
 
 
-PRINT
-COLOR 2
-PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
+' ======================== FIGHT INTRO SCENE ============================
 
-DO WHILE INKEY$ = ""
-LOOP
-CLS
+CALL FightIntro
 
-
-combatINI:   '================== COMBAT INI ==================
-
+'============================ COMBAT INI ================================
+combatINI: 
 
 COLOR 2
 PRINT
@@ -2177,7 +2179,7 @@ CLS
 
 COLOR 4
 
-IF FindACity = 2 THEN
+IF FindACity = 1 THEN
 COLOR 10
 END IF
 
@@ -2193,6 +2195,24 @@ END IF
 
 Pause
 PRINT "# Get 100 gold."
+
+COLOR 4
+
+IF OneThousandGold = 1 THEN
+COLOR 10
+END IF
+
+Pause
+PRINT "# Get 1000 gold."
+
+COLOR 4
+
+IF ReachLevelTen = 1 THEN
+COLOR 10
+END IF
+
+Pause
+PRINT "# Reach level 10."
 
 
 DO WHILE INKEY$ = ""
@@ -2249,20 +2269,34 @@ SUB CheckChallenges
 IF gold >= 100 AND OneHundredGold = 0 THEN
 COLOR 14, 2
 LOCATE 10, 25
-PRINT "CHALLENGE GET 100 GOLD COMPLETED!"
+PRINT "CHALLENGE [GET 100 GOLD] COMPLETED!"
 COLOR , 0
 OneHundredGold = 1
 END IF
 
-IF FindACity = 1 THEN
+IF gold >= 1000 AND OneThousandGold = 0 THEN
 COLOR 14, 2
-LOCATE 10, 25
-PRINT "CHALLENGE `FIND A CITY FOR THE FIRST TIME' COMPLETED!"
+LOCATE 10, 24
+PRINT "CHALLENGE [GET 1000 GOLD] COMPLETED!"
 COLOR , 0
-FindACity = 2
+OneThousandGold = 1
 END IF
 
+IF FindACity = 0 THEN
+COLOR 14, 2
+LOCATE 10, 15
+PRINT "CHALLENGE [FIND A CITY FOR THE FIRST TIME] COMPLETED!"
+COLOR , 0
+FindACity = 1
+END IF
 
+IF level >= 10 AND ReachLevelTen = 0 THEN
+COLOR 14, 2
+LOCATE 10, 23
+PRINT "CHALLENGE [REACH LEVEL TEN] ACHIEVED!"
+COLOR , 0
+ReachLevelTen = 1
+END IF
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -3178,6 +3212,272 @@ END SELECT
 
 END SUB
 
+SUB DrawCrawler
+
+COLOR 4
+LOCATE 6, 26
+PRINT "#############################"
+LOCATE 7, 26
+PRINT "#                           #"
+LOCATE 8, 26
+PRINT "#                           #"
+LOCATE 9, 26
+PRINT "#                           #"
+LOCATE 10, 26
+PRINT "#                           #"
+LOCATE 11, 26
+PRINT "#                           #"
+LOCATE 12, 26
+PRINT "#                           #"
+LOCATE 13, 26
+PRINT "#                           #"
+LOCATE 14, 26
+PRINT "#                           #"
+LOCATE 15, 26
+PRINT "#                           #"
+LOCATE 16, 26
+PRINT "#                           #"
+LOCATE 17, 26
+PRINT "#############################"
+
+COLOR 7
+LOCATE 8, 30
+PRINT "                   EPD"
+LOCATE 9, 30
+PRINT "  w|w|w           ##  "
+LOCATE 10, 30
+PRINT "  #*#*#    ###  ###|  "
+LOCATE 11, 30
+PRINT "   #-#   #### ####|   "
+LOCATE 12, 30
+PRINT "  #############|   "
+LOCATE 13, 30
+PRINT " ## \ ## -----"
+LOCATE 14, 30
+PRINT " W   ##  "
+LOCATE 15, 30
+PRINT "     WW  "
+LOCATE 16, 30
+PRINT "         "
+
+LOCATE 10, 33
+COLOR 4
+PRINT "*"
+
+LOCATE 10, 35
+COLOR 4
+PRINT "*"
+
+LOCATE 11, 34
+COLOR 4
+PRINT "-"
+
+LOCATE 8, 49
+COLOR 8
+PRINT "EPD"
+
+LOCATE 9, 32
+COLOR 15
+PRINT "w|w|w"
+
+LOCATE 14, 30
+COLOR 8
+PRINT "WW"
+
+LOCATE 15, 35
+COLOR 8
+PRINT "WW"
+
+END SUB
+
+SUB DrawCriminal
+
+COLOR 4
+LOCATE 6, 26
+PRINT "#############################"
+LOCATE 7, 26
+PRINT "#                           #"
+LOCATE 8, 26
+PRINT "#                           #"
+LOCATE 9, 26
+PRINT "#                           #"
+LOCATE 10, 26
+PRINT "#                           #"
+LOCATE 11, 26
+PRINT "#                           #"
+LOCATE 12, 26
+PRINT "#                           #"
+LOCATE 13, 26
+PRINT "#                           #"
+LOCATE 14, 26
+PRINT "#                           #"
+LOCATE 15, 26
+PRINT "#                           #"
+LOCATE 16, 26
+PRINT "#                           #"
+LOCATE 17, 26
+PRINT "#############################"
+
+
+
+COLOR 7
+
+LOCATE 8, 30
+PRINT "       ####### "
+LOCATE 9, 30
+PRINT "       ####### "
+LOCATE 10, 30
+PRINT "     ########### "
+COLOR 15
+LOCATE 11, 30
+PRINT "       ##*#*## "
+COLOR 6
+LOCATE 12, 30
+PRINT "        ##.## "
+LOCATE 13, 30
+PRINT "         #-# "
+COLOR 1
+LOCATE 14, 30
+PRINT "  ##### ##### ##### "
+LOCATE 15, 30
+PRINT " ################### "
+LOCATE 16, 30
+PRINT "#### ########## ##### "
+
+
+COLOR 8
+LOCATE 11, 39
+PRINT "*"
+LOCATE 11, 41
+PRINT "*"
+
+LOCATE 12, 40
+COLOR 15
+PRINT "."
+
+LOCATE 13, 40
+COLOR 15
+PRINT "-"
+
+LOCATE 15, 40
+COLOR 9
+PRINT "#"
+
+LOCATE 16, 40
+COLOR 9
+PRINT "#"
+
+END SUB
+
+SUB DrawGiantScorpion
+
+COLOR 4
+LOCATE 6, 26
+PRINT "#############################"
+LOCATE 7, 26
+PRINT "#                           #"
+LOCATE 8, 26
+PRINT "#                           #"
+LOCATE 9, 26
+PRINT "#                           #"
+LOCATE 10, 26
+PRINT "#                           #"
+LOCATE 11, 26
+PRINT "#                           #"
+LOCATE 12, 26
+PRINT "#                           #"
+LOCATE 13, 26
+PRINT "#                           #"
+LOCATE 14, 26
+PRINT "#                           #"
+LOCATE 15, 26
+PRINT "#                           #"
+LOCATE 16, 26
+PRINT "#                           #"
+LOCATE 17, 26
+PRINT "#############################"
+
+COLOR 14
+
+LOCATE 7, 30
+PRINT "            #### "
+LOCATE 8, 30
+PRINT "           W   ##, "
+LOCATE 9, 30
+PRINT "              ###, "
+LOCATE 10, 30
+PRINT "            ####, "
+LOCATE 11, 30
+PRINT "         #######, "
+LOCATE 12, 30
+PRINT "      ###***#####, "
+LOCATE 13, 30
+PRINT "    ##   W W   ## "
+LOCATE 14, 30
+PRINT "    ###       ### "
+LOCATE 15, 30
+PRINT "   #  #      #   # "
+
+LOCATE 12, 39
+COLOR 8
+PRINT "***"
+
+LOCATE 13, 39
+COLOR 6
+PRINT "W W"
+
+END SUB
+
+SUB FightIntro
+
+PRINT
+COLOR 15
+
+'================= ALIGNING NAMES TO THE CENTER =============================
+
+LOCATE 3, 25
+
+IF Enemyname$ = "Giant Scorpion" THEN
+LOCATE 3, 23
+END IF
+
+IF Enemyname$ = "Criminal" THEN
+LOCATE 3, 25
+END IF
+
+IF Enemyname$ = "Crawler" THEN
+LOCATE 3, 26
+END IF
+
+PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
+
+IF Enemyname$ = "Criminal" THEN
+CALL DrawCriminal
+END IF
+
+IF Enemyname$ = "Giant Scorpion" THEN
+CALL DrawGiantScorpion
+END IF
+
+IF Enemyname$ = "Crawler" THEN
+CALL DrawCrawler
+END IF
+
+
+COLOR PositionCol(PositionCH), 0
+LOCATE 1, 1
+PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
+
+LOCATE 23, 1
+PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
+
+DO WHILE INKEY$ = ""
+LOOP
+
+CLS
+
+END SUB
+
 SUB GameOver
 CLS
 x = 0
@@ -3401,8 +3701,10 @@ CLOSE #1
 
 OPEN "chl.dat" FOR INPUT AS #1
 
-INPUT #1, OneHudredGold
+INPUT #1, OneHundredGold
+INPUT #1, OneThousandGold
 INPUT #1, FindACity
+INPUT #1, ReachLevelTen
 
 CLOSE #1
 
@@ -3463,9 +3765,13 @@ SUB Notes
 ' - First challenges added.
 ' - GET 100 GOLD challenge, created.
 ' - FIND A CITY FOR THE FIRST TIME challenge, created.
+' - REACH LEVEL 10 challenge, created.
 ' - The chl.dat file is created to save challenges variables.
 ' - Challenges variables are saved everytime you exit the game.
 ' - Challenges variables are loaded everytime you start the game.
+' - The Fight Intro has been improved.
+' - Grapics made of ASCII characters added to Fight Intro.
+
 
 ' v 0.4
 
@@ -3511,7 +3817,9 @@ SUB SaveChallenges
 OPEN "chl.dat" FOR OUTPUT AS #1
 
 WRITE #1, OneHundredGold
+WRITE #1, OneThousandGold
 WRITE #1, FindACity
+WRITE #1, ReachLevelTen
 
 
 LOCATE , 30
