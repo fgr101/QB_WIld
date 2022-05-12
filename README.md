@@ -6,7 +6,7 @@ I'd be very glad you could help with:
 
 - Music, small sounds effects.
 - Transition FXs between the different stages in the game (map, battle, etc.).
-- ASCI Graphics.
+- ASCII Graphics.
 - A better main menu at the beginning of the game.
 - New mechanics and ideas for a better gameplay.
 - Ideas for the story.
