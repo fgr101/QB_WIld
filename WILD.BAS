@@ -1,3 +1,4 @@
+DECLARE SUB DrawBugio ()
 
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
@@ -111,7 +112,7 @@ CLS
 COLOR 15
 LOCATE 1, 1
 COLOR 10, 2
-PRINT "                              WILD 0.3 (2021 - 2022)                            "
+PRINT "                              WILD 0.5 (2021 - 2022)                            "
 COLOR 15, 0
 PRINT
 PRINT
@@ -2015,7 +2016,7 @@ CLS
 
 PRINT
 Pause
-PRINT "Wild 0.3 - 2021 / 2022"
+PRINT "Wild 0.5 - 2021 / 2022"
 Pause
 PRINT "Created by Fernando Gaston Ramirez as a free software and open source project."
 PRINT
@@ -3274,6 +3275,105 @@ END SELECT
 
 END SUB
 
+SUB DrawBugio
+
+COLOR 4
+
+LOCATE 6, 26
+PRINT "#############################"
+LOCATE 7, 26
+PRINT "#                           #"
+LOCATE 8, 26
+PRINT "#                           #"
+LOCATE 9, 26
+PRINT "#                           #"
+LOCATE 10, 26
+PRINT "#                           #"
+LOCATE 11, 26
+PRINT "#                           #"
+LOCATE 12, 26
+PRINT "#                           #"
+LOCATE 13, 26
+PRINT "#                           #"
+LOCATE 14, 26
+PRINT "#                           #"
+LOCATE 15, 26
+PRINT "#                           #"
+LOCATE 16, 26
+PRINT "#                           #"
+LOCATE 17, 26
+PRINT "#############################"
+
+
+COLOR 6
+LOCATE 7, 27
+PRINT "        Ý Ý Ý Ý Ý Ý"
+LOCATE 8, 27
+PRINT "       Ý ²°°°²²°°°² Ý"
+LOCATE 9, 27
+PRINT "      Ý ²  þ úú þ  ² Ý"
+LOCATE 10, 27
+PRINT "      ú°ú °°°úú°°°° ° Ý"
+LOCATE 11, 27
+PRINT "     Ýú° °° °°°° °° ú°úÝ"
+LOCATE 12, 27
+PRINT "      ° Ý°° °°°° °°ú Ý°"
+LOCATE 13, 27
+PRINT "     Ý° ÝÝ ± ± ± ± ÝúÝ°"
+LOCATE 14, 27
+PRINT "     Ý° ÝÝ± ± ± ± ±Ý Ý°"
+LOCATE 15, 27
+PRINT "       ²²°°°²²²²°°°²²²"
+LOCATE 16, 27
+COLOR 4
+PRINT "         ° ° ° ° ° °"
+LOCATE 17, 27
+PRINT "##########°#####°"
+
+
+COLOR 4
+LOCATE 9, 38
+PRINT "þ"
+LOCATE 9, 43
+PRINT "þ"
+
+LOCATE 13, 38
+COLOR 15
+PRINT "±"
+LOCATE 13, 40
+PRINT "±"
+LOCATE 13, 42
+PRINT "±"
+LOCATE 13, 44
+PRINT "±"
+
+LOCATE 14, 37
+PRINT "±"
+LOCATE 14, 39
+PRINT "±"
+LOCATE 14, 41
+PRINT "±"
+LOCATE 14, 43
+PRINT "±"
+LOCATE 14, 45
+PRINT "±"
+
+LOCATE 15, 36
+COLOR 4
+PRINT "°°°"
+LOCATE 15, 43
+PRINT "°°°"
+
+LOCATE 18, 37
+PRINT "°"
+
+LOCATE 18, 43
+PRINT "°"
+
+
+
+END SUB
+
 SUB DrawCrawler
 
 COLOR 4
@@ -3652,6 +3752,10 @@ END IF
 
 IF Enemyname$ = "Witch" THEN
 CALL DrawWitch
+END IF
+
+IF Enemyname$ = "Wild Bugio" THEN
+CALL DrawBugio
 END IF
 
 COLOR PositionCol(PositionCH), 0
