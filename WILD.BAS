@@ -1,7 +1,5 @@
-DECLARE SUB DrawCrawler ()
-DECLARE SUB FightIntro ()
-DECLARE SUB DrawGiantScorpion ()
-DECLARE SUB DrawCriminal ()
+
+' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
@@ -9,7 +7,6 @@ DECLARE SUB DrawCriminal ()
 ' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
 ' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
 '   ALEATORIOS.
-' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
 ' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
 '   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
@@ -62,6 +59,16 @@ DECLARE SUB SaveChallenges ()
 DECLARE SUB LoadChallenges ()
 DECLARE SUB CheckChallenges ()
 DECLARE SUB Challenges ()
+
+
+'FIGHT INTRO & ASCII DRAWINGS:
+
+DECLARE SUB FightIntro ()
+DECLARE SUB DrawWitch ()
+DECLARE SUB DrawCrawler ()
+DECLARE SUB DrawGiantScorpion ()
+DECLARE SUB DrawCriminal ()
+
 
 DECLARE FUNCTION rolld6 ()
 
@@ -1627,7 +1634,7 @@ END IF
 CALL FightIntro
 
 '============================ COMBAT INI ================================
-combatINI: 
+combatINI:
 
 COLOR 2
 PRINT
@@ -1715,12 +1722,12 @@ PRINT
 COLOR 3
 Pause
 PRINT "GOOD JOB! The "; Enemyname$; " has been defeated!"
-' RANDOMIZE TIMER
+
 d1 = rolld6
 gold = gold + d1
 Pause
 PRINT "You receive"; d1; "gold coins."
-' RANDOMIZE TIMER
+
 d1 = rolld6
 xpoints = xpoints + d1
 Pause
@@ -2927,6 +2934,61 @@ COLOR 10
 		CASE 5
 		'ASK SOMETHING {PROTECTION, WISDOM, STRENGTH}
 		Pause
+		PRINT "After being in deep meditational state for some minutes, you"
+		Pause
+		PRINT "fall asleep. In your dreams, an entity, one of the guardians"
+		Pause
+		PRINT "of the forests, appears. He talks to you and gives you good"
+		Pause
+		PRINT "advice of what you should do. They will protect you."
+		Pause
+		PRINT "At the end he shows you three books with words on them."
+		Pause
+		PRINT "There's a red one with the word BLOOD, a green one with"
+		Pause
+		PRINT "the word TREE, and a grey one with the word ROCK."
+		Pause
+		PRINT "The entity asks you to choose one of them."
+		PRINT
+
+		Pause
+		COLOR 3
+		PRINT "1) BLOOD 2) TREE 3) ROCK"
+
+askagainbooks:
+
+		Pause
+		COLOR 3
+		INPUT "What is your choice? ", opcion
+		COLOR 10
+		PRINT
+
+		SELECT CASE opcion
+
+			CASE 1
+
+			PRINT "You choose the RED book with the word BLOOD on the cover."
+
+			CASE 2
+
+			PRINT "You choose the GREEN book with the word TREE on the cover."
+
+			CASE 3
+
+			PRINT "You choose the GREY book with the word ROCK on the cover."
+
+			CASE ELSE
+			GOTO askagainbooks
+
+		END SELECT
+
+		' CONTINUAR AQUI
+
+
+		PRINT
+
+
+
 		PRINT "ASK SOMETHING"
 
 		DO WHILE INKEY$ = ""
@@ -2969,7 +3031,7 @@ PRINT
 Pause
 224 :
 COLOR 3
-INPUT "What is your choose?", opcion
+INPUT "What is your choice?", opcion
 COLOR 10
 
 	IF opcion = 0 THEN
@@ -3428,6 +3490,131 @@ PRINT "W W"
 
 END SUB
 
+SUB DrawWitch
+
+COLOR 4
+LOCATE 6, 26
+PRINT "#############################"
+LOCATE 7, 26
+PRINT "#     S#############$$$$    #"
+LOCATE 8, 26
+PRINT "#    S###############$$$$   #"
+LOCATE 9, 26
+PRINT "#    S##$$$####$$$##$$$$    #"
+LOCATE 10, 26
+PRINT "#    SS##*#$##$#*###$$ $$$  #"
+LOCATE 11, 26
+PRINT "#    SS#####.#######$$$$$   #"
+LOCATE 12, 26
+PRINT "#   SSS###<<#######$$$$$$$$ #"
+LOCATE 13, 26
+PRINT "#  SSSS###########$$$$ $$$$$#"
+LOCATE 14, 26
+PRINT "# SSSSSS$# # # # #$$$$$$$   #"
+LOCATE 15, 26
+PRINT "#   $$$   # # # #   $$$$$$$ #"
+LOCATE 16, 26
+PRINT "# $$$ $$$  #####   $$$$ $$  #"
+LOCATE 17, 26
+PRINT "#############################"
+
+
+COLOR 7
+LOCATE 7, 27
+PRINT "     S#############$$$$ "
+LOCATE 8, 27
+PRINT "    S###############$$$$   "
+LOCATE 9, 27
+PRINT "    S##$$$####$$$##$$$$    "
+LOCATE 10, 27
+PRINT "    SS##*#$##$#*###$$ $$$  "
+LOCATE 11, 27
+PRINT "    SS#####.#######$$$$$   "
+LOCATE 12, 27
+PRINT "   SSS###<<#######$$$$$$$$ "
+LOCATE 13, 27
+PRINT "  SSSS###########$$$$ $$$$$"
+LOCATE 14, 27
+PRINT " SSSSSS$# # # # #$$$$$$$   "
+LOCATE 15, 27
+PRINT "   $$$   # # # #   $$$$$$$ "
+LOCATE 16, 27
+PRINT " $$$ $$$  #####   $$$$ $$  "
+
+
+LOCATE 9, 34
+COLOR 8
+PRINT "$$$"
+
+LOCATE 10, 37
+PRINT "$"
+
+
+LOCATE 9, 41
+PRINT "$$$"
+
+LOCATE 10, 40
+PRINT "$"
+
+LOCATE 10, 35
+COLOR 4
+PRINT "*"
+
+LOCATE 10, 42
+PRINT "*"
+
+LOCATE 14, 35
+PRINT "# # # # #"
+
+LOCATE 15, 36
+PRINT "# # # #"
+
+COLOR 15
+LOCATE 7, 27
+PRINT "     S"
+LOCATE 8, 27
+PRINT "    S"
+LOCATE 9, 27
+PRINT "    S"
+LOCATE 10, 27
+PRINT "    SS"
+LOCATE 11, 27
+PRINT "    SS"
+LOCATE 12, 27
+PRINT "   SSS"
+LOCATE 13, 27
+PRINT "  SSSS"
+LOCATE 14, 27
+PRINT " SSSSSS"
+LOCATE 15, 27
+PRINT "   $$$"
+LOCATE 16, 27
+PRINT " $$$ $$$"
+
+LOCATE 7, 46
+PRINT "$$$$"
+LOCATE 8, 47
+PRINT "$$$$"
+LOCATE 9, 46
+PRINT "$$$$"
+LOCATE 10, 46
+PRINT "$$ $$$"
+LOCATE 11, 46
+PRINT "$$$$$"
+LOCATE 12, 45
+PRINT "$$$$$$$$"
+LOCATE 13, 44
+PRINT "$$$$ $$$$$"
+LOCATE 14, 44
+PRINT "$$$$$$$"
+LOCATE 15, 46
+PRINT "$$$$$$$"
+LOCATE 16, 45
+PRINT "$$$$ $$"
+
+
+END SUB
+
 SUB FightIntro
 
 PRINT
@@ -3463,6 +3650,9 @@ IF Enemyname$ = "Crawler" THEN
 CALL DrawCrawler
 END IF
 
+IF Enemyname$ = "Witch" THEN
+CALL DrawWitch
+END IF
 
 COLOR PositionCol(PositionCH), 0
 LOCATE 1, 1
@@ -3470,6 +3660,93 @@ PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 LOCATE 23, 1
 PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+
+' ++++++++++++++++++++++++++++ FOREST BANNER ++++++++++++++++++++++++++++++++
+
+IF PositionCol(PositionCH) = 2 THEN
+
+LOCATE 21, 1
+COLOR 2
+PRINT "°°° °°°°°°°°°°°°°°°°°°°°°°° °°° °°° °°°°°° °°° °°°°°°°°°°° °°°°°°°°°°°°°°°°° °°°"
+LOCATE 22, 1
+COLOR 6
+PRINT " °   °  °  ° °  °  °  °  °   °   °   °  °   °   °  ° °  °   °  °  ° °  °  °   °"
+LOCATE 23, 1
+COLOR 10
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+LOCATE 22, 13
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 16
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 19
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 22
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 25
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 28
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 32
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 35
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 37
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 62
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 65
+COLOR 2
+PRINT ";"
+
+LOCATE 22, 68
+COLOR 2
+PRINT ";"
+END IF
+
+'++++++++++++++++++++++++++++ FROZEN LANDS +++++++++++++++++++++++++++++++++++
+
+IF PositionCol(PositionCH) = 7 THEN
+
+LOCATE 21, 1
+COLOR 15
+PRINT "  °°°°°°°   °°°°      °°° °°°   °°°°°°°    °°° °°°   °°°°°°°    °°°°°°°   °°°°°°"
+LOCATE 22, 1
+COLOR 15
+PRINT " °°°°°°°°°°°°°°°°°°° °°°°°°°°°° °°°°°°°°°° °°°°°°°°° °°°°°°°°°° °°°°°°°° °°°°°°°"
+LOCATE 23, 1
+COLOR 7
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+END IF
+
+'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 
 DO WHILE INKEY$ = ""
 LOOP
