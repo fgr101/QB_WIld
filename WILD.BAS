@@ -1,5 +1,11 @@
+DECLARE SUB DrawMountains ()
+DECLARE SUB PrintLines ()
+DECLARE SUB NegativeSub ()
+DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
+
+' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
@@ -67,7 +73,7 @@ DECLARE SUB Challenges ()
 DECLARE SUB FightIntro ()
 DECLARE SUB DrawWitch ()
 DECLARE SUB DrawCrawler ()
-DECLARE SUB DrawGiantScorpion ()
+DECLARE SUB DrawScorpion ()
 DECLARE SUB DrawCriminal ()
 
 
@@ -78,7 +84,9 @@ DECLARE FUNCTION rolld6 ()
 DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
-DIM SHARED OptionMusic, barfight, line$(10)
+DIM SHARED OptionMusic, barfight, line$(25)
+DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
+
 
 ' ENEMIES VARIABLES
 
@@ -86,7 +94,7 @@ DIM SHARED Enemyname$, enemyAT, enemyDF
 
 '==================== MUSIC and SOUNDS ======================
 
-DIM SHARED Chance$, endfight$, enemy$, Chime$, levelup$, negative$, positive$
+DIM SHARED Chance$, endfight$, enemy$, Chime$, levelup$, NegativeMusic$, positive$
 DIM SHARED IntroMusic$
 
 OptionMusic = 1      'BOOLEAN for Music ON and OFF
@@ -117,7 +125,7 @@ COLOR 15, 0
 PRINT
 PRINT
 PRINT "1) NEW GAME"
-PRINT "2) CHALLENGES"
+PRINT "2) ACHIEVEMENTS"
 PRINT "3) CREDITS"
 PRINT "4) EXIT"
 PRINT ""
@@ -1123,7 +1131,7 @@ END IF
 
 IF d1 = 5 THEN
 PRINT " - NEGATIVE EVENT -"
-GOTO negative
+GOTO Negative
 END IF
 
 IF d1 = 6 THEN
@@ -1139,146 +1147,13 @@ LOOP
 GOTO inicio
 
 
-'---------------------------------------------------------
-negative:
+'+++++++++++++++++++++++++++++++ NEGATIVE EVENTS +++++++++++++++++++++++++++++
+Negative:
 
-d1 = rolld6
-
-IF d1 = LastNegativeEvent THEN      'This part of the code should avoid
-GOTO negative                       'the same negative event repeating twice
-END IF                              'in a very short period of time.
-LastNegativeEvent = d1
-
-COLOR 3
-PRINT "Die:"; d1;
-COLOR 10
-
-IF d1 = 1 THEN
-PRINT "You are trying to climb a huge rock that blocks the way and end up falling down."
-Pause
-PRINT "You hurt your back when falling (-1 HP)."
-hp = hp - 1
-END IF
-
-IF d1 = 2 THEN
-PRINT "You are walking around the place and hear the sound of an animal coming"
-Pause
-PRINT "towards you from behind. When you turn, you see a GIANT BUGIO (a huge"
-Pause
-PRINT "and violent monkey) coming. You run, you run and save your life but in"
-Pause
-PRINT "the escape you lose all your gold coins (Gold = 0)."
-gold = 0
-END IF
-
-IF d1 = 3 THEN
-PRINT "You feel something like a bite in your leg. You stop and check what was it."
-Pause
-PRINT "You see two red points and a thin blood string coming out from your leg."
-Pause
-PRINT "You wish it was only an insect and not a snake."
-DO WHILE INKEY$ = ""
-LOOP
-d1 = rolld6
-COLOR 3
-PRINT "Die:"; d1;
-'''''''''''
-	IF d1 = 1 THEN
-	COLOR 10
-	PRINT "Some meters ahead you see it... it was a snake! (-6 HP)"
-	hp = hp - 6
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-	IF d1 = 2 THEN
-	COLOR 10
-	PRINT "Some meters ahead you see it... it was a brown spider! (-3 HP)"
-	hp = hp - 3
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-	IF d1 = 3 THEN
-	COLOR 10
-	PRINT "You don't see anything... well maybe it was just a plant or a rock."
-	Pause
-	PRINT "The pain goes away..."
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-	IF d1 = 4 THEN
-	COLOR 10
-	PRINT "It hurst a lot at the beginning! Then it feels better but the area"
-	Pause
-	PRINT "seems to be infected... It's swelling! "
-	Pause
-	RANDOMIZE TIMER
-	d1 = INT(RND * 6) + 1
-	COLOR 3
-	PRINT "Die:"; d1; "| you get -"; d1; "HP."
-	hp = hp - d1
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-	IF d1 = 5 THEN
-	COLOR 10
-	PRINT "Oh... it's nothing. Probably you cut your leg against a rock."
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-	IF d1 = 6 THEN
-	COLOR 10
-	PRINT "Some centimeters away from your leg there's a huge poisonous centipede..."
-	Pause
-	PRINT "It's in attack position, seems to be annoyed. It's an horrible and disgusting"
-	Pause
-	PRINT "animal. That creepy thing bit you!"
-
-	d1 = rolld6
-
-	Pause
-	COLOR 3
-	PRINT "Die:"; d1; "| you get -"; d1; "HP."
-	hp = hp - d1
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO inicio
-	END IF
-'''''''''''
-END IF
-
-
-IF d1 > 3 AND d1 < 7 THEN
-COLOR 10
-PRINT "There is a huge storm coming. You seem worried cause it looks very bad."
-Pause
-PRINT "You try to hurry up and find a place to hide. However, you are not lucky today."
-Pause
-PRINT "All your clothes get wet and you feel terrible after walking so much with"
-Pause
-PRINT "wet feet and wet clothes. You also feel very cold. (-1 HP)"
-hp = hp - 1.5
-END IF
-
-DO WHILE INKEY$ = ""
-LOOP
-
-
-
+CALL NegativeSub
 GOTO inicio
 
-
-'---------------------------------------------------------
-
+'+++++++++++++++++++++++++++++++ DECISION EVENTS +++++++++++++++++++++++++++++
 Decision:
 CALL Decision
 
@@ -1289,7 +1164,7 @@ CASE 1
 GOTO enemy
 END SELECT
 
-'---------------------------------------------------------
+'+++++++++++++++++++++++++++++++ POSITIVE EVENTS +++++++++++++++++++++++++++++
 positive:
 
 d1 = rolld6
@@ -2116,21 +1991,21 @@ SELECT CASE BetOptions
 	     SELECT CASE d1
 
 		   CASE 1
-		   PLAY negative$
+		   PLAY NegativeMusic$
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
 		   gold = gold - howmuch
 
 		   CASE 2
-		   PLAY negative$
+		   PLAY NegativeMusic$
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
 		   gold = gold - howmuch
 
 		   CASE 3
-		   PLAY negative$
+		   PLAY NegativeMusic$
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 50% OF YOUR MONEY!"
@@ -2561,7 +2436,7 @@ SELECT CASE opcion
 
      IF gold < 10 AND NOT TrainingOptions = 4 THEN
      PRINT
-     PLAY negative$
+     PLAY NegativeMusic$
      Pause
      PRINT "You don't have any money to pay me!"
      DO WHILE INKEY$ = ""
@@ -2651,7 +2526,7 @@ SELECT CASE opcion
 		IF d1 < 4 THEN
 		COLOR 10
 		PRINT
-		PLAY negative$
+		PLAY NegativeMusic$
 		PRINT "DOESNT WORK"
 		COLOR 10, 0
 		PRINT
@@ -3152,96 +3027,101 @@ COLOR 3
 INPUT "What is your choose?", opcion
 COLOR 10
 
-     IF opcion = 0 THEN
-     GOTO 333
-     END IF
-
-     IF opcion = 1 THEN
-     d1 = rolld6
-
-     SELECT CASE d1
-
-     CASE 1
-     PRINT ""
-     Pause
-     PRINT "There's an enemy or creature inside this cave!"
-     PRINT ""
-     PLAY Chance$
-     DO WHILE INKEY$ = ""
-     LOOP
-     DecisionResult = 1
-     GOTO EndSub
-
-     CASE 2
-     d1 = rolld6
-     addgold = d1 * 2
-     PRINT ""
-     Pause
-     PRINT "There are some items in this cave!"
-     Pause
-     PRINT "You found "; addgold; " GOLD!"
-     PRINT ""
-     PLAY Chance$
-     DO WHILE INKEY$ = ""
-     LOOP
-     gold = gold + addgold
-     GOTO EndSub
-
-     CASE 3
-     d1 = rolld6
-     addmana = d1 * 2
-     PRINT ""
-     Pause
-     PRINT "There is a dim blue light coming from somewhere in this cave!"
-     Pause
-     PRINT "You don't know what it means, however it makes you feel better."
-     Pause
-     PRINT "Seems like your body (all muscles) and mind are relaxed and healed."
-     PRINT
-     Pause
-     PRINT "(+ "; addmana; " MANA pts)"
-     PRINT ""
-     PLAY Chance$
-     DO WHILE INKEY$ = ""
-     LOOP
-     mana = mana + addmana
-     GOTO EndSub
+     SELECT CASE opcion
      
-     CASE 4
+     CASE 1
      d1 = rolld6
-     DiscountHP = d1 / 2
-     PRINT ""
-     Pause
-     PRINT "There's nothing interesting to see there..."
-     Pause
-     PRINT "However, while exploring the cave you slip and fall over some rocks."
-     Pause
-     PRINT "You get out from the cave with one of your arms hurting really bad."
-     Pause
-     PRINT "It was a wrong decision to get in there."
-     PRINT
-     Pause
-     PRINT "(-"; DiscountHP; " HP pts)"
-     PRINT ""
-     PLAY Chance$
-     DO WHILE INKEY$ = ""
-     LOOP
-     hp = hp - DiscountHP
-     GOTO EndSub
 
-     CASE ELSE
-     PRINT ""
-     Pause
-     PRINT "The cave is empty... Nothing interesting to see here."
-     PRINT ""
-     DO WHILE INKEY$ = ""
-     LOOP
-     GOTO EndSub
+	SELECT CASE d1
 
-     END SELECT
+	CASE 1
+	PRINT ""
+	Pause
+	PRINT "There's an enemy or creature inside this cave!"
+	PRINT ""
+	PLAY Chance$
+	DO WHILE INKEY$ = ""
+	LOOP
+	DecisionResult = 1
+	GOTO EndSub
 
-     END IF
+	CASE 2
+	d1 = rolld6
+	addgold = d1 * 2
+	PRINT ""
+	Pause
+	PRINT "There are some items in this cave!"
+	Pause
+	PRINT "You found "; addgold; " GOLD!"
+	PRINT ""
+	PLAY Chance$
+	DO WHILE INKEY$ = ""
+	LOOP
+	gold = gold + addgold
+	GOTO EndSub
 
+	CASE 3
+	d1 = rolld6
+	addmana = d1 * 2
+	PRINT ""
+	Pause
+	PRINT "There is a dim blue light coming from somewhere in this cave!"
+	Pause
+	PRINT "You don't know what it means, however it makes you feel better."
+	Pause
+	PRINT "Seems like your body (all muscles) and mind are relaxed and healed."
+	PRINT
+	Pause
+	PRINT "(+ "; addmana; " MANA pts)"
+	PRINT ""
+	PLAY Chance$
+	DO WHILE INKEY$ = ""
+	LOOP
+	mana = mana + addmana
+	GOTO EndSub
+     
+	CASE 4
+	d1 = rolld6
+	DiscountHP = d1 / 2
+	PRINT ""
+	Pause
+	PRINT "There's nothing interesting to see there..."
+	Pause
+	PRINT "However, while exploring the cave you slip and fall over some rocks."
+	Pause
+	PRINT "You get out from the cave with one of your arms hurting really bad."
+	Pause
+	PRINT "It was a wrong decision to get in there."
+	PRINT
+	Pause
+	PRINT "(-"; DiscountHP; " HP pts)"
+	PRINT ""
+	PLAY Chance$
+	DO WHILE INKEY$ = ""
+	LOOP
+	hp = hp - DiscountHP
+	GOTO EndSub
+
+	CASE ELSE
+	PRINT ""
+	Pause
+	PRINT "The cave is empty... Nothing interesting to see here."
+	PRINT ""
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO EndSub
+
+	END SELECT
+     
+CASE 2
+
+Pause
+PRINT "You just continue walking..."
+
+CASE ELSE
+GOTO 333
+
+END SELECT
 
 END IF
 
@@ -3279,8 +3159,10 @@ SUB DrawBugio
 
 COLOR 4
 
-LOCATE 6, 26
+LOCATE 5, 26
 PRINT "#############################"
+LOCATE 6, 26
+PRINT "#                           #"
 LOCATE 7, 26
 PRINT "#                           #"
 LOCATE 8, 26
@@ -3300,74 +3182,72 @@ PRINT "#                           #"
 LOCATE 15, 26
 PRINT "#                           #"
 LOCATE 16, 26
-PRINT "#                           #"
-LOCATE 17, 26
 PRINT "#############################"
 
 
 COLOR 6
-LOCATE 7, 27
+LOCATE 6, 27
 PRINT "        Ý Ý Ý Ý Ý Ý"
-LOCATE 8, 27
+LOCATE 7, 27
 PRINT "       Ý ²°°°²²°°°² Ý"
-LOCATE 9, 27
+LOCATE 8, 27
 PRINT "      Ý ²  þ úú þ  ² Ý"
-LOCATE 10, 27
+LOCATE 9, 27
 PRINT "      ú°ú °°°úú°°°° ° Ý"
-LOCATE 11, 27
+LOCATE 10, 27
 PRINT "     Ýú° °° °°°° °° ú°úÝ"
-LOCATE 12, 27
+LOCATE 11, 27
 PRINT "      ° Ý°° °°°° °°ú Ý°"
-LOCATE 13, 27
+LOCATE 12, 27
 PRINT "     Ý° ÝÝ ± ± ± ± ÝúÝ°"
-LOCATE 14, 27
+LOCATE 13, 27
 PRINT "     Ý° ÝÝ± ± ± ± ±Ý Ý°"
-LOCATE 15, 27
+LOCATE 14, 27
 PRINT "       ²²°°°²²²²°°°²²²"
-LOCATE 16, 27
+LOCATE 15, 27
 COLOR 4
 PRINT "         ° ° ° ° ° °"
-LOCATE 17, 27
+LOCATE 16, 27
 PRINT "##########°#####°"
 
 
 COLOR 4
-LOCATE 9, 38
+LOCATE 8, 38
 PRINT "þ"
-LOCATE 9, 43
+LOCATE 8, 43
 PRINT "þ"
 
-LOCATE 13, 38
+LOCATE 12, 38
 COLOR 15
 PRINT "±"
-LOCATE 13, 40
+LOCATE 12, 40
 PRINT "±"
-LOCATE 13, 42
+LOCATE 12, 42
 PRINT "±"
-LOCATE 13, 44
-PRINT "±"
-
-LOCATE 14, 37
-PRINT "±"
-LOCATE 14, 39
-PRINT "±"
-LOCATE 14, 41
-PRINT "±"
-LOCATE 14, 43
-PRINT "±"
-LOCATE 14, 45
+LOCATE 12, 44
 PRINT "±"
 
-LOCATE 15, 36
+LOCATE 13, 37
+PRINT "±"
+LOCATE 13, 39
+PRINT "±"
+LOCATE 13, 41
+PRINT "±"
+LOCATE 13, 43
+PRINT "±"
+LOCATE 13, 45
+PRINT "±"
+
+LOCATE 14, 36
 COLOR 4
 PRINT "°°°"
-LOCATE 15, 43
+LOCATE 14, 43
 PRINT "°°°"
 
-LOCATE 18, 37
+LOCATE 17, 37
 PRINT "°"
 
-LOCATE 18, 43
+LOCATE 17, 43
 PRINT "°"
 
 
@@ -3531,7 +3411,99 @@ PRINT "#"
 
 END SUB
 
-SUB DrawGiantScorpion
+SUB DrawMountains
+COLOR 6
+
+LOCATE 16
+PRINT "                                                                                "
+LOCATE 17
+PRINT "°                 +            °        °²±         °²±          + Þ Ü"
+LOCATE 18
+PRINT "²±               °²²±         °²±      °²²²±       °²²²²±       °²Û²Û²Û±       °"
+LOCATE 19
+PRINT "²²²±   ß  °     °²²²²²±    ß °±²²±   °²²°±±±±   ß °²²²²²±  þ  °²Û²Û²Û²Û²Û±    °±"
+LOCATE 20
+PRINT "°²°²±  þ °²± þ °±²°²°²°²± þ °²°²°²± °±²°²°±±± þ  °²°°°²°²±   °²Û²Û²Û²Û²Û²Û±  °±±"
+LOCATE 21
+PRINT "²°²°²±  °²°²± °±°°²°°°²°²± °±²°²°²±²°°°°°°²²±±  °²°²°²°±°°°²°²Û°±Û°±Û°±Û°±Û²°±±±"
+LOCATE 22
+PRINT "°²°²°²±°²°²°²±±°°°°°±°°°°°±°°°°°°°°°°±²°°°°°°±°°²°°°°°°°°°²°²°°°°°°°°°°°°°°±°±°°"
+LOCATE 23
+PRINT "²°²°²°°°°²°°°°²°°°±°°°°°±°°°°°±°°°°°°°°±²°°°°°°±°°°±°°°°°°°°°°°°°°±°°°°°°°°°±°°°"
+LOCATE 24
+PRINT "°°°°°±²°°°°±°°°°±°°°°±°°°°°°°°°°°°°±°°°°°°±°°°°°°°°°°°°°°±°°°°°°°°°°°°°°°±°±°±°°"
+
+LOCATE 15, 5
+COLOR 15
+PRINT "þ"
+
+LOCATE 15, 17
+PRINT "ß"
+
+LOCATE 15, 24
+PRINT "þ"
+
+LOCATE 15, 46
+PRINT "ß"
+
+LOCATE 15, 50
+PRINT "ß"
+
+LOCATE 15, 60
+PRINT "þ"
+
+LOCATE 15, 67
+PRINT "ß"
+
+LOCATE 16, 9
+PRINT "þ"
+
+LOCATE 16, 21
+PRINT "ß"
+
+LOCATE 16, 26
+PRINT "þ"
+
+LOCATE 16, 48
+PRINT "ß"
+
+LOCATE 16, 54
+PRINT "ß"
+
+LOCATE 16, 65
+PRINT "þ"
+
+LOCATE 16, 70
+PRINT "ß"
+
+LOCATE 17, 6
+PRINT "þ"
+
+LOCATE 17, 16
+PRINT "þ"
+
+LOCATE 17, 26
+PRINT "ß"
+
+LOCATE 17, 38
+PRINT "þ"
+
+LOCATE 17, 49
+PRINT "ß"
+
+LOCATE 17, 60
+PRINT "þ"
+
+LOCATE 17, 75
+PRINT "ß"
+
+LOCATE 16, 6
+COLOR 14
+PRINT "+"
+
+END SUB
+
+SUB DrawScorpion
 
 COLOR 4
 LOCATE 6, 26
@@ -3593,123 +3565,123 @@ END SUB
 SUB DrawWitch
 
 COLOR 4
-LOCATE 6, 26
+LOCATE 5, 26
 PRINT "#############################"
-LOCATE 7, 26
+LOCATE 6, 26
 PRINT "#     S#############$$$$    #"
-LOCATE 8, 26
+LOCATE 7, 26
 PRINT "#    S###############$$$$   #"
-LOCATE 9, 26
+LOCATE 8, 26
 PRINT "#    S##$$$####$$$##$$$$    #"
-LOCATE 10, 26
+LOCATE 9, 26
 PRINT "#    SS##*#$##$#*###$$ $$$  #"
-LOCATE 11, 26
+LOCATE 10, 26
 PRINT "#    SS#####.#######$$$$$   #"
-LOCATE 12, 26
+LOCATE 11, 26
 PRINT "#   SSS###<<#######$$$$$$$$ #"
-LOCATE 13, 26
+LOCATE 12, 26
 PRINT "#  SSSS###########$$$$ $$$$$#"
-LOCATE 14, 26
+LOCATE 13, 26
 PRINT "# SSSSSS$# # # # #$$$$$$$   #"
-LOCATE 15, 26
+LOCATE 14, 26
 PRINT "#   $$$   # # # #   $$$$$$$ #"
-LOCATE 16, 26
+LOCATE 15, 26
 PRINT "# $$$ $$$  #####   $$$$ $$  #"
-LOCATE 17, 26
+LOCATE 16, 26
 PRINT "#############################"
 
 
 COLOR 7
-LOCATE 7, 27
+LOCATE 6, 27
 PRINT "     S#############$$$$ "
-LOCATE 8, 27
+LOCATE 7, 27
 PRINT "    S###############$$$$   "
-LOCATE 9, 27
+LOCATE 8, 27
 PRINT "    S##$$$####$$$##$$$$    "
-LOCATE 10, 27
+LOCATE 9, 27
 PRINT "    SS##*#$##$#*###$$ $$$  "
-LOCATE 11, 27
+LOCATE 10, 27
 PRINT "    SS#####.#######$$$$$   "
-LOCATE 12, 27
+LOCATE 11, 27
 PRINT "   SSS###<<#######$$$$$$$$ "
-LOCATE 13, 27
+LOCATE 12, 27
 PRINT "  SSSS###########$$$$ $$$$$"
-LOCATE 14, 27
+LOCATE 13, 27
 PRINT " SSSSSS$# # # # #$$$$$$$   "
-LOCATE 15, 27
+LOCATE 14, 27
 PRINT "   $$$   # # # #   $$$$$$$ "
-LOCATE 16, 27
+LOCATE 15, 27
 PRINT " $$$ $$$  #####   $$$$ $$  "
 
 
-LOCATE 9, 34
+LOCATE 8, 34
 COLOR 8
 PRINT "$$$"
 
-LOCATE 10, 37
+LOCATE 9, 37
 PRINT "$"
 
 
-LOCATE 9, 41
+LOCATE 8, 41
 PRINT "$$$"
 
-LOCATE 10, 40
+LOCATE 9, 40
 PRINT "$"
 
-LOCATE 10, 35
+LOCATE 9, 35
 COLOR 4
 PRINT "*"
 
-LOCATE 10, 42
+LOCATE 9, 42
 PRINT "*"
 
-LOCATE 14, 35
+LOCATE 13, 35
 PRINT "# # # # #"
 
-LOCATE 15, 36
+LOCATE 14, 36
 PRINT "# # # #"
 
 COLOR 15
-LOCATE 7, 27
+LOCATE 6, 27
 PRINT "     S"
+LOCATE 7, 27
+PRINT "    S"
 LOCATE 8, 27
 PRINT "    S"
 LOCATE 9, 27
-PRINT "    S"
+PRINT "    SS"
 LOCATE 10, 27
 PRINT "    SS"
 LOCATE 11, 27
-PRINT "    SS"
-LOCATE 12, 27
 PRINT "   SSS"
-LOCATE 13, 27
+LOCATE 12, 27
 PRINT "  SSSS"
-LOCATE 14, 27
+LOCATE 13, 27
 PRINT " SSSSSS"
-LOCATE 15, 27
+LOCATE 14, 27
 PRINT "   $$$"
-LOCATE 16, 27
+LOCATE 15, 27
 PRINT " $$$ $$$"
 
-LOCATE 7, 46
+LOCATE 6, 46
 PRINT "$$$$"
-LOCATE 8, 47
+LOCATE 7, 47
+PRINT "$$$$"
+LOCATE 8, 46
 PRINT "$$$$"
 LOCATE 9, 46
-PRINT "$$$$"
-LOCATE 10, 46
 PRINT "$$ $$$"
-LOCATE 11, 46
+LOCATE 10, 46
 PRINT "$$$$$"
-LOCATE 12, 45
+LOCATE 11, 45
 PRINT "$$$$$$$$"
-LOCATE 13, 44
+LOCATE 12, 44
 PRINT "$$$$ $$$$$"
-LOCATE 14, 44
+LOCATE 13, 44
 PRINT "$$$$$$$"
-LOCATE 15, 46
+LOCATE 14, 46
 PRINT "$$$$$$$"
-LOCATE 16, 45
+LOCATE 15, 45
 PRINT "$$$$ $$"
 
 
@@ -3743,7 +3715,7 @@ CALL DrawCriminal
 END IF
 
 IF Enemyname$ = "Giant Scorpion" THEN
-CALL DrawGiantScorpion
+CALL DrawScorpion
 END IF
 
 IF Enemyname$ = "Crawler" THEN
@@ -3847,8 +3819,15 @@ PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 END IF
 
-'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'++++++++++++++++++++++++++++++ MOUNTAINS ++++++++++++++++++++++++++++++++++++
 
+IF PositionCol(PositionCH) = 6 THEN
+
+CALL DrawMountains
+
+END IF
+
+'++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
 
@@ -3905,67 +3884,64 @@ PRINT "Die:"; d1;
 COLOR 10
 
 IF d1 > 0 AND d1 < 3 THEN
-Pause
-PRINT "Peasant: So, you are looking for some terrible criminals, right?"
-Pause
-PRINT "Well, some of them hide in places like forests or in the mountains"
-Pause
-PRINT "if you are lucky, you'll find them in those places."
+
+line$(1) = "Peasant: So, you are looking for some terrible criminals, right?"
+line$(2) = "Well, some of them hide in places like forests or in the mountains"
+line$(3) = "if you are lucky, you'll find them in those places."
+
+PrintLines
+
 END IF
 
 IF d1 = 3 THEN
-Pause
-PRINT "Tavern owner: Good to know you are taking care of those terrible killers."
-Pause
-PRINT "Some of them are wizards who practice the arts of the dark side. People"
-Pause
-PRINT "even say they kidnap kids and young women for their sacrifices, offering"
-Pause
-PRINT "them to the black lord."
+
+line$(1) = "Tavern owner: Good to know you are taking care of those terrible killers."
+line$(2) = "Some of them are wizards who practice the arts of the dark side. People"
+line$(3) = "even say they kidnap kids and young women for their sacrifices, offering"
+line$(4) = "them to the black lord."
+
+PrintLines
+
 END IF
 
 IF d1 = 4 THEN
-Pause
-PRINT "Farmer: Be very a careful man, we all know what you're doing over here"
-Pause
-PRINT "and they know too. They expect to meet you soon, so I guess they are ready."
-Pause
-PRINT "Don't be a fool, don't think they are weak. Get ready as much as you can."
-Pause
-PRINT "These people are dark and they aren't ordinary ones, they posses supernatural"
-Pause
-PRINT "powers, and this power doesn't come from light. Many families around here"
-Pause
-PRINT "lost some of their children... and we all know they took them."
+
+line$(1) = "Farmer: Be very a careful man, we all know what you're doing over here"
+line$(2) = "and they know too. They expect to meet you soon, so I guess they are ready."
+line$(3) = "Don't be a fool, don't think they are weak. Get ready as much as you can."
+line$(4) = "These people are dark and they aren't ordinary ones, they posses supernatural"
+line$(5) = "powers, and this power doesn't come from light. Many families around here"
+line$(6) = "lost some of their children... and we all know they took them."
+
+PrintLines
+
 END IF
 
 IF d1 = 5 THEN
-Pause
-PRINT "Priest: They are part of a satanic order. These black sorcerers have already"
-Pause
-PRINT "carried out thousands of killings and murders, terrifying our village. They"
-Pause
-PRINT "They kidnap babies, kids and young women. We have already found the places"
-Pause
-PRINT "where these beasts celebrate their bloody rituals and hideous feasts."
+
+line$(1) = "Priest: They are part of a satanic order. These black sorcerers have already"
+line$(2) = "carried out thousands of killings and murders, terrifying our village."
+line$(3) = "They kidnap babies, kids and young women. We have already found the places"
+line$(4) = "where these beasts celebrate their bloody rituals and hideous feasts."
+
+PrintLines
+
 END IF
 
 IF d1 = 6 THEN
-Pause
-PRINT "You're following a narrow path, seeing huge vultures above in the sky. "
-Pause
-PRINT "Something is not ok. A strong and awful smell gets to you. You continue"
-Pause
-PRINT "walking not knowing what you're about to find. Behind some rocks, hidden "
-Pause
-PRINT "by high grass, you find a rotten corpse. Rotten bones and flesh. You vomit,"
-Pause
-PRINT "the view is overwhelming, disgusting. Danger seems to be near."
+
+line$(1) = "You're following a narrow path, seeing huge vultures above in the sky. "
+line$(2) = "Something is not ok. A strong and awful smell gets to you. You continue"
+line$(3) = "walking not knowing what you're about to find. Behind some rocks, hidden "
+line$(4) = "by high grass, you find a rotten corpse. Rotten bones and flesh. You vomit,"
+line$(5) = "the view is overwhelming, disgusting. Danger seems to be near."
+
+PrintLines
+
 END IF
 
 DO WHILE INKEY$ = ""
 LOOP
-
 
 END SUB
 
@@ -4099,7 +4075,7 @@ endfight$ = "O2b5ebo3c4o2eo3"
 enemy$ = "e20 e20"
 Chime$ = "MB o5 d20 d20"
 levelup$ = "c20 d20 e20 c20 d20 e20"
-negative$ = "MB o1 D#8 E4 o0 C4 B9C8B3"
+NegativeMusic$ = "MB o1 D#8 E4 o0 C4 B9C8B3"
 positive$ = "MB o1 A8B8C7 A8D8D#8 o0 E4E4"
 IntroMusic$ = "MB o1ag#g#baao2co1bo2co1aecde o1g#g#baao2co1bo1o1a6a5a2"
 END IF
@@ -4110,12 +4086,220 @@ endfight$ = ""
 enemy$ = ""
 Chime$ = ""
 levelup$ = ""
-negative$ = ""
+NegativeMusic$ = ""
 positive$ = ""
 IntroMusic$ = ""
 END IF
 
 
+END SUB
+
+SUB NegativeSub
+Negative2:
+
+d1 = rolld6
+
+IF d1 = LastNegativeEvent THEN      'This part of the code should avoid
+GOTO Negative2                      'the same negative event repeating twice
+END IF                              'in a very short period of time.
+LastNegativeEvent = d1
+
+COLOR 3
+PRINT "Die:"; d1;
+COLOR 10
+
+IF d1 = 1 THEN
+
+line$(1) = "You are trying to climb a huge rock that blocks the way and end up falling down."
+line$(2) = "You hurt your back when falling (-1 HP)."
+
+PrintLines
+
+hp = hp - 1
+
+END IF
+
+
+IF d1 = 2 THEN
+
+line$(1) = "You are walking around the place and hear the sound of an animal coming"
+line$(2) = "towards you from behind. When you turn, you see a GIANT BUGIO (a huge"
+line$(3) = "and violent monkey) coming. You run, you run and save your life but in"
+line$(4) = "the escape you lose all your gold coins (Gold = 0)."
+
+PrintLines
+
+gold = 0
+
+END IF
+
+
+IF d1 = 3 THEN
+
+line$(1) = "You feel something like a bite in your leg. You stop and check what it was."
+line$(2) = "You see two red points and a thin blood string coming out from your leg."
+line$(3) = "You wish it was only an insect and not a snake."
+
+PrintLines
+
+DO WHILE INKEY$ = ""
+LOOP
+
+d1 = rolld6
+
+COLOR 3
+
+PRINT "Die:"; d1;
+
+'''''''''''
+
+	IF d1 = 1 THEN
+
+	COLOR 10
+
+	line$(1) = "Some meters ahead you see it... it was a snake! (-6 HP)"
+
+	PrintLines
+
+	hp = hp - 6
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO EndOfNegative
+
+	END IF
+
+'''''''''''
+
+	IF d1 = 2 THEN
+
+	COLOR 10
+
+	line$(1) = "Some meters ahead you see it... it was a brown spider! (-3 HP)"
+	
+	PrintLines
+
+	hp = hp - 3
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO EndOfNegative
+
+	END IF
+
+'''''''''''
+
+	IF d1 = 3 THEN
+	COLOR 10
+	
+	line$(1) = "You don't see anything... well maybe it was just a plant or a rock."
+	line$(2) = "The pain goes away..."
+
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO EndOfNegative
+	END IF
+
+'''''''''''
+	IF d1 = 4 THEN
+
+	COLOR 10
+
+	line$(1) = "It hurst a lot at the beginning! Then it feels better but the area"
+	line$(2) = "seems to be infected... It's swelling! "
+	
+	PrintLines
+
+	RANDOMIZE TIMER
+
+	d1 = INT(RND * 6) + 1
+
+	COLOR 3
+	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+
+	hp = hp - d1
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO EndOfNegative
+
+	END IF
+
+'''''''''''
+
+	IF d1 = 5 THEN
+
+	COLOR 10
+
+	line$(1) = "Oh... it's nothing. Probably you cut your leg against a rock."
+
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO EndOfNegative
+
+	END IF
+
+'''''''''''
+
+	IF d1 = 6 THEN
+
+	COLOR 10
+
+	line$(1) = "Some centimeters away from your leg there's a huge poisonous centipede..."
+	line$(2) = "It's in attack position, seems to be annoyed. It's an horrible and disgusting"
+	line$(3) = "animal. That creepy thing bit you!"
+
+	PrintLines
+
+	d1 = rolld6
+
+	Pause
+
+	COLOR 3
+	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+
+	hp = hp - d1
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO EndOfNegative
+
+	END IF
+
+'''''''''''
+
+END IF
+
+
+IF d1 > 3 AND d1 < 7 THEN
+
+COLOR 10
+
+line$(1) = "There is a huge storm coming. You seem worried cause it looks very bad."
+line$(2) = "You try to hurry up and find a place to hide. However, you are not lucky today."
+line$(3) = "All your clothes get wet and you feel terrible after walking so much with"
+line$(4) = "wet feet and wet clothes. You also feel very cold. (-1 HP)"
+
+PrintLines
+
+hp = hp - 1.5
+
+END IF
+
+
+DO WHILE INKEY$ = ""
+LOOP
+
+EndOfNegative:
 END SUB
 
 SUB NewCityText
@@ -4186,6 +4370,39 @@ LOOP
 
 END SUB
 
+SUB PrintLines
+
+'Sub routine that prints text lines and the story lines.
+
+loopx = 0               '========= LOOP for printing the line$() ARRAY
+
+DO UNTIL loopx = 24
+
+ IF line$(loopx) = "" THEN
+ GOTO SkipLine
+ END IF
+
+ Pause
+ PRINT line$(loopx)
+
+SkipLine:
+
+ loopx = loopx + 1
+
+LOOP
+
+
+'++++++++++++++++++++ CLEAR STRING VARIABLES ++++++++++++++++++++++++++++++++
+
+loopx = 0
+
+DO UNTIL loopx = 24
+line$(loopx) = ""
+loopx = loopx + 1
+LOOP
+
+END SUB
+
 FUNCTION rolld6
 RANDOMIZE TIMER
 rolld6 = INT(RND * 6) + 1
@@ -4215,8 +4432,6 @@ SUB TalkToStrangers
 CLS
 d1 = rolld6
 
-
-
 SELECT CASE d1
 
 	CASE 1
@@ -4224,12 +4439,31 @@ SELECT CASE d1
 	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
 	line$(2) = "Some random foreigners come over here from time to time, some of them"
 	line$(3) = "come to this bar looking for fight and trouble. See that man next to"
-	line$(4) = "the door? He's crazy, have been in prison for many years and now is our"
+	line$(4) = "the door? He's crazy, has been in prison for many years and now is our"
 	line$(5) = "security guard. See that other huge guy playing games at that table?"
 	line$(6) = "Seems pretty quiet, but that's cause you don't know him well. However,"
 	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
 	line$(8) = "nothing to fear over here, people are usually friendly."
 
+	CASE 2
+	
+	line$(1) = "Jason: Some people say that they built something like a small city"
+	line$(2) = "inside the mountains. A huge place made of caves, connected by tunnels"
+	line$(3) = "and that they live there. Some other people say that there's a small"
+	line$(4) = "and hidden place in the haunted woods, where they have their houses that"
+	line$(5) = "they made using trees and stones. I have never seen these places, don't"
+	line$(6) = "even know if they really exist. No one  goes out of the town. No one."
+
+	CASE 3
+	
+	line$(1) = "Soldier: Some years ago, me and a small group of soldiers, were sent to"
+	line$(2) = "patrol the forest and the surroundings of the city. It was usual to find"
+	line$(3) = "the areas where these people practice their rituals. Blood and corpses of"
+	line$(4) = "all kinds were found in those places, even human bodies and lots of strange"
+	line$(5) = "and scary dolls, made of plants, stones, feathers and animal skulls. Not so"
+	line$(6) = "long ago I found out that one of our superiors was also part of the order."
+	line$(7) = "You can't trust anyone here."
+	
 	CASE ELSE
 
 	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
@@ -4241,22 +4475,12 @@ SELECT CASE d1
 	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
 	line$(8) = "nothing to fear over here, people are usually friendly."
 
-
 END SELECT
 
-
 PRINT
 PRINT
 
-
-loopx = 0               '========= LOOP for printing the line$() ARRAY
-DO UNTIL loopx = 9
-
- Pause
- PRINT line$(loopx)
- loopx = loopx + 1
-
-LOOP
+CALL PrintLines        '========= SUB for printing the line$() ARRAY
 
 DO WHILE INKEY$ = ""
 LOOP
