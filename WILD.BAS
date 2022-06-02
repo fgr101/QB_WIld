@@ -1,3 +1,4 @@
+DECLARE SUB DrawWolf ()
 DECLARE SUB DrawMountains ()
 DECLARE SUB PrintLines ()
 DECLARE SUB NegativeSub ()
@@ -5,9 +6,15 @@ DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
 
+'- QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
+'  PARA EL PERSONAJE, OTRO TERRENO DEBE SER DESFAVORABLE.
+
+
+' - AGREGAR DETALLES Y GRAFICOS ASCII
 ' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
+
 
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
@@ -28,14 +35,12 @@ DECLARE SUB DrawBugio ()
 '- AGREGAR MAS DETALLES EN LA HISTORIA INICIAL, INTRO.
 '- AGREGAR MAS SONIDOS
 '- AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
-'- AGREGAR DETALLES Y GRAFICOS ASCII
 '- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
 '- CREAR ALGUNAS NUEVAS TRANSICIONES
 '- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
 
 '- MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
-'- QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
-'  PARA EL PERSONAJE, OTRO TERRENO DEBE SER DESFAVORABLE.
+'- QUE UN TERRENO SEA DESFAVORABLE PARA EL PERSONAJE.
 
 '- TRADUCIR JUEGO AL ESPANHOL
 '- TRADUCIR JUEGO A PT BRASIL
@@ -86,7 +91,7 @@ DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(25)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
-
+DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
 
 ' ENEMIES VARIABLES
 
@@ -109,6 +114,7 @@ OneThousandGold = 0
 ReachLevelTen = 0
 
 CALL LoadChallenges
+
 '======================== MAIN MENU =========================
 
 mainmenu:
@@ -152,10 +158,10 @@ CLS
 x = 0
 DO UNTIL x = 4000
 d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
+d2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 9
-LOCATE D2, d1
+LOCATE d2, d1
 PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
@@ -166,10 +172,10 @@ LOOP
 x = 0
 DO UNTIL x = 4000
 d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
+d2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
-LOCATE D2, d1
+LOCATE d2, d1
 PRINT "°±²"
 LOCATE 10, 34
 COLOR 15
@@ -318,7 +324,7 @@ gold = rolld6 * rolld6                         'HAVE BEEN RANDOMIZED, SO
 PRINT "Generating random attack value..."      'EVERYTIME YOU PLAY A NEW
 					       'GAME IT'S GONNA BE SOMETHING
 AT = rolld6 * 2                                'DIFFERENT. I USED THE VALUE
-PRINT "Generating random defence value..."  '6 TO RANDOMIZE THEM, SIMULATING
+PRINT "Generating random defence value..." '6 TO RANDOMIZE THEM, SIMULATING
 					   'A NORMAL SOLO RPG GAME, USING A
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
@@ -331,6 +337,82 @@ mana = MaxMana
 
 Pause
 
+
+'======================= GENERATING BONUS TERRAIN ============================
+
+' The bonus terrain is a a piece of terrain that can give you extra attack pts
+' during the battle. For instance, if the BONUS TERRAIN of the character is the
+' FOREST, everytime the character has an encounter in a forest, will get extra
+' force when attacking & will cause more damage.
+
+d1 = rolld6
+d2 = d1
+
+SELECT CASE d1
+
+	CASE 1
+	BonusTerrain = 2
+	LandName$ = "forest"
+
+	CASE 2
+	BonusTerrain = 6
+	LandName$ = "mountains"
+
+	CASE 3
+	BonusTerrain = 8
+	LandName$ = "swamps"
+
+	CASE 4
+	BonusTerrain = 14
+	LandName$ = "desert"
+
+	CASE 5
+	BonusTerrain = 7
+	LandName$ = "frozen lands"
+
+	CASE 6
+	BonusTerrain = 1
+	LandName$ = "lakes and rivers"
+
+END SELECT
+
+denuevo:
+d1 = rolld6
+
+IF d1 = d2 THEN
+GOTO denuevo
+END IF
+
+SELECT CASE d1
+
+	CASE 1
+	NegativeTerrain = 2
+	LandNameNegative$ = "forest"
+
+	CASE 2
+	NegativeTerrain = 6
+	LandNameNegative$ = "mountains"
+
+	CASE 3
+	NegativeTerrain = 8
+	LandNameNegative$ = "swamps"
+
+	CASE 4
+	NegativeTerrain = 14
+	LandNameNegative$ = "desert"
+
+	CASE 5
+	NegativeTerrain = 7
+	LandNameNegative$ = "frozen lands"
+
+	CASE 6
+	NegativeTerrain = 1
+	LandNameNegative$ = "lakes and rivers"
+
+END SELECT
+
+
+'=============================================================================
 
 CALL Character
 
@@ -1532,6 +1614,31 @@ PRINT "Die: "; d1;
 COLOR 2
 damage1 = AT + d1
 PRINT " Damage: "; damage1
+
+
+'================= TERRAIN AT BONUS DURING FIGHT ============================
+
+IF combatloop = 3 AND BonusTerrain = PositionCol(PositionCH) THEN
+Pause
+PRINT
+COLOR BonusTerrain, 0
+PRINT LandName$; " BONUS attack!"
+COLOR 15, PositionCol(PositionCH)
+PRINT "YOU GET EXTRA ATTACK PTS FOR BEING USED TO THIS KIND OF TERRAIN!"
+COLOR , 0
+d1 = rolld6
+COLOR 3
+Pause
+PRINT "Die: "; d1; " | ";
+PRINT "Damage + "; d1; " of terrain bonus!";
+damage1 = damage1 + d1
+COLOR 15
+PRINT " DAMAGE PTS increased to "; damage1; " now! ±±±±±"
+PRINT
+END IF
+
+'============================================================================
+
 d1 = rolld6
 COLOR 3
 PRINT "Die (enemy defence):"; d1;
@@ -1570,6 +1677,32 @@ PRINT "Die (for YOUR defence):"; d1;
 COLOR 2
 yourdefence = DF + d1
 PRINT "YOUR Defence: "; yourdefence
+
+'================= NEGATIVE TERRAIN DURING FIGHT ============================
+
+IF combatloop = 3 AND NegativeTerrain = PositionCol(PositionCH) THEN
+Pause
+PRINT
+COLOR NegativeTerrain, 0
+PRINT "Being in the "; LandNameNegative$; " affects your defence!"
+COLOR 15, PositionCol(PositionCH)
+PRINT "REDUCTION OF DEFENCE PTS FOR NOT BEING USED TO THIS KIND OF TERRAIN!"
+COLOR , 0
+d1 = rolld6
+COLOR 3
+Pause
+PRINT "Die: "; d1; " | ";
+PRINT "-"; d1; " PTS of DEFENCE REDUCTION!";
+yourdefence = yourdefence - d1
+COLOR 15
+PRINT " DEFENCE PTS reduced to "; yourdefence; " now! ±±±±±±"
+PRINT
+END IF
+
+'============================================================================
+
+
+
 finaldamage = damageEN - yourdefence
 IF finaldamage < 0 THEN
 finaldamage = 0
@@ -1785,7 +1918,7 @@ INPUT "What will you do...", opcion
 		IF opcion = 1 AND mana >= 3 THEN
 		mana = mana - 3
 		enemyDF = enemyDF - AT
-		COLOR 2
+		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to attack"
@@ -1817,7 +1950,7 @@ INPUT "What will you do...", opcion
 		IF opcion = 2 AND mana >= 3 THEN
 		mana = mana - 3
 		hp = maxHP
-		COLOR 2
+		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to recover your health"
@@ -1846,7 +1979,7 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 3 AND mana >= 3 THEN
 		mana = mana - 3
-		COLOR 2
+		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to run away!"
@@ -2133,6 +2266,20 @@ PRINT
 COLOR 14, 9
 PRINT "  GOLD   = "; gold; "   "
 COLOR , 0
+
+PRINT
+
+COLOR 3, 0
+PRINT "You were born in the ";
+COLOR BonusTerrain, 0
+PRINT LandName$; "."
+
+COLOR 3, 0
+PRINT "You are not used to be in the ";
+COLOR NegativeTerrain, 0
+PRINT LandNameNegative$; "."
+
+COLOR 15
 
 COLOR 4
 LOCATE 1, 1
@@ -2639,46 +2786,45 @@ LastDecisionEvent = d1
 
 DecisionResult = 0
 
-
-
 COLOR 10
 
 '-----------------------  1  -----------------------------
 
 IF d1 = 1 THEN
+
 PRINT
-Pause
-PRINT "You are walking out of the road, exploring the place and checking"
-Pause
-PRINT "the surroundings. Behind some dead trees there's something that looks"
-Pause
-PRINT "like a circle made of huge stones with some strange symbols written on them."
-Pause
-PRINT "As soon as you see them, you realize it's an archaic temple, probably"
-Pause
-PRINT "built by the ancient tribes that lived in the region."
+
+line$(1) = "You are walking out of the road, exploring the place and checking"
+line$(2) = "the surroundings. Behind some dead trees there's something that looks"
+line$(3) = "like a circle made of huge stones with some strange symbols written on them."
+line$(4) = "As soon as you see them, you realize it's an archaic temple, probably"
+line$(5) = "built by the ancient tribes that lived in the region."
+
+PrintLines
 
 DO WHILE INKEY$ = ""
 LOOP
 
 PRINT
-PRINT "It's easy for you to recognize these symbols, you've seen them before."
-Pause
-PRINT "They aren't part of the dark side, probably this temple was offered and"
-Pause
-PRINT "built to summon and pray to the gods of nature."
+
+line$(1) = "It's easy for you to recognize these symbols, you've seen them before."
+line$(2) = "They aren't part of the dark side, probably this temple was offered and"
+line$(3) = "built to summon and pray to the gods of nature."
+
+PrintLines
 
 DO WHILE INKEY$ = ""
 LOOP
 
 PRINT
-PRINT "You feel that talking to the gods, trying to comunicate with them could"
-Pause
-PRINT "be a good idea."
+
+line$(1) = "You feel that talking to the gods, trying to comunicate with them could"
+line$(2) = "be a good idea."
+
+PrintLines
 
 DO WHILE INKEY$ = ""
 LOOP
-
 
 PRINT
 COLOR 3
@@ -2689,13 +2835,14 @@ COLOR 10
 	IF opcion = 1 THEN
 
 	PRINT
-	PRINT "You stop and sit in the middle of the circle, you feel the wind in"
-	Pause
-	PRINT "your ears, over your skin, playing with your hair. You can hear the"
-	Pause
-	PRINT "birds around the place, wolves howlling in the distance, the trees "
-	Pause
-	PRINT "dancing with the air, knowing that you are there."
+
+	line$(1) = "You stop and sit in the middle of the circle, you feel the wind in"
+	line$(2) = "your ears, over your skin, playing with your hair. You can hear the"
+	line$(3) = "birds around the place, wolves howlling in the distance, the trees "
+	line$(4) = "dancing with the air, knowing that you are there."
+
+	PrintLines
+
 	PRINT
 
 	DO WHILE INKEY$ = ""
@@ -2715,17 +2862,16 @@ COLOR 10
 
 		CASE 2
 		'YOU FEEL BETTER AND RECOVER HP
+
 		PRINT
-		Pause
-		PRINT "After being in deep meditational state, connected with nature,"
-		Pause
-		PRINT "communicating with their gods and astral guardians. You feel "
-		Pause
-		PRINT "much better, 100% energized and recovered. They said this"
-		Pause
-		PRINT "would be one of your hardest missions, a tough one, but they"
-		Pause
-		PRINT "would be by your side. You will succeed."
+
+		line$(1) = "After being in deep meditational state, connected with nature,"
+		line$(2) = "communicating with their gods and astral guardians. You feel "
+		line$(3) = "much better, 100% energized and recovered. They said this"
+		line$(4) = "would be one of your hardest missions, a tough one, but they"
+		line$(5) = "would be by your side. You will succeed."
+
+		PrintLines
 
 		PRINT
 
@@ -3412,92 +3558,95 @@ PRINT "#"
 END SUB
 
 SUB DrawMountains
+
 COLOR 6
+LOCATE 1, 1
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ MOUNTAINS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
-LOCATE 16
-PRINT "                                                                                "
+
+
 LOCATE 17
-PRINT "°                 +            °        °²±         °²±          + Þ Ü"
+PRINT "                                                                                "
 LOCATE 18
-PRINT "²±               °²²±         °²±      °²²²±       °²²²²±       °²Û²Û²Û±       °"
+PRINT "°                 +            °        °²±         °²±          + Þ Ü"
 LOCATE 19
-PRINT "²²²±   ß  °     °²²²²²±    ß °±²²±   °²²°±±±±   ß °²²²²²±  þ  °²Û²Û²Û²Û²Û±    °±"
+PRINT "²±               °²²±         °²±      °²²²±       °²²²²±       °²Û²Û²Û±       °"
 LOCATE 20
-PRINT "°²°²±  þ °²± þ °±²°²°²°²± þ °²°²°²± °±²°²°±±± þ  °²°°°²°²±   °²Û²Û²Û²Û²Û²Û±  °±±"
+PRINT "²²²±   ß  °     °²²²²²±    ß °±²²±   °²²°±±±±   ß °²²²²²±  þ  °²Û²Û²Û²Û²Û±    °±"
 LOCATE 21
-PRINT "²°²°²±  °²°²± °±°°²°°°²°²± °±²°²°²±²°°°°°°²²±±  °²°²°²°±°°°²°²Û°±Û°±Û°±Û°±Û²°±±±"
+PRINT "°²°²±  þ °²± þ °±²°²°²°²± þ °²°²°²± °±²°²°±±± þ  °²°°°²°²±   °²Û²Û²Û²Û²Û²Û±  °±±"
 LOCATE 22
-PRINT "°²°²°²±°²°²°²±±°°°°°±°°°°°±°°°°°°°°°°±²°°°°°°±°°²°°°°°°°°°²°²°°°°°°°°°°°°°°±°±°°"
+PRINT "²°²°²±  °²°²± °±°°²°°°²°²± °±²°²°²±²°°°°°°²²±±  °²°²°²°±°°°²°²Û°±Û°±Û°±Û°±Û²°±±±"
 LOCATE 23
-PRINT "²°²°²°°°°²°°°°²°°°±°°°°°±°°°°°±°°°°°°°°±²°°°°°°±°°°±°°°°°°°°°°°°°°±°°°°°°°°°±°°°"
+PRINT "°²°²°²±°²°²°²±±°°°°°±°°°°°±°°°°°°°°°°±²°°°°°°±°°²°°°°°°°°°²°²°°°°°°°°°°°°°°±°±°°"
 LOCATE 24
-PRINT "°°°°°±²°°°°±°°°°±°°°°±°°°°°°°°°°°°°±°°°°°°±°°°°°°°°°°°°°°±°°°°°°°°°°°°°°°±°±°±°°"
+PRINT "²°²°²°°°°²°°°°²°°°±°°°°°±°°°°°±°°°°°°°°±²°°°°°°±°°°±°°°°°°°°°°°°°°±°°°°°°°°°±°°°"
 
-LOCATE 15, 5
+LOCATE 16, 5
 COLOR 15
 PRINT "þ"
 
-LOCATE 15, 17
+LOCATE 16, 17
 PRINT "ß"
 
-LOCATE 15, 24
+LOCATE 16, 24
 PRINT "þ"
 
-LOCATE 15, 46
+LOCATE 16, 46
 PRINT "ß"
 
-LOCATE 15, 50
+LOCATE 16, 50
 PRINT "ß"
 
-LOCATE 15, 60
+LOCATE 16, 60
 PRINT "þ"
 
-LOCATE 15, 67
+LOCATE 16, 67
 PRINT "ß"
 
-LOCATE 16, 9
+LOCATE 17, 9
 PRINT "þ"
 
-LOCATE 16, 21
+LOCATE 17, 21
 PRINT "ß"
 
-LOCATE 16, 26
+LOCATE 17, 26
 PRINT "þ"
 
-LOCATE 16, 48
+LOCATE 17, 48
 PRINT "ß"
 
-LOCATE 16, 54
+LOCATE 17, 54
 PRINT "ß"
 
-LOCATE 16, 65
+LOCATE 17, 65
 PRINT "þ"
 
-LOCATE 16, 70
+LOCATE 17, 70
+PRINT "ß"
+
+LOCATE 18, 6
+PRINT "þ"
+
+LOCATE 18, 16
+PRINT "þ"
+
+LOCATE 18, 26
+PRINT "ß"
+
+LOCATE 18, 38
+PRINT "þ"
+
+LOCATE 18, 49
+PRINT "ß"
+
+LOCATE 18, 60
+PRINT "þ"
+
+LOCATE 18, 75
 PRINT "ß"
 
 LOCATE 17, 6
-PRINT "þ"
-
-LOCATE 17, 16
-PRINT "þ"
-
-LOCATE 17, 26
-PRINT "ß"
-
-LOCATE 17, 38
-PRINT "þ"
-
-LOCATE 17, 49
-PRINT "ß"
-
-LOCATE 17, 60
-PRINT "þ"
-
-LOCATE 17, 75
-PRINT "ß"
-
-LOCATE 16, 6
 COLOR 14
 PRINT "+"
 
@@ -3687,6 +3836,78 @@ PRINT "$$$$ $$"
 
 END SUB
 
+SUB DrawWolf
+
+COLOR 7
+
+LOCATE 3, 18
+PRINT "              °              °"
+LOCATE 4, 18
+PRINT "              °°            °±°"
+LOCATE 5, 18
+PRINT "             °°±°         °°±±°"
+LOCATE 6, 18
+PRINT "             °°±±° °  ° ° °°±°°"
+LOCATE 7, 18
+PRINT "             °°±±±°°° °° °°   °"
+LOCATE 8, 18
+PRINT "            ° °°°±°     °  - °°"
+LOCATE 9, 18
+PRINT "             °° -°--° ° °--±±° ° °"
+LOCATE 10, 18
+PRINT "            ° °±±Ý * °² * Ý±±°° °"
+LOCATE 11, 18
+PRINT "          °   °±±± °°±±±°°° ±±±°° °"
+LOCATE 12, 18
+PRINT "         °   °   ²²²²±²±²²²²  ° ° ° ±"
+LOCATE 13, 18
+PRINT "         ± ° ° ° Ý²²°°°²Þþ ° °  ° °"
+LOCATE 14, 18
+PRINT "        °  °  ° °  °° ° °° ÝÝ° ° °  ° ²       "
+LOCATE 15, 18
+PRINT "         °  ° ° °°ÝÝÝÝÝÝ ° ° °   °     °      "
+LOCATE 16, 18
+PRINT "        ±  ±  ° ° Ý °°°° Ý ° °     °          "
+LOCATE 17, 18
+PRINT "          ± ²  ° °   °°    °°   ° °  ²        "
+LOCATE 18, 18
+PRINT "        ²         °°     °°           °       "
+LOCATE 19, 18
+PRINT "       °    ±       °° °°                     "
+LOCATE 20, 18
+PRINT "          °                                   "
+LOCATE 21, 18
+PRINT ""
+
+COLOR 14
+LOCATE 10, 37
+PRINT "*"
+LOCATE 10, 42
+PRINT "*"
+
+COLOR 4
+LOCATE 15, 35
+PRINT "°"
+LOCATE 16, 34
+PRINT "°"
+LOCATE 17, 35
+PRINT "°"
+LOCATE 16, 44
+PRINT "°"
+
+LOCATE 15, 43
+PRINT "°"
+LOCATE 16, 40
+PRINT "°"
+LOCATE 16, 38
+PRINT "°"
+LOCATE 17, 39
+PRINT "°"
+
+
+
+END SUB
+
 SUB FightIntro
 
 PRINT
@@ -3708,27 +3929,19 @@ IF Enemyname$ = "Crawler" THEN
 LOCATE 3, 26
 END IF
 
-PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
-
-IF Enemyname$ = "Criminal" THEN
-CALL DrawCriminal
+IF Enemyname$ = "Wild Wolf" THEN
+LOCATE 5, 3
+PRINT Enemyname$; "!"
+LOCATE 6, 3
+PRINT "ATTACK: "; enemyAT
+LOCATE 7, 3
+PRINT "DEFENCE: "; enemyDF
+GOTO Skip
 END IF
 
-IF Enemyname$ = "Giant Scorpion" THEN
-CALL DrawScorpion
-END IF
+PRINT Enemyname$; "! ATTACK: "; enemyAT; "DEFENCE: "; enemyDF
 
-IF Enemyname$ = "Crawler" THEN
-CALL DrawCrawler
-END IF
-
-IF Enemyname$ = "Witch" THEN
-CALL DrawWitch
-END IF
-
-IF Enemyname$ = "Wild Bugio" THEN
-CALL DrawBugio
-END IF
+Skip:
 
 COLOR PositionCol(PositionCH), 0
 LOCATE 1, 1
@@ -3742,6 +3955,10 @@ PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 ' ++++++++++++++++++++++++++++ FOREST BANNER ++++++++++++++++++++++++++++++++
 
 IF PositionCol(PositionCH) = 2 THEN
+
+COLOR 10, 0
+LOCATE 1, 1
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FOREST ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
 LOCATE 21, 1
 COLOR 2
@@ -3807,6 +4024,11 @@ END IF
 
 IF PositionCol(PositionCH) = 7 THEN
 
+COLOR PositionCol(PositionCH), 0
+LOCATE 1, 1
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FROZEN LANDS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
 LOCATE 21, 1
 COLOR 15
 PRINT "  °°°°°°°   °°°°      °°° °°°   °°°°°°°    °°° °°°   °°°°°°°    °°°°°°°   °°°°°°"
@@ -3829,7 +4051,30 @@ END IF
 
 '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+IF Enemyname$ = "Criminal" THEN
+CALL DrawCriminal
+END IF
 
+IF Enemyname$ = "Wild Wolf" THEN
+CALL DrawWolf
+END IF
+
+
+IF Enemyname$ = "Giant Scorpion" THEN
+CALL DrawScorpion
+END IF
+
+IF Enemyname$ = "Crawler" THEN
+CALL DrawCrawler
+END IF
+
+IF Enemyname$ = "Witch" THEN
+CALL DrawWitch
+END IF
+
+IF Enemyname$ = "Wild Bugio" THEN
+CALL DrawBugio
+END IF
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -3844,10 +4089,10 @@ x = 0
 DO UNTIL x = 4000
 'RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
+d2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 4
-LOCATE D2, d1
+LOCATE d2, d1
 PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
@@ -3860,10 +4105,10 @@ x = 0
 DO UNTIL x = 4000
 'RANDOMIZE TIMER
 d1 = INT(RND * 75) + 1
-D2 = INT(RND * 23) + 1
+d2 = INT(RND * 23) + 1
 x = x + 1
 COLOR 0
-LOCATE D2, d1
+LOCATE d2, d1
 PRINT "°±²"
 LOCATE 10, 33
 COLOR 15
@@ -4336,6 +4581,12 @@ SUB Notes
 ' - Challenges variables are loaded everytime you start the game.
 ' - The Fight Intro has been improved.
 ' - Grapics made of ASCII characters added to Fight Intro.
+' - Wild Bugio - ASCII graphic added.
+' - Wild Wolf - ASCII graphic added.
+' - ASCII BANNERS represent the TERRAIN you are in.
+' - The kind of terrain influences in battle.
+' - A randomly chosen terrain will give you extra AT pts in battle.
+' - "You were born in the <terrain>" showed in the CHARACTER screen.
 
 
 ' v 0.4
@@ -4463,6 +4714,16 @@ SELECT CASE d1
 	line$(5) = "and scary dolls, made of plants, stones, feathers and animal skulls. Not so"
 	line$(6) = "long ago I found out that one of our superiors was also part of the order."
 	line$(7) = "You can't trust anyone here."
+	
+	CASE 4
+
+	line$(1) = "Blonde Woman: There's some sort of magic in this town. Not so big, not too"
+	line$(2) = "small. If you go out to the streets and look around, the trees, the houses"
+	line$(3) = "and even the stores look tidy and neat, they are very nice. However, when"
+	line$(4) = "the sun goes down, people hide in their homes and only come out the next"
+	line$(5) = "morning. Everyone is terrified of darkness and no one dares to walk out of"
+	line$(6) = "the city into the  woods. It's very dangerous. Chances of being killed or"
+	line$(7) = "dissapearing are high."
 	
 	CASE ELSE
 
