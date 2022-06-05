@@ -40,3 +40,25 @@ Version 0.4
 - Main menu and some visual details of the game improved.
 - CHARACTER screen added (Statistics and Information about the character)
 
+v 0.5
+
+- System of CHALLENGES created.
+- First challenges added.
+- GET 100 GOLD challenge, created.
+- FIND A CITY FOR THE FIRST TIME challenge, created.
+- REACH LEVEL 10 challenge, created.
+- The chl.dat file is created to save challenges variables.
+- Challenges variables are saved everytime you exit the game.
+- Challenges variables are loaded everytime you start the game.
+- The Fight Intro has been improved.
+- Grapics made of ASCII characters added to Fight Intro.
+- Wild Bugio - ASCII graphic added.
+- Wild Wolf - ASCII graphic added.
+- ASCII BANNERS represent the TERRAIN you are in.
+- The kind of terrain influences in battle.
+- A randomly chosen terrain will give you extra AT pts in battle.
+- A randomly chosen terrain will decrese your DF pts in battle.
+- "You were born in the <terrain>" showed in the CHARACTER screen.
+- "You are not used to be in <terrain>" showed in the CHARACTER screen.
+- Witch - ASCII graphic added.
+- LAKES & RIVERS banner added to the fighting intro.
