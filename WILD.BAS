@@ -40,7 +40,6 @@ DECLARE SUB DrawBugio ()
 '- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
 
 '- MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
-'- QUE UN TERRENO SEA DESFAVORABLE PARA EL PERSONAJE.
 
 '- TRADUCIR JUEGO AL ESPANHOL
 '- TRADUCIR JUEGO A PT BRASIL
@@ -1633,7 +1632,7 @@ PRINT "Die: "; d1; " | ";
 PRINT "Damage + "; d1; " of terrain bonus!";
 damage1 = damage1 + d1
 COLOR 15
-PRINT " DAMAGE increased to "; damage1; " now! ±±±±±"
+PRINT " DAMAGE increased to "; damage1; " now! ±±±±±±±"
 PRINT
 END IF
 
@@ -3023,6 +3022,7 @@ askagainbooks:
 		PRINT "ASK SOMETHING"
 
 		DO WHILE INKEY$ = ""
+
 		LOOP
 		GOTO EndSub
 
@@ -3039,6 +3039,17 @@ askagainbooks:
 	END SELECT
 
 	END IF
+
+
+       IF opcion = 2 OR opcion = 0 THEN
+
+       line$(1) = "You just decide to continue walking..."
+       line$(2) = "Maybe some other time."
+
+       PrintLines
+
+       END IF
+
 
 END IF
 
@@ -3722,125 +3733,64 @@ END SUB
 
 SUB DrawWitch
 
-COLOR 4
-LOCATE 5, 26
-PRINT "#############################"
-LOCATE 6, 26
-PRINT "#     S#############$$$$    #"
-LOCATE 7, 26
-PRINT "#    S###############$$$$   #"
-LOCATE 8, 26
-PRINT "#    S##$$$####$$$##$$$$    #"
-LOCATE 9, 26
-PRINT "#    SS##*#$##$#*###$$ $$$  #"
-LOCATE 10, 26
-PRINT "#    SS#####.#######$$$$$   #"
-LOCATE 11, 26
-PRINT "#   SSS###<<#######$$$$$$$$ #"
-LOCATE 12, 26
-PRINT "#  SSSS###########$$$$ $$$$$#"
-LOCATE 13, 26
-PRINT "# SSSSSS$# # # # #$$$$$$$   #"
-LOCATE 14, 26
-PRINT "#   $$$   # # # #   $$$$$$$ #"
-LOCATE 15, 26
-PRINT "# $$$ $$$  #####   $$$$ $$  #"
-LOCATE 16, 26
-PRINT "#############################"
-
 
 COLOR 7
-LOCATE 6, 27
-PRINT "     S#############$$$$ "
-LOCATE 7, 27
-PRINT "    S###############$$$$   "
-LOCATE 8, 27
-PRINT "    S##$$$####$$$##$$$$    "
-LOCATE 9, 27
-PRINT "    SS##*#$##$#*###$$ $$$  "
-LOCATE 10, 27
-PRINT "    SS#####.#######$$$$$   "
-LOCATE 11, 27
-PRINT "   SSS###<<#######$$$$$$$$ "
-LOCATE 12, 27
-PRINT "  SSSS###########$$$$ $$$$$"
-LOCATE 13, 27
-PRINT " SSSSSS$# # # # #$$$$$$$   "
-LOCATE 14, 27
-PRINT "   $$$   # # # #   $$$$$$$ "
-LOCATE 15, 27
-PRINT " $$$ $$$  #####   $$$$ $$  "
+LOCATE 5, 17
+PRINT "                   ° ° °"
+LOCATE 6, 17
+PRINT "                ú±ú ± ± ± °"
+LOCATE 7, 17
+PRINT "               ± °±° °±° ± °"
+LOCATE 8, 17
+PRINT "              ± °  ±   ±° ± °"
+LOCATE 9, 17
+PRINT "             ° ±  þ  ß  °°²±ú"
+LOCATE 10, 17
+PRINT "             ú± °  ÞÞ  °±ú± °"
+LOCATE 11, 17
+PRINT "             ° ± °Ý²ÝÝ²° ± ±"
+LOCATE 12, 17
+PRINT "              ±ú± °   ± ±ú° °"
+LOCATE 13, 17
+PRINT "              °±°  ²°² ° ° °ú"
+LOCATE 14, 17
+PRINT "               ± ±  ²  ± ± °ú"
+COLOR 3
+LOCATE 15, 17
+PRINT "                  °±°±°±°  °ú"
+LOCATE 16, 17
+PRINT "               °±°±°±°±°±°±°°²"
+LOCATE 17, 17
+PRINT "              °±°±°±°±°±°±°±°°°²"
 
 
-LOCATE 8, 34
-COLOR 8
-PRINT "$$$"
-
-LOCATE 9, 37
-PRINT "$"
 
 
-LOCATE 8, 41
-PRINT "$$$"
-
-LOCATE 9, 40
-PRINT "$"
-
-LOCATE 9, 35
 COLOR 4
-PRINT "*"
-
-LOCATE 9, 42
-PRINT "*"
-
-LOCATE 13, 35
-PRINT "# # # # #"
-
-LOCATE 14, 36
-PRINT "# # # #"
+LOCATE 9, 35
+PRINT "þ  ß"
 
 COLOR 15
-LOCATE 6, 27
-PRINT "     S"
-LOCATE 7, 27
-PRINT "    S"
-LOCATE 8, 27
-PRINT "    S"
-LOCATE 9, 27
-PRINT "    SS"
-LOCATE 10, 27
-PRINT "    SS"
-LOCATE 11, 27
-PRINT "   SSS"
-LOCATE 12, 27
-PRINT "  SSSS"
-LOCATE 13, 27
-PRINT " SSSSSS"
-LOCATE 14, 27
-PRINT "   $$$"
-LOCATE 15, 27
-PRINT " $$$ $$$"
+LOCATE 11, 35
+PRINT "Ý"
+LOCATE 11, 37
+PRINT "ÝÝ"
 
-LOCATE 6, 46
-PRINT "$$$$"
-LOCATE 7, 47
-PRINT "$$$$"
-LOCATE 8, 46
-PRINT "$$$$"
-LOCATE 9, 46
-PRINT "$$ $$$"
-LOCATE 10, 46
-PRINT "$$$$$"
-LOCATE 11, 45
-PRINT "$$$$$$$$"
-LOCATE 12, 44
-PRINT "$$$$ $$$$$"
-LOCATE 13, 44
-PRINT "$$$$$$$"
-LOCATE 14, 46
-PRINT "$$$$$$$"
-LOCATE 15, 45
-PRINT "$$$$ $$"
+COLOR 4
+LOCATE 11, 36
+PRINT "²"
+LOCATE 11, 39
+PRINT "²"
+LOCATE 12, 39
+PRINT "±"
+
+LOCATE 13, 38
+PRINT "²"
+
+LOCATE 11, 34
+PRINT "°"
+LOCATE 12, 35
+PRINT "°"
 
 
 END SUB
@@ -3942,13 +3892,13 @@ IF Enemyname$ = "Wild Wolf" THEN
 LOCATE 5, 3
 PRINT Enemyname$; "!"
 LOCATE 6, 3
-PRINT "ATTACK: "; enemyAT
+PRINT "ATTACK:"; enemyAT
 LOCATE 7, 3
-PRINT "DEFENCE: "; enemyDF
+PRINT "DEFENCE:"; enemyDF
 GOTO Skip
 END IF
 
-PRINT Enemyname$; "! ATTACK: "; enemyAT; "DEFENCE: "; enemyDF
+PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
 
 Skip:
 
@@ -3967,7 +3917,7 @@ IF PositionCol(PositionCH) = 2 THEN
 
 COLOR 10, 0
 LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FOREST ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FOREST ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
 LOCATE 21, 1
 COLOR 2
@@ -4027,6 +3977,31 @@ PRINT ";"
 LOCATE 22, 68
 COLOR 2
 PRINT ";"
+END IF
+
+'++++++++++++++++++++++++++++ LAKES & RIVERS +++++++++++++++++++++++++++++++++++
+
+IF PositionCol(PositionCH) = 1 THEN
+
+
+COLOR 3
+LOCATE 20
+PRINT "ú  ú  ú     ú    ú                                  ú     ú      ú  ú   ú  ú  ú"
+LOCATE 21
+PRINT "°²Ü²ß°ß±Ü°²ß²°ßÜ±²ß²Ü°²ß±Ü±ß²ß²°ÝÜ²°±ß°Ý±Ü²°ß²±Ü°²ÜÝ°ß°²Ü±ß²ßÝÛÜÛ²ÛßÛÜÛ²ßÝ²ßÝ±°±"
+LOCATE 22
+PRINT "²±°þ°²þ±þ°þ°Ýþ±²þ°ÝÜ±þ²°°þ°Ý±þ°Ýþ°±Ý°±þ°Ý±þ±þ±°þ²þ²°Ü°þ°þ°²Ý²°Ý°þ°°þ°Ýþ°²Ý°þ°±²°"
+LOCATE 23
+PRINT "±°²°²°²°°²±°°±²°²°±²°±°²±°°°°±±°±°°±±°°²°°±²°°²°±°±°²±²°°±°²°±°²°²±°°±°²°±²°²°±²"
+LOCATE 24
+PRINT "°²°²°²°²°²°±°²°°±°±°²°°²°±°°±°±²°°±°°±°°±²°±°±°°±°²°±°°°±°²°±°°±°²°±°°²°±°°°±°²°"
+
+
+LOCATE 1
+COLOR 1
+PRINT "°²°²°²°²°°²°±°²°°°²°±²°±°²°±°²° [LAKES & RIVERS] °²°±°°±°±°²°°°²°±°°±°°±²°±°±°±²"
+
+
 END IF
 
 '++++++++++++++++++++++++++++ FROZEN LANDS +++++++++++++++++++++++++++++++++++
@@ -4630,8 +4605,11 @@ SUB Notes
 ' - ASCII BANNERS represent the TERRAIN you are in.
 ' - The kind of terrain influences in battle.
 ' - A randomly chosen terrain will give you extra AT pts in battle.
+' - A randomly chosen terrain will decrese your DF pts in battle.
 ' - "You were born in the <terrain>" showed in the CHARACTER screen.
-
+' - "You are not used to be in <terrain>" showed in the CHARACTER screen.
+' - Witch - ASCII graphic added.
+' - LAKES & RIVERS banner added to the fighting intro.
 
 ' v 0.4
 
