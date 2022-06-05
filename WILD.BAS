@@ -1424,14 +1424,14 @@ enemyDF = 5
 
 	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
-	enemyAT = 6
+	enemyAT = 8
 	enemyDF = 10
 	END IF
 
 	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
-	enemyAT = 6
-	enemyDF = 10
+	enemyAT = 38
+	enemyDF = 43
 	END IF
 	
 END IF
@@ -1443,14 +1443,14 @@ enemyDF = 6
 
 	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
-	enemyAT = 6
+	enemyAT = 7
 	enemyDF = 15
 	END IF
 
 	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
-	enemyAT = 6
-	enemyDF = 10
+	enemyAT = 26
+	enemyDF = 35
 	END IF
 
 END IF
@@ -1462,14 +1462,14 @@ enemyDF = 5.5
 	
 	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
-	enemyAT = 8
+	enemyAT = 9
 	enemyDF = 12
 	END IF
 
 	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
-	enemyAT = 6
-	enemyDF = 10
+	enemyAT = 36
+	enemyDF = 40
 	END IF
 
 END IF
@@ -1481,8 +1481,8 @@ enemyDF = 5
 
 	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
-	enemyAT = 30
-	enemyDF = 54
+	enemyAT = 11
+	enemyDF = 15
 	END IF
 
 	IF AT > 22 OR hp > 22 OR DF > 22 THEN
@@ -1633,7 +1633,7 @@ PRINT "Die: "; d1; " | ";
 PRINT "Damage + "; d1; " of terrain bonus!";
 damage1 = damage1 + d1
 COLOR 15
-PRINT " DAMAGE PTS increased to "; damage1; " now! ±±±±±"
+PRINT " DAMAGE increased to "; damage1; " now! ±±±±±"
 PRINT
 END IF
 
@@ -1765,20 +1765,27 @@ PRINT
 
 PLAY levelup$
 
+OpcionLevelUp:
 INPUT opcion
 
-IF opcion = 1 THEN
-AT = AT + 1
-END IF
-IF opcion = 2 THEN
-DF = DF + 1
-END IF
-IF opcion = 3 THEN
-maxHP = maxHP + 1
-END IF
-IF opcion = 4 THEN
-MaxMana = MaxMana + 1
-END IF
+SELECT CASE opcion
+
+	CASE 1
+	AT = AT + 1
+	
+	CASE 2
+	DF = DF + 1
+
+	CASE 3
+	maxHP = maxHP + 1
+
+	CASE 4
+	MaxMana = MaxMana + 1
+
+	CASE ELSE
+	GOTO OpcionLevelUp
+
+END SELECT
 
 mana = MaxMana
 hp = maxHP
@@ -1929,6 +1936,7 @@ INPUT "What will you do...", opcion
 		Pause
 		PRINT "Its HP is"; enemyDF; " now!"
 		PRINT
+		COLOR 2
 		Pause
 		PRINT "--------------------------------------------"
 		PLAY Chime$
@@ -1959,6 +1967,7 @@ INPUT "What will you do...", opcion
 		Pause
 		PRINT "Ready to fight back!"
 		PRINT
+		COLOR 2
 		Pause
 		PRINT "--------------------------------------------"
 		PLAY Chime$
@@ -4041,6 +4050,27 @@ PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
 END IF
 
+'++++++++++++++++++++++++++++ SWAMPS +++++++++++++++++++++++++++++++++++
+
+IF PositionCol(PositionCH) = 8 THEN
+
+COLOR PositionCol(PositionCH), 0
+LOCATE 1, 1
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ SWAMPS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+LOCATE 21, 1
+COLOR 8
+PRINT "  °°°°°°°   °°°°      °°° °°°   °°°°°°°    °°° °°°   °°°°°°°    °°°°°°°   °°°°°°"
+LOCATE 22, 1
+COLOR 8
+PRINT " °°°°°°°°°°°°°°°°°°° °°°°°°°°°° °°°°°°°°°° °°°°°°°°° °°°°°°°°°° °°°°°°°° °°°°°°°"
+LOCATE 23, 1
+COLOR 8
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+END IF
+
 '++++++++++++++++++++++++++++++ MOUNTAINS ++++++++++++++++++++++++++++++++++++
 
 IF PositionCol(PositionCH) = 6 THEN
@@ -4128,7 +4158,20 @@ COLOR 3
 PRINT "Die:"; d1;
 COLOR 10
 
-IF d1 > 0 AND d1 < 3 THEN
+IF d1 = 1 THEN
+
+line$(1) = "Officer: If you find the leaders of that group and end with their lives, I guess"
+line$(2) = "our lands might be back to normal and our kids and women will live in peace."
+line$(3) = "There are several savage monsters and wild creatures in the area but we can deal"
+line$(4) = "with that, we have soldiers and a local force for that. However, evil human"
+line$(5) = "beings can be much worse than any monsters or demons if they want to. I strongly"
+line$(6) = "believe that some human beings are just demons inside a human body."
+
+PrintLines
+
+END IF
+
+IF d1 = 2 THEN
 
 line$(1) = "Peasant: So, you are looking for some terrible criminals, right?"
 line$(2) = "Well, some of them hide in places like forests or in the mountains"
@@ -4143,7 +4186,8 @@ IF d1 = 3 THEN
 line$(1) = "Tavern owner: Good to know you are taking care of those terrible killers."
 line$(2) = "Some of them are wizards who practice the arts of the dark side. People"
 line$(3) = "even say they kidnap kids and young women for their sacrifices, offering"
-line$(4) = "them to the black lord."
+line$(4) = "them to the black lord. However, they've been around us most of the time"
+line$(5) = "and we don't even know who they are. You can't trust anyone here."
 
 PrintLines
 
@@ -4151,7 +4195,7 @@ END IF
 
 IF d1 = 4 THEN
 
-line$(1) = "Farmer: Be very a careful man, we all know what you're doing over here"
+line$(1) = "Farmer: Be very careful man, we all know what you're doing over here"
 line$(2) = "and they know too. They expect to meet you soon, so I guess they are ready."
 line$(3) = "Don't be a fool, don't think they are weak. Get ready as much as you can."
 line$(4) = "These people are dark and they aren't ordinary ones, they posses supernatural"
