@@ -1,3 +1,4 @@
+DECLARE SUB PositiveSub ()
 DECLARE SUB DrawWolf ()
 DECLARE SUB DrawMountains ()
 DECLARE SUB PrintLines ()
@@ -6,12 +7,13 @@ DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
 
-'- QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
+' - MEJORAR CODIGO USANDO [SUB PrintLines] EN PositiveSub.
+' - QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
 '  PARA EL PERSONAJE, OTRO TERRENO DEBE SER DESFAVORABLE.
-
-
 ' - AGREGAR DETALLES Y GRAFICOS ASCII
 ' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
+
+
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 
@@ -85,7 +87,7 @@ DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
 
-DIM SHARED DecisionResult, LastDecisionEvent, mana, hp, gold
+DIM SHARED d1, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, maxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(25)
@@ -319,7 +321,7 @@ City6Visited = 0
 
 PRINT "Generating random gold values..."
 					       'ALL THESE VARIABLES
-gold = rolld6 * rolld6                         'HAVE BEEN RANDOMIZED, SO
+GOLD = rolld6 * rolld6                         'HAVE BEEN RANDOMIZED, SO
 PRINT "Generating random attack value..."      'EVERYTIME YOU PLAY A NEW
 					       'GAME IT'S GONNA BE SOMETHING
 AT = rolld6 * 2                                'DIFFERENT. I USED THE VALUE
@@ -328,11 +330,11 @@ PRINT "Generating random defence value..." '6 TO RANDOMIZE THEM, SIMULATING
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
 maxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
-hp = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
+HP = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
 
 MaxMana = 5 + rolld6
-mana = MaxMana
+MANA = MaxMana
 
 Pause
 
@@ -419,24 +421,24 @@ CALL Character
 inicio:
 
 d1 = (rolld6) / 10
-hp = hp + d1
-mana = mana + d1
+HP = HP + d1
+MANA = MANA + d1
 
 inicio2:
 RANDOMIZE TIMER
 
 CALL CheckChallenges     'Checks if there are challenges acomplished and
 			 'if so, shows a message.
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
-IF hp > maxHP THEN
-hp = maxHP
+IF HP > maxHP THEN
+HP = maxHP
 END IF
 
-IF mana > MaxMana THEN
-mana = MaxMana
+IF MANA > MaxMana THEN
+MANA = MaxMana
 END IF
 
 'MAP ==========================    'THE MAP IS GENERATED FOR THE FIRST TIME
@@ -643,9 +645,9 @@ COLOR , 0
 
 COLOR 3
 LOCATE 3, 1
-PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "| ( LEVEL"; level; ")"
 LOCATE 4, 1
-PRINT "Mana"; mana; "| Expert Points:"; xpoints; "| Gold:"; gold
+PRINT "Mana"; MANA; "| Expert Points:"; xpoints; "| Gold:"; GOLD
 
 COLOR 2
 PRINT
@@ -771,7 +773,7 @@ SELECT CASE PositionCH
 
 END SELECT
 
-	IF hp <= 0 THEN
+	IF HP <= 0 THEN
 	GOTO mainmenu
 	END IF
 
@@ -824,7 +826,7 @@ IF direction = 555 THEN
 
 	CALL City
 
-		IF hp <= 0 THEN
+		IF HP <= 0 THEN
 		GOTO mainmenu
 		END IF
 
@@ -1248,167 +1250,15 @@ END SELECT
 '+++++++++++++++++++++++++++++++ POSITIVE EVENTS +++++++++++++++++++++++++++++
 positive:
 
-d1 = rolld6
+d1 = rolld6                      'Rolls the D6 die.
 
 IF d1 = LastPositiveEvent THEN   'This part of the code should avoid
 GOTO positive                    'the same positive event repeating twice
 END IF                           'in a very short period of time.
 LastPositiveEvent = d1
 
-
-COLOR 3
-PRINT "Die:"; d1;
-COLOR 10
-
-IF d1 = 1 THEN
-Pause
-PRINT "You find a good place to sleep and spend the night there. It's an inn."
-Pause
-PRINT "You've been there before and know the owner. You feel much better"
-Pause
-PRINT "the next day. (+1 HP)"
-hp = hp + 1
-END IF
-
-IF d1 = 2 THEN
-Pause
-PRINT "You find an abandoned house in the place. It's an old house but seems"
-Pause
-PRINT "to be in perfect conditions. The front door is open. You get in. The place"
-Pause
-PRINT "is clean, there's even a room with a bed, old chairs and a big table. You "
-Pause
-PRINT "even find a shelf with many old books. Books about black and white magic,"
-Pause
-PRINT "the natural world, about creatures, the kingdom's history, music, poetry"
-Pause
-PRINT "and even short stories. You also find some old gold coins around the place."
-Pause
-PRINT "You spend the rest of the day resting and reading. Seems to be a safe and "
-Pause
-PRINT "good place to spend the night too. (+5 HP) (+20 GOLD) (100% MANA pts)"
-hp = hp + 5
-gold = gold + 20
-mana = MaxMana
-END IF
-
-IF d1 = 3 THEN
-Pause
-PRINT "You see something shiny in the middle of the path."
-Pause
-PRINT "Some gold coins are spread all over the place!!! (+10 GOLD)"
-gold = gold + 10
-END IF
-
-IF d1 = 4 THEN
-Pause
-PRINT "You stop, set a place to camp. Start a fire and cook something to eat."
-Pause
-PRINT "You spend your time practicing fighting techniques and training with your"
-Pause
-PRINT "knives and sword. The mission has been pretty rough and hard, so difficult.  "
-Pause
-PRINT "You needed to take some time for you, to rest and relax a little bit. It's"
-Pause
-PRINT "always a good thing to practice with your weapons and improve your fighting"
-Pause
-PRINT "techniques. (HP + 3) (AT + 0.5) "
-hp = hp + 3
-AT = AT + .5
-END IF
-
-IF d1 = 5 THEN
-Pause
-PRINT "Street vendor by the road! He offers you the following items:"
-PRINT
-Pause
-PRINT "[1] Mix of Herbs   (+5 HP)   - $25"
-Pause
-PRINT "[2] Energetic Soup (+5 MANA) - $25"
-Pause
-PRINT "[3] NO, THANKS!"
-PRINT
-Pause
-INPUT "Would you like to buy something sir?"; opcion
-
-IF opcion = 3 THEN
-Pause
-PRINT "- Oh, that's ok then..."
-DO WHILE INKEY$ = ""
-LOOP
+CALL PositiveSub
 GOTO inicio
-END IF
-
-IF gold < 25 THEN
-Pause
-PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
-
-
-IF opcion = 1 THEN
-Pause
-PRINT "- Nice, MIX OF HERBS! Here you have!"
-DO WHILE INKEY$ = ""
-LOOP
-PRINT
-Pause
-PRINT "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
-Pause
-PRINT "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
-hp = hp + 5
-gold = gold - 25
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
-
-IF opcion = 2 THEN
-Pause
-PRINT "- Nice, ENERGETIC SOUP! Here you have!"
-DO WHILE INKEY$ = ""
-LOOP
-PRINT
-Pause
-PRINT "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
-Pause
-PRINT "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
-Pause
-PRINT "PRETTY GOOD."
-mana = mana + 5
-gold = gold - 25
-DO WHILE INKEY$ = ""
-LOOP
-GOTO inicio
-END IF
-
-END IF
-
-IF d1 = 6 THEN
-Pause
-PRINT "You find a family of travelers by the road. They've heard about you and"
-Pause
-PRINT "they know you are there to help. The husband invites you to join them. You"
-Pause
-PRINT "rest, eat good food and take a shower. You stay a good time with them."
-Pause
-PRINT "The man also teaches you some fighting and defensive techniques. Before"
-Pause
-PRINT "you leave, they give you some food and gold coins to support you. "
-Pause
-PRINT "You thank them and continue with your travel. (Gold + 25) (HP + 10) (AT + 0.5) "
-gold = gold + 25
-hp = hp + 10
-AT = AT + .5
-END IF
-
-DO WHILE INKEY$ = ""
-LOOP
-
-GOTO inicio
-
 
 '---------------------------------------------------------
 enemy:
@@ -1421,13 +1271,13 @@ Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
 	enemyAT = 8
 	enemyDF = 10
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
 	enemyAT = 38
 	enemyDF = 43
@@ -1440,13 +1290,13 @@ Enemyname$ = "Wild Bugio"
 enemyAT = 4.5
 enemyDF = 6
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
 	enemyAT = 7
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
 	enemyAT = 26
 	enemyDF = 35
@@ -1459,13 +1309,13 @@ Enemyname$ = "Witch"
 enemyAT = 4
 enemyDF = 5.5
 	
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
 	enemyAT = 9
 	enemyDF = 12
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
 	enemyAT = 36
 	enemyDF = 40
@@ -1478,13 +1328,13 @@ Enemyname$ = "Crawler"
 enemyAT = 5
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
 	enemyAT = 11
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Goblin"
 	enemyAT = 35
 	enemyDF = 59
@@ -1497,13 +1347,13 @@ Enemyname$ = "Criminal"
 enemyAT = 4
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Forest Demon"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 	
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Draco"
 	enemyAT = 11
 	enemyDF = 15
@@ -1516,13 +1366,13 @@ Enemyname$ = "Giant Scorpion"
 enemyAT = 6
 enemyDF = 7
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Corrupted Soul"
 	enemyAT = 14
 	enemyDF = 16
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Centipede"
 	enemyAT = 19
 	enemyDF = 21
@@ -1595,7 +1445,7 @@ combatINI:
 
 COLOR 2
 PRINT
-PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; mana; ")"
+PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
 COLOR 4
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
 COLOR 2
@@ -1712,7 +1562,7 @@ PRINT "YOU receive"; finaldamage; "points of damage."
 COLOR 2
 
 
-hp = hp - finaldamage
+HP = HP - finaldamage
 
 
 DO WHILE INKEY$ = ""
@@ -1721,7 +1571,7 @@ LOOP
 PRINT "--------------------------------------------"
 
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
@@ -1732,7 +1582,7 @@ Pause
 PRINT "GOOD JOB! The "; Enemyname$; " has been defeated!"
 
 d1 = rolld6
-gold = gold + d1
+GOLD = GOLD + d1
 Pause
 PRINT "You receive"; d1; "gold coins."
 
@@ -1753,8 +1603,19 @@ Pause
 PRINT "LEVEL UP!"
 xpoints = 0
 level = level + 1
+
+Pause
+COLOR 10, 2
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "MANA:"; MaxMana
+
+COLOR 3, 0
 Pause
 PRINT "What would you like to improve?"          'IMPROVING SKILL POINTS
+
+LOCATE 23, 32
+COLOR 0, 0
+PRINT "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
+
 PRINT
 Pause
 PRINT "1) ATTACK      2)DEFENCE"
@@ -1767,27 +1628,52 @@ PLAY levelup$
 OpcionLevelUp:
 INPUT opcion
 
+
+COLOR 15
 SELECT CASE opcion
 
 	CASE 1
 	AT = AT + 1
 	
+	PRINT
+	PRINT "Attack increased!"
+	Pause
+	PRINT "Your attack is"; AT; "now!"
+
 	CASE 2
 	DF = DF + 1
+
+	PRINT
+	PRINT "Defence increased!"
+	Pause
+	PRINT "Your defence is"; DF; "now!"
 
 	CASE 3
 	maxHP = maxHP + 1
 
+	PRINT
+	PRINT "HP increased!"
+	Pause
+	PRINT "Your HP is"; maxHP; "now!"
+	
 	CASE 4
 	MaxMana = MaxMana + 1
+
+	PRINT
+	PRINT "Mana increased!"
+	Pause
+	PRINT "Your mana is"; MaxMana; "now!"
 
 	CASE ELSE
 	GOTO OpcionLevelUp
 
 END SELECT
 
-mana = MaxMana
-hp = maxHP
+MANA = MaxMana
+HP = maxHP
+
+DO WHILE INKEY$ = ""
+LOOP
 
 END IF
 
@@ -1850,9 +1736,9 @@ INPUT "What will you do...", opcion
 		PRINT "You try to escape but can't. It seems you aren't fast enough for that."
 		Pause
 		PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-		hp = hp - enemyAT
+		HP = HP - enemyAT
 		Pause
-		PRINT "Your HP is "; hp; " now."
+		PRINT "Your HP is "; HP; " now."
 		PRINT
 		COLOR 2
 		Pause
@@ -1861,7 +1747,7 @@ INPUT "What will you do...", opcion
 		DO WHILE INKEY$ = ""
 		LOOP
 
-			IF hp <= 0 THEN
+			IF HP <= 0 THEN
 			GOTO GameOver
 			END IF
 
@@ -1908,11 +1794,11 @@ INPUT "What will you do...", opcion
 		GOTO 1248
 		END IF
 
-		IF opcion = 1 AND mana < 3 THEN ' ====  MANA OPTION 1 ====
+		IF opcion = 1 AND MANA < 3 THEN ' ====  MANA OPTION 1 ====
 		COLOR 2
 		PRINT
 		Pause
-		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "Your mana is"; MANA; "! You don't have enough energy in your"
 		Pause
 		PRINT "body for that attack!"
 		PRINT
@@ -1921,8 +1807,8 @@ INPUT "What will you do...", opcion
 		PLAY Chime$
 		END IF
 
-		IF opcion = 1 AND mana >= 3 THEN
-		mana = mana - 3
+		IF opcion = 1 AND MANA >= 3 THEN
+		MANA = MANA - 3
 		enemyDF = enemyDF - AT
 		COLOR 15
 		PRINT
@@ -1941,11 +1827,11 @@ INPUT "What will you do...", opcion
 		PLAY Chime$
 		END IF
 
-		IF opcion = 2 AND mana < 3 THEN ' ====  MANA OPTION 2 ====
+		IF opcion = 2 AND MANA < 3 THEN ' ====  MANA OPTION 2 ====
 		COLOR 2
 		PRINT
 		Pause
-		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "Your mana is"; MANA; "! You don't have enough energy in your"
 		Pause
 		PRINT "body to recover your health!"
 		PRINT
@@ -1954,15 +1840,15 @@ INPUT "What will you do...", opcion
 		PLAY Chime$
 		END IF
 
-		IF opcion = 2 AND mana >= 3 THEN
-		mana = mana - 3
-		hp = maxHP
+		IF opcion = 2 AND MANA >= 3 THEN
+		MANA = MANA - 3
+		HP = maxHP
 		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to recover your health"
 		Pause
-		PRINT "Your HP is now "; hp; "! You feel much better and renewed!"
+		PRINT "Your HP is now "; HP; "! You feel much better and renewed!"
 		Pause
 		PRINT "Ready to fight back!"
 		PRINT
@@ -1972,11 +1858,11 @@ INPUT "What will you do...", opcion
 		PLAY Chime$
 		END IF
 
-		IF opcion = 3 AND mana < 3 THEN ' ====  MANA OPTION 3 ====
+		IF opcion = 3 AND MANA < 3 THEN ' ====  MANA OPTION 3 ====
 		COLOR 2
 		PRINT
 		Pause
-		PRINT "Your mana is"; mana; "! You don't have enough energy in your"
+		PRINT "Your mana is"; MANA; "! You don't have enough energy in your"
 		Pause
 		PRINT "body to run away like that!"
 		PRINT
@@ -1985,8 +1871,8 @@ INPUT "What will you do...", opcion
 		PLAY Chime$
 		END IF
 
-		IF opcion = 3 AND mana >= 3 THEN
-		mana = mana - 3
+		IF opcion = 3 AND MANA >= 3 THEN
+		MANA = MANA - 3
 		COLOR 15
 		PRINT
 		Pause
@@ -2105,7 +1991,7 @@ SELECT CASE BetOptions
 
 
 
-       IF gold < howmuch OR gold = 0 THEN
+       IF GOLD < howmuch OR GOLD = 0 THEN
        PRINT
        Pause
        PRINT "You don't have that money! Better get out of here!"
@@ -2136,21 +2022,21 @@ SELECT CASE BetOptions
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
-		   gold = gold - howmuch
+		   GOLD = GOLD - howmuch
 
 		   CASE 2
 		   PLAY NegativeMusic$
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 100% OF YOUR MONEY!"
-		   gold = gold - howmuch
+		   GOLD = GOLD - howmuch
 
 		   CASE 3
 		   PLAY NegativeMusic$
 		   Pause
 		   PRINT
 		   PRINT "YOU LOSE 50% OF YOUR MONEY!"
-		   gold = gold - (howmuch / 2)
+		   GOLD = GOLD - (howmuch / 2)
 
 
 		   CASE 4
@@ -2162,13 +2048,13 @@ SELECT CASE BetOptions
 		   PLAY positive$
 		   PRINT
 		   PRINT "YOU WIN +50% OF YOUR BET!"
-		   gold = gold + (howmuch / 2)
+		   GOLD = GOLD + (howmuch / 2)
 
 		   CASE 6
 		   PLAY positive$
 		   PRINT
 		   PRINT "YOU WIN +100% OF YOUR BET!"
-		   gold = gold + howmuch
+		   GOLD = GOLD + howmuch
 
 
 	     END SELECT
@@ -2176,7 +2062,7 @@ SELECT CASE BetOptions
        COLOR 3
        PLAY Chime$
        PRINT
-       PRINT "Your gold is"; gold; "now."
+       PRINT "Your gold is"; GOLD; "now."
        COLOR 10
 
        DO WHILE INKEY$ = ""
@@ -2272,7 +2158,7 @@ PRINT "  MANA = "; MaxMana; "    "
 COLOR , 0
 PRINT
 COLOR 14, 9
-PRINT "  GOLD   = "; gold; "   "
+PRINT "  GOLD   = "; GOLD; "   "
 COLOR , 0
 
 PRINT
@@ -2304,7 +2190,7 @@ END SUB
 
 SUB CheckChallenges
 
-IF gold >= 100 AND OneHundredGold = 0 THEN
+IF GOLD >= 100 AND OneHundredGold = 0 THEN
 COLOR 14, 2
 LOCATE 10, 25
 PRINT "CHALLENGE [GET 100 GOLD] COMPLETED!"
@@ -2312,7 +2198,7 @@ COLOR , 0
 OneHundredGold = 1
 END IF
 
-IF gold >= 1000 AND OneThousandGold = 0 THEN
+IF GOLD >= 1000 AND OneThousandGold = 0 THEN
 COLOR 14, 2
 LOCATE 10, 24
 PRINT "CHALLENGE [GET 1000 GOLD] COMPLETED!"
@@ -2344,9 +2230,9 @@ END SUB
 SUB City
 CityIni:
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 CALL GameOver
-GOTO EndOfSub
+GOTO endofsub
 END IF
 
 CLS
@@ -2364,7 +2250,7 @@ PRINT
 
 LOCATE 1, 50
 COLOR 14, 0
-PRINT "Gold: "; gold;
+PRINT "Gold: "; GOLD;
 
 LOCATE 10, 1
 COLOR 15, 9
@@ -2379,7 +2265,7 @@ SELECT CASE opcion
 
      CASE 1
 
-     IF gold < 25 THEN
+     IF GOLD < 25 THEN
      COLOR 10, 0
      PRINT
      Pause
@@ -2406,9 +2292,9 @@ SELECT CASE opcion
      COLOR 3
      PRINT
      PRINT "(HP 100% / MANA 100%)"
-     gold = gold - 25
-     hp = maxHP
-     mana = MaxMana
+     GOLD = GOLD - 25
+     HP = maxHP
+     MANA = MaxMana
      DO WHILE INKEY$ = ""
      LOOP
      
@@ -2427,7 +2313,7 @@ SELECT CASE opcion
 
 	LOCATE 1, 50
 	COLOR 14, 0
-	PRINT "Gold: "; gold;
+	PRINT "Gold: "; GOLD;
 	PRINT
 
 	LOCATE 10, 1
@@ -2441,7 +2327,7 @@ SELECT CASE opcion
 
 		CASE 1
 
-		IF gold < 10 THEN
+		IF GOLD < 10 THEN
 		COLOR 10, 0
 		PRINT
 		Pause
@@ -2467,9 +2353,9 @@ SELECT CASE opcion
 		PRINT "(-10 GOLD)"
 		Pause
 		PRINT "(-0.5 HP)"
-		gold = gold - 10
-		mana = mana + 3
-		hp = hp - .5
+		GOLD = GOLD - 10
+		MANA = MANA + 3
+		HP = HP - .5
 
 		DO WHILE INKEY$ = ""
 		LOOP
@@ -2530,7 +2416,7 @@ SELECT CASE opcion
 
 			CASE 1
 			barfight = 1
-			GOTO EndOfSub
+			GOTO endofsub
 
 			CASE 2
 			PRINT
@@ -2579,7 +2465,7 @@ SELECT CASE opcion
 
      LOCATE 1, 50
      COLOR 14, 0
-     PRINT "Gold: "; gold;
+     PRINT "Gold: "; GOLD;
      PRINT
 
 
@@ -2589,7 +2475,7 @@ SELECT CASE opcion
      INPUT "What would you like to practice? ", TrainingOptions
      PRINT
 
-     IF gold < 10 AND NOT TrainingOptions = 4 THEN
+     IF GOLD < 10 AND NOT TrainingOptions = 4 THEN
      PRINT
      PLAY NegativeMusic$
      Pause
@@ -2609,7 +2495,7 @@ SELECT CASE opcion
 	Pause
 	PRINT "(+"; d1; " AT)"
 	AT = AT + d1
-	gold = gold - 10
+	GOLD = GOLD - 10
 
 	CASE 2
 	PRINT "You train Attack and Resistance"
@@ -2620,7 +2506,7 @@ SELECT CASE opcion
 	PRINT "(+"; d1; " AT / +"; d1; " DEF)"
 	AT = AT + d1
 	DF = DF + d1
-	gold = gold - 10
+	GOLD = GOLD - 10
 
 	CASE 3
 	PRINT "You train Defensive Movements"
@@ -2631,7 +2517,7 @@ SELECT CASE opcion
 	Pause
 	PRINT "(+"; d1; " DEF)"
 	DF = DF + d1
-	gold = gold - 10
+	GOLD = GOLD - 10
 
 	CASE 4
 
@@ -2701,17 +2587,17 @@ SELECT CASE opcion
 		Pause
 		d1 = rolld6
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; "HP."
-		hp = hp - (d1 * 2)
+		HP = HP - (d1 * 2)
 
 		d1 = rolld6
 		Pause
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; " GOLD."
-		gold = gold - (d1 * 2)
+		GOLD = GOLD - (d1 * 2)
 
 		Pause
 		d1 = rolld6
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; " MANA."
-		mana = mana - (d1 * 2)
+		MANA = MANA - (d1 * 2)
 		
 		DO WHILE INKEY$ = ""
 		LOOP
@@ -2741,7 +2627,7 @@ SELECT CASE opcion
 		Pause
 		d1 = rolld6
 		PRINT "Die:"; d1; "*5 | you get +"; d1 * 5; "GOLD."
-		gold = gold + (d1 * 5)
+		GOLD = GOLD + (d1 * 5)
 		DO WHILE INKEY$ = ""
 		LOOP
 		GOTO CityIni
@@ -2768,7 +2654,7 @@ SELECT CASE opcion
      PRINT
      PRINT "You decide to leave the city.."
      Pause
-     GOTO EndOfSub
+     GOTO endofsub
 
      CASE ELSE
      COLOR , 0
@@ -2778,7 +2664,7 @@ END SELECT
 
 GOTO CityIni
 
-EndOfSub:
+endofsub:
 COLOR , 0
 END SUB
 
@@ -2896,8 +2782,8 @@ COLOR 10
 		PRINT "(+"; d1; " HP pts)"
 		COLOR 10
 
-		hp = hp + d1
-		mana = mana + d1
+		HP = HP + d1
+		MANA = MANA + d1
 
 		DO WHILE INKEY$ = ""
 		LOOP
@@ -2933,7 +2819,7 @@ COLOR 10
 		PRINT "been shot in the shoulder and are heavily wounded."
 
 		d1 = 5 + rolld6
-		hp = hp - d1
+		HP = HP - d1
 		
 		Pause
 		COLOR 3
@@ -3046,6 +2932,7 @@ askagainbooks:
        line$(1) = "You just decide to continue walking..."
        line$(2) = "Maybe some other time."
 
+       PRINT
        PrintLines
 
        END IF
@@ -3161,7 +3048,7 @@ ask1:
 	PRINT "(+5 MANA pts)"
 	COLOR 10
 	PLAY Chance$
-	mana = mana + 5
+	MANA = MANA + 5
 	DO WHILE INKEY$ = ""
 	LOOP
 	END IF
@@ -3223,7 +3110,7 @@ COLOR 10
 	PLAY Chance$
 	DO WHILE INKEY$ = ""
 	LOOP
-	gold = gold + addgold
+	GOLD = GOLD + addgold
 	GOTO EndSub
 
 	CASE 3
@@ -3243,7 +3130,7 @@ COLOR 10
 	PLAY Chance$
 	DO WHILE INKEY$ = ""
 	LOOP
-	mana = mana + addmana
+	MANA = MANA + addmana
 	GOTO EndSub
      
 	CASE 4
@@ -3265,7 +3152,7 @@ COLOR 10
 	PLAY Chance$
 	DO WHILE INKEY$ = ""
 	LOOP
-	hp = hp - DiscountHP
+	HP = HP - DiscountHP
 	GOTO EndSub
 
 	CASE ELSE
@@ -3499,81 +3386,67 @@ PRINT "WW"
 END SUB
 
 SUB DrawCriminal
-
-COLOR 4
-LOCATE 6, 26
-PRINT "#############################"
-LOCATE 7, 26
-PRINT "#                           #"
-LOCATE 8, 26
-PRINT "#                           #"
-LOCATE 9, 26
-PRINT "#                           #"
-LOCATE 10, 26
-PRINT "#                           #"
-LOCATE 11, 26
-PRINT "#                           #"
-LOCATE 12, 26
-PRINT "#                           #"
-LOCATE 13, 26
-PRINT "#                           #"
-LOCATE 14, 26
-PRINT "#                           #"
-LOCATE 15, 26
-PRINT "#                           #"
-LOCATE 16, 26
-PRINT "#                           #"
-LOCATE 17, 26
-PRINT "#############################"
-
-
+' CRIMINAL
 
 COLOR 7
-
-LOCATE 8, 30
-PRINT "       ####### "
-LOCATE 9, 30
-PRINT "       ####### "
-LOCATE 10, 30
-PRINT "     ########### "
+LOCATE 4, 29
+PRINT "ú      ú  ú     ú  úú"
+COLOR 4
+LOCATE 4, 29
+PRINT "    ú    !!!       ú"
+COLOR 12
+LOCATE 5, 29
+PRINT "ú ú    °°°°°°°   ú  ú"
+LOCATE 6, 29
+PRINT "      °°°°°°°°°"
+LOCATE 7, 29
+PRINT "   °°°°°°°°°°°°°°°"
+COLOR 7
+LOCATE 8, 29
+PRINT "      ± \±²±/ ±     ú"
+LOCATE 9, 29
+PRINT "  ú   ²±þÝ±Þþ±²  ú"
+LOCATE 10, 29
+PRINT "ú    ú ±°²-²°±"
 COLOR 15
-LOCATE 11, 30
-PRINT "       ##*#*## "
+LOCATE 11, 29
+PRINT " ú  ú             ú ú"
+LOCATE 12, 29
+PRINT " ú    °ß ÜßÜßÜ°  ú ú"
+LOCATE 13, 29
 COLOR 6
-LOCATE 12, 30
-PRINT "        ##.## "
-LOCATE 13, 30
-PRINT "         #-# "
+PRINT "ú  ú   °°°°°°°  ú"
+COLOR 7
+LOCATE 14, 29
+PRINT "    ú    ±±±     ú"
 COLOR 1
-LOCATE 14, 30
-PRINT "  ##### ##### ##### "
-LOCATE 15, 30
-PRINT " ################### "
-LOCATE 16, 30
-PRINT "#### ########## ##### "
+LOCATE 15, 29
+PRINT "  ²±°²±±°°±°°±°±²²±°"
+LOCATE 16, 29
+PRINT " °°±±±±²²±°±±²²±°±°±°"
+LOCATE 17, 29
+PRINT " °±°±ú°±°±þ±±°±±ú±±°°"
 
 
-COLOR 8
-LOCATE 11, 39
-PRINT "*"
-LOCATE 11, 41
-PRINT "*"
+COLOR 4
+LOCATE 9, 37
+PRINT "þ"
+LOCATE 9, 41
+PRINT "þ"
 
-LOCATE 12, 40
-COLOR 15
-PRINT "."
+COLOR 6
+LOCATE 12, 35
+PRINT "°"
+LOCATE 12, 43
+PRINT "°"
 
-LOCATE 13, 40
-COLOR 15
-PRINT "-"
+COLOR 7
+LOCATE 15, 39
+PRINT "±"
 
-LOCATE 15, 40
 COLOR 9
-PRINT "#"
-
-LOCATE 16, 40
-COLOR 9
-PRINT "#"
+LOCATE 17, 39
+PRINT "þ"
 
 END SUB
 
@@ -3822,19 +3695,19 @@ PRINT "         °   °   ²²²²±²±²²²²  ° ° ° ±"
 LOCATE 13, 18
 PRINT "         ± ° ° ° Ý²²°°°²Þþ ° °  ° °"
 LOCATE 14, 18
-PRINT "        °  °  ° °  °° ° °° ÝÝ° ° °  ° ²       "
+PRINT "        °  °  ° °  °° ° °° ÝÝ° ° °  ° ²"
 LOCATE 15, 18
-PRINT "         °  ° ° °°ÝÝÝÝÝÝ ° ° °   °     °      "
+PRINT "         °  ° ° °°ÝÝÝÝÝÝ ° ° °   °     °"
 LOCATE 16, 18
-PRINT "        ±  ±  ° ° Ý °°°° Ý ° °     °          "
+PRINT "        ±  ±  ° ° Ý °°°° Ý ° °     °"
 LOCATE 17, 18
-PRINT "          ± ²  ° °   °°    °°   ° °  ²        "
+PRINT "          ± ²  ° °   °°    °°   ° °  ²"
 LOCATE 18, 18
-PRINT "        ²         °°     °°           °       "
+PRINT "        ²         °°     °°           °"
 LOCATE 19, 18
-PRINT "       °    ±       °° °°                     "
+PRINT "       °    ±       °° °°"
 LOCATE 20, 18
-PRINT "          °                                   "
+PRINT "          ° "
 LOCATE 21, 18
 PRINT ""
 
@@ -3999,7 +3872,7 @@ PRINT "°²°²°²°²°²°±°²°°±°±°²°°²°±°°±°±²°°±°°±°°±²°±°±°°±°²°±°°°±°²°±°°±°²°±°°²°±
 
 LOCATE 1
 COLOR 1
-PRINT "°²°²°²°²°°²°±°²°°°²°±²°±°²°±°²° [LAKES & RIVERS] °²°±°°±°±°²°°°²°±°°±°°±²°±°±°±²"
+PRINT "°²°²°²°²°°²°±°²°°²°±²°±°²°±°²° [LAKES & RIVERS] °²°±°°±°±°²°°°²°°±°°±°°±²°±°±°±²"
 
 
 END IF
@@ -4010,7 +3883,7 @@ IF PositionCol(PositionCH) = 7 THEN
 
 COLOR PositionCol(PositionCH), 0
 LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FROZEN LANDS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FROZEN LANDS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
 
 LOCATE 21, 1
@@ -4379,7 +4252,7 @@ line$(2) = "You hurt your back when falling (-1 HP)."
 
 PrintLines
 
-hp = hp - 1
+HP = HP - 1
 
 END IF
 
@@ -4393,7 +4266,7 @@ line$(4) = "the escape you lose all your gold coins (Gold = 0)."
 
 PrintLines
 
-gold = 0
+GOLD = 0
 
 END IF
 
@@ -4425,7 +4298,7 @@ PRINT "Die:"; d1;
 
 	PrintLines
 
-	hp = hp - 6
+	HP = HP - 6
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4444,7 +4317,7 @@ PRINT "Die:"; d1;
 	
 	PrintLines
 
-	hp = hp - 3
+	HP = HP - 3
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4485,7 +4358,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	hp = hp - d1
+	HP = HP - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4530,7 +4403,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	hp = hp - d1
+	HP = HP - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4555,7 +4428,7 @@ line$(4) = "wet feet and wet clothes. You also feel very cold. (-1 HP)"
 
 PrintLines
 
-hp = hp - 1.5
+HP = HP - 1.5
 
 END IF
 
@@ -4590,6 +4463,10 @@ SUB Notes
 
 'v 0.5
 
+' - Method to PRINT LINES AND PAUSE TEXT improved ---> Suggested by
+'   @amonroejj (Alan Monroe).
+' - New method to PRINT LINES AND PAUSE TEXT being applied to the rest
+'   of the code ---> Suggested by @amonroejj (Alan Monroe).
 ' - System of CHALLENGES created.
 ' - First challenges added.
 ' - GET 100 GOLD challenge, created.
@@ -4641,6 +4518,172 @@ DO UNTIL pausex = 10000
 pausex = pausex + 1
 LOOP
 
+END SUB
+
+SUB PositiveSub
+
+COLOR 3
+PRINT "Die:"; d1;
+COLOR 10
+
+IF d1 = 1 THEN
+
+line$(1) = "You find a good place to sleep and spend the night there. It's an inn."
+line$(2) = "You've been there before and know the owner. You feel much better"
+line$(3) = "the next day. (+1 HP)"
+
+PrintLines
+
+HP = HP + 1
+
+END IF
+
+IF d1 = 2 THEN
+
+line$(1) = "You find an abandoned house in the place. It's an old house but seems"
+line$(2) = "to be in perfect conditions. The front door is open. You get in. The place"
+line$(3) = "is clean, there's even a room with a bed, old chairs and a big table. You "
+line$(4) = "even find a shelf with many old books. Books about black and white magic,"
+line$(5) = "the natural world, about creatures, the kingdom's history, music, poetry"
+line$(6) = "and even short stories. You also find some old gold coins around the place."
+line$(7) = "You spend the rest of the day resting and reading. Seems to be a safe and "
+line$(8) = "good place to spend the night too."
+
+PrintLines
+
+COLOR 3
+PRINT
+Pause
+PRINT "(+5 HP) (+20 GOLD) (100% MANA pts)"
+
+HP = HP + 5
+GOLD = GOLD + 20
+MANA = MaxMana
+END IF
+
+IF d1 = 3 THEN
+
+line$(1) = "You see something shiny in the middle of the path."
+line$(2) = "Some gold coins are spread all over the place!!!"
+
+PrintLines
+
+COLOR 3
+PRINT
+Pause
+PRINT "(+10 GOLD)"
+
+GOLD = GOLD + 10
+END IF
+
+IF d1 = 4 THEN
+Pause
+PRINT "You stop, set a place to camp. Start a fire and cook something to eat."
+Pause
+PRINT "You spend your time practicing fighting techniques and training with your"
+Pause
+PRINT "knives and sword. The mission has been pretty rough and hard, so difficult.  "
+Pause
+PRINT "You needed to take some time for you, to rest and relax a little bit. It's"
+Pause
+PRINT "always a good thing to practice with your weapons and improve your fighting"
+Pause
+PRINT "techniques. (HP + 3) (AT + 0.5) "
+HP = HP + 3
+AT = AT + .5
+END IF
+
+IF d1 = 5 THEN
+Pause
+PRINT "Street vendor by the road! He offers you the following items:"
+PRINT
+Pause
+PRINT "[1] Mix of Herbs   (+5 HP)   - $25"
+Pause
+PRINT "[2] Energetic Soup (+5 MANA) - $25"
+Pause
+PRINT "[3] NO, THANKS!"
+PRINT
+Pause
+INPUT "Would you like to buy something sir?"; opcion
+
+IF opcion = 3 THEN
+Pause
+PRINT "- Oh, that's ok then..."
+DO WHILE INKEY$ = ""
+LOOP
+GOTO PositiveEnd
+END IF
+
+IF GOLD < 25 THEN
+Pause
+PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
+DO WHILE INKEY$ = ""
+LOOP
+GOTO PositiveEnd
+END IF
+
+
+IF opcion = 1 THEN
+Pause
+PRINT "- Nice, MIX OF HERBS! Here you have!"
+DO WHILE INKEY$ = ""
+LOOP
+PRINT
+Pause
+PRINT "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
+Pause
+PRINT "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
+HP = HP + 5
+GOLD = GOLD - 25
+DO WHILE INKEY$ = ""
+LOOP
+GOTO PositiveEnd
+END IF
+
+IF opcion = 2 THEN
+Pause
+PRINT "- Nice, ENERGETIC SOUP! Here you have!"
+DO WHILE INKEY$ = ""
+LOOP
+PRINT
+Pause
+PRINT "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
+Pause
+PRINT "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
+Pause
+PRINT "PRETTY GOOD."
+MANA = MANA + 5
+GOLD = GOLD - 25
+DO WHILE INKEY$ = ""
+LOOP
+GOTO PositiveEnd
+END IF
+
+END IF
+
+IF d1 = 6 THEN
+Pause
+PRINT "You find a family of travelers by the road. They've heard about you and"
+Pause
+PRINT "they know you are there to help. The husband invites you to join them. You"
+Pause
+PRINT "rest, eat good food and take a shower. You stay a good time with them."
+Pause
+PRINT "The man also teaches you some fighting and defensive techniques. Before"
+Pause
+PRINT "you leave, they give you some food and gold coins to support you. "
+Pause
+PRINT "You thank them and continue with your travel. (Gold + 25) (HP + 10) (AT + 0.5) "
+GOLD = GOLD + 25
+HP = HP + 10
+AT = AT + .5
+END IF
+
+DO WHILE INKEY$ = ""
+LOOP
+
+PositiveEnd:
 END SUB
 
 SUB PrintLines
