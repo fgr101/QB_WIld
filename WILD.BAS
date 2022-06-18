@@ -7,17 +7,18 @@ DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
 
-' - MEJORAR CODIGO USANDO [SUB PrintLines] EN PositiveSub.
-' - QUE EL TERRENO INFLUYA EN LAS BATALLAS. UN TERRENO QUE SEA FAVORABLE
-'  PARA EL PERSONAJE, OTRO TERRENO DEBE SER DESFAVORABLE.
+' - TERMINAR BANNERS
+' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
+
+' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
+'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
+' - CONSEGUIR 10.000 DE ORO.
+' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
+' - LLEGAR AL NIVEL 50.
+
 ' - AGREGAR DETALLES Y GRAFICOS ASCII
 ' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
-
-
-' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
-
-
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
 ' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
@@ -26,11 +27,6 @@ DECLARE SUB DrawBugio ()
 ' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
 ' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
 '   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
-' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
-' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
-'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
-' - CONSEGUIR 10.000 DE ORO.
-' - LLEGAR AL NIVEL 50.
 
 '- CONTINUAR DESARROLLANDO LA HISTORIA
 '- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
@@ -40,6 +36,12 @@ DECLARE SUB DrawBugio ()
 '- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
 '- CREAR ALGUNAS NUEVAS TRANSICIONES
 '- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
+
+'- AGREGAR SISTEMA DE ITEMS, ARMAS, PROTECCION, ETC.
+'- AGREGAR MEDICINA QUE PUEDA SER USADA, COMPRADA Y VENDIDA
+
+'- MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
+'  TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO.
 
 '- MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
 
@@ -88,7 +90,7 @@ DECLARE FUNCTION rolld6 ()
 '| GLOBAL VARIABLES FOR SUBS |
 
 DIM SHARED d1, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
-DIM SHARED AT, DF, maxHP, MaxMana
+DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(25)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
@@ -329,8 +331,8 @@ PRINT "Generating random defence value..." '6 TO RANDOMIZE THEM, SIMULATING
 					   'A NORMAL SOLO RPG GAME, USING A
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
-maxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
-HP = maxHP                                 'TO JUST TO KEEP IT SIMPLE.
+MaxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
+HP = MaxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
 
 MaxMana = 5 + rolld6
@@ -433,8 +435,8 @@ IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
-IF HP > maxHP THEN
-HP = maxHP
+IF HP > MaxHP THEN
+HP = MaxHP
 END IF
 
 IF MANA > MaxMana THEN
@@ -1505,10 +1507,26 @@ COLOR 2
 enemyDF = enemyDF - finaldamage
 
 PRINT
+
+IF enemyDF < 0 THEN    'IF enemy's life is less than 0 SHOW MESSAGE.
+COLOR 15
+Pause
+PRINT "CRITICAL HIT!"
+Pause
+END IF
+
+
+PRINT
+COLOR 2
 PRINT "--------------------------------------------"
 
 DO WHILE INKEY$ = ""
 LOOP
+
+
+IF enemyDF < 0 THEN    'IF enemy's life is less than 0 then SKIP enemy's
+GOTO SkipEnemyAttack   'attack.
+END IF
 
 PRINT
 PRINT "THE "; Enemyname$; " ATTACKS YOU:"
@@ -1564,11 +1582,14 @@ COLOR 2
 
 HP = HP - finaldamage
 
+PRINT
+PRINT "--------------------------------------------"
 
 DO WHILE INKEY$ = ""
 LOOP
 
-PRINT "--------------------------------------------"
+
+SkipEnemyAttack:         'CONTINUES HERE WHEN SKIPPING ENEMY'S ATTACK
 
 
 IF HP <= 0 THEN
@@ -1606,7 +1627,7 @@ level = level + 1
 
 Pause
 COLOR 10, 2
-PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "MANA:"; MaxMana
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; MaxHP; "MANA:"; MaxMana
 
 COLOR 3, 0
 Pause
@@ -1616,6 +1637,7 @@ LOCATE 23, 32
 COLOR 0, 0
 PRINT "±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±"
 
+COLOR 3
 PRINT
 Pause
 PRINT "1) ATTACK      2)DEFENCE"
@@ -1649,12 +1671,12 @@ SELECT CASE opcion
 	PRINT "Your defence is"; DF; "now!"
 
 	CASE 3
-	maxHP = maxHP + 1
+	MaxHP = MaxHP + 1
 
 	PRINT
 	PRINT "HP increased!"
 	Pause
-	PRINT "Your HP is"; maxHP; "now!"
+	PRINT "Your HP is"; MaxHP; "now!"
 	
 	CASE 4
 	MaxMana = MaxMana + 1
@@ -1670,7 +1692,7 @@ SELECT CASE opcion
 END SELECT
 
 MANA = MaxMana
-HP = maxHP
+HP = MaxHP
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -1716,61 +1738,106 @@ INPUT "What will you do...", opcion
 	END IF
 
 	IF opcion = 1 THEN
-	d1 = rolld6
-	COLOR 2
-	Pause
-	PRINT "You decide to run and try to escape..."
-	COLOR 3
-	PRINT "Die:"; d1; "[1 to 3 means failure - 4 to 6 means success]"
 
-	DO WHILE INKEY$ = ""
-	LOOP
+		PRINT
 
-	COLOR 2
+		COLOR 10
+		line$(1) = "You decide to leave and try to run away from the battle."
+		line$(2) = "However it's not an easy move. You can leave all your gold"
+		line$(3) = "in the place and escape or you can try luck."
+
+		PrintLines
+
+		COLOR 3
+		PRINT
+		Pause
+		PRINT "1) LEAVE GOLD and run away!"
+		Pause
+		PRINT "2) TRY LUCK to escape!"
+		PRINT
+		Pause
+		INPUT "What do you think is better? ", opcion2
+
+		SELECT CASE opcion2
+
+			CASE 1
+			PRINT
+			Pause
+			COLOR 15
+			PRINT "You leave all your gold behind and run away!"
+
+			DO WHILE INKEY$ = ""
+			LOOP
+
+			GOLD = 0
+			combatloop = 0
+			GOTO inicio2
+
+
+			CASE 2
+			d1 = rolld6
+			COLOR 2
+			Pause
+			PRINT "You decide to run and try to escape..."
+			COLOR 3
+			PRINT "Die:"; d1; "[1 to 3 means failure - 4 to 6 means success]"
+
+			DO WHILE INKEY$ = ""
+			LOOP
+
+			COLOR 2
 		
-		IF d1 >= 1 AND d1 <= 3 THEN
-		PRINT
-		Pause
-		PRINT "[FAILURE]"
-		Pause
-		PRINT "You try to escape but can't. It seems you aren't fast enough for that."
-		Pause
-		PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-		HP = HP - enemyAT
-		Pause
-		PRINT "Your HP is "; HP; " now."
-		PRINT
-		COLOR 2
-		Pause
-		PRINT "--------------------------------------------"
+			IF d1 >= 1 AND d1 <= 3 THEN
 
-		DO WHILE INKEY$ = ""
-		LOOP
+				PRINT
+				Pause
+				PRINT "[FAILURE]"
+				Pause
+				PRINT "You try to escape but can't. It seems you aren't fast enough for that."
+				Pause
+				PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
+				HP = HP - enemyAT
+				Pause
+				PRINT "Your HP is "; HP; " now."
+				PRINT
+				COLOR 2
+				Pause
+				PRINT "--------------------------------------------"
 
-			IF HP <= 0 THEN
-			GOTO GameOver
+				DO WHILE INKEY$ = ""
+				LOOP
+
+				IF HP <= 0 THEN
+				GOTO GameOver
+				END IF
+
+				END IF
+
+			IF d1 >= 4 AND d1 <= 6 THEN
+
+				PRINT
+				Pause
+				PRINT "[SUCCESS]"
+				Pause
+				PRINT "You try to escape. You are fast enough to run away!"
+				Pause
+				PRINT
+				COLOR 2
+				Pause
+				PRINT "--------------------------------------------"
+
+				DO WHILE INKEY$ = ""
+				LOOP
+
+				combatloop = 0
+				GOTO inicio2
+
 			END IF
 
-		END IF
-
-		IF d1 >= 4 AND d1 <= 6 THEN
-		PRINT
-		Pause
-		PRINT "[SUCCESS]"
-		Pause
-		PRINT "You try to escape. You are fast enough to run away!"
-		Pause
-		PRINT
-		COLOR 2
-		Pause
-		PRINT "--------------------------------------------"
-		DO WHILE INKEY$ = ""
-		LOOP
-		combatloop = 0
-		GOTO inicio2
-		END IF
+		END SELECT
 
 	END IF
+
 
 	IF opcion = 2 THEN
 	PRINT ""
@@ -1842,7 +1909,7 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 2 AND MANA >= 3 THEN
 		MANA = MANA - 3
-		HP = maxHP
+		HP = MaxHP
 		COLOR 15
 		PRINT
 		Pause
@@ -2153,7 +2220,7 @@ COLOR 15, 9
 LOCATE 6, 1
 PRINT "  AT   = "; AT; "    "
 PRINT "  DEF  = "; DF; "    "
-PRINT "  HP   = "; maxHP; "    "
+PRINT "  HP   = "; MaxHP; "    "
 PRINT "  MANA = "; MaxMana; "    "
 COLOR , 0
 PRINT
@@ -2293,7 +2360,7 @@ SELECT CASE opcion
      PRINT
      PRINT "(HP 100% / MANA 100%)"
      GOLD = GOLD - 25
-     HP = maxHP
+     HP = MaxHP
      MANA = MaxMana
      DO WHILE INKEY$ = ""
      LOOP
@@ -4467,7 +4534,11 @@ SUB Notes
 '   @amonroejj (Alan Monroe).
 ' - New method to PRINT LINES AND PAUSE TEXT being applied to the rest
 '   of the code ---> Suggested by @amonroejj (Alan Monroe).
-' - System of CHALLENGES created.
+' - New Method applied to [SUB] NegativeSub.
+' - New Method applied to [SUB] PositiveSub.
+' - New Method applied to [SUB] TalkToStrangers.
+' - New Method applied to [SUB] Information.
+' - System of ACHIEVEMENTS created.
 ' - First challenges added.
 ' - GET 100 GOLD challenge, created.
 ' - FIND A CITY FOR THE FIRST TIME challenge, created.
@@ -4487,6 +4558,14 @@ SUB Notes
 ' - "You are not used to be in <terrain>" showed in the CHARACTER screen.
 ' - Witch - ASCII graphic added.
 ' - LAKES & RIVERS banner added to the fighting intro.
+' - Criminal - ASCII graphic added.
+' - BUG "Enemies attack when their HP is 0 or less than 0" FIXED.
+'   Bug spotted by YouTube user.
+' - "CRITICAL HIT!" message is shown instead.
+' - NEW OPTION TO ESCAPE BATTLES ADDED. You can LEAVE ALL YOUR GOLD BEHIND
+'   and RUN from a battle now. You can LEAVE ALL GOLD BEHIND or TRY LUCK.
+'   Option suggested by YouTube user.
+ 
 
 ' v 0.4
 
@@ -4530,9 +4609,13 @@ IF d1 = 1 THEN
 
 line$(1) = "You find a good place to sleep and spend the night there. It's an inn."
 line$(2) = "You've been there before and know the owner. You feel much better"
-line$(3) = "the next day. (+1 HP)"
+line$(3) = "the next day."
 
 PrintLines
+
+COLOR 3
+PRINT
+PRINT "(+1 HP)"
 
 HP = HP + 1
 
@@ -4577,107 +4660,123 @@ GOLD = GOLD + 10
 END IF
 
 IF d1 = 4 THEN
-Pause
-PRINT "You stop, set a place to camp. Start a fire and cook something to eat."
-Pause
-PRINT "You spend your time practicing fighting techniques and training with your"
-Pause
-PRINT "knives and sword. The mission has been pretty rough and hard, so difficult.  "
-Pause
-PRINT "You needed to take some time for you, to rest and relax a little bit. It's"
-Pause
-PRINT "always a good thing to practice with your weapons and improve your fighting"
-Pause
-PRINT "techniques. (HP + 3) (AT + 0.5) "
+
+line$(1) = "You stop, set a place to camp. Start a fire and cook something to eat."
+line$(2) = "You spend your time practicing fighting techniques and training with your"
+line$(3) = "knives and sword. The mission has been pretty rough and hard, so difficult.  "
+line$(4) = "You needed to take some time for you, to rest and relax a little bit. It's"
+line$(5) = "always a good thing to practice with your weapons and improve your fighting"
+line$(6) = "techniques."
+
+PrintLines
+
+COLOR 3
+PRINT
+PRINT "(+3 HP) (+0.5 AT) "
+
 HP = HP + 3
 AT = AT + .5
+
 END IF
 
 IF d1 = 5 THEN
+
 Pause
 PRINT "Street vendor by the road! He offers you the following items:"
+
 PRINT
-Pause
-PRINT "[1] Mix of Herbs   (+5 HP)   - $25"
-Pause
-PRINT "[2] Energetic Soup (+5 MANA) - $25"
-Pause
-PRINT "[3] NO, THANKS!"
+line$(1) = "[1] Mix of Herbs   (+5 HP)   - $25"
+line$(2) = "[2] Energetic Soup (+5 MANA) - $25"
+line$(3) = "[3] NO, THANKS!"
+
+PrintLines
+
 PRINT
 Pause
 INPUT "Would you like to buy something sir?"; opcion
 
-IF opcion = 3 THEN
-Pause
-PRINT "- Oh, that's ok then..."
-DO WHILE INKEY$ = ""
-LOOP
-GOTO PositiveEnd
-END IF
+'REHACER OPCIONES USANDO SELECT CASE:
 
-IF GOLD < 25 THEN
-Pause
-PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
-DO WHILE INKEY$ = ""
-LOOP
-GOTO PositiveEnd
-END IF
+	IF opcion = 3 THEN '===== NO, THANKS
+	Pause
+	PRINT "- Oh, that's ok then..."
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO PositiveEnd
+	END IF
 
+	IF GOLD < 25 THEN '===== NO MONEY
+	Pause
+	PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO PositiveEnd
+	END IF
 
-IF opcion = 1 THEN
-Pause
-PRINT "- Nice, MIX OF HERBS! Here you have!"
-DO WHILE INKEY$ = ""
-LOOP
-PRINT
-Pause
-PRINT "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
-Pause
-PRINT "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
-HP = HP + 5
-GOLD = GOLD - 25
-DO WHILE INKEY$ = ""
-LOOP
-GOTO PositiveEnd
-END IF
+	IF opcion = 1 THEN  '===== MIX OF HERBS
+	Pause
+	PRINT "- Nice, MIX OF HERBS! Here you have!"
+	DO WHILE INKEY$ = ""
+	LOOP
 
-IF opcion = 2 THEN
-Pause
-PRINT "- Nice, ENERGETIC SOUP! Here you have!"
-DO WHILE INKEY$ = ""
-LOOP
-PRINT
-Pause
-PRINT "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
-Pause
-PRINT "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
-Pause
-PRINT "PRETTY GOOD."
-MANA = MANA + 5
-GOLD = GOLD - 25
-DO WHILE INKEY$ = ""
-LOOP
-GOTO PositiveEnd
-END IF
+	PRINT
+	line$(1) = "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
+	line$(2) = "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
+
+	PrintLines
+
+	HP = HP + 5
+	GOLD = GOLD - 25
+	DO WHILE INKEY$ = ""
+	LOOP
+	GOTO PositiveEnd
+	END IF
+
+	IF opcion = 2 THEN '===== ENERGETIC SOUP
+
+	Pause
+	PRINT "- Nice, ENERGETIC SOUP! Here you have!"
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	PRINT
+	line$(1) = "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
+	line$(2) = "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
+	line$(3) = "PRETTY GOOD."
+
+	PrintLines
+
+	MANA = MANA + 5
+	GOLD = GOLD - 25
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO PositiveEnd
+
+	END IF
 
 END IF
 
 IF d1 = 6 THEN
-Pause
-PRINT "You find a family of travelers by the road. They've heard about you and"
-Pause
-PRINT "they know you are there to help. The husband invites you to join them. You"
-Pause
-PRINT "rest, eat good food and take a shower. You stay a good time with them."
-Pause
-PRINT "The man also teaches you some fighting and defensive techniques. Before"
-Pause
-PRINT "you leave, they give you some food and gold coins to support you. "
-Pause
-PRINT "You thank them and continue with your travel. (Gold + 25) (HP + 10) (AT + 0.5) "
+
+line$(1) = "You find a family of travelers by the road. They've heard about you and"
+line$(2) = "they know you are there to help. The husband invites you to join them. You"
+line$(3) = "rest, eat good food and take a shower. You stay a good time with them."
+line$(4) = "The man also teaches you some fighting and defensive techniques. Before"
+line$(5) = "you leave, they give you some food and gold coins to support you. "
+line$(6) = "You thank them and continue with your travel."
+
+PrintLines
+
+COLOR 3
+PRINT
+PRINT "(+25 GOLD) (+10 HP) (+0.5 AT)"
+
 GOLD = GOLD + 25
 HP = HP + 10
 AT = AT + .5
+
 END IF
 
 DO WHILE INKEY$ = ""
