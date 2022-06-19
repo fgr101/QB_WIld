@@ -1,3 +1,4 @@
+DECLARE SUB DrawIcons ()
 DECLARE SUB PositiveSub ()
 DECLARE SUB DrawWolf ()
 DECLARE SUB DrawMountains ()
@@ -1451,6 +1452,11 @@ PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA;
 COLOR 4
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
 COLOR 2
+PRINT
+
+
+CALL DrawIcons
+
 PRINT
 PRINT "--------------------------------------------"
 DO WHILE INKEY$ = ""
@@ -3514,6 +3520,62 @@ PRINT "±"
 COLOR 9
 LOCATE 17, 39
 PRINT "þ"
+
+END SUB
+
+SUB DrawIcons
+
+COLOR 10
+
+SELECT CASE Enemyname$
+
+	CASE "Criminal"
+
+	PRINT "°°°°°±±±°°°°°"
+	PRINT "°°°°±±±±±°°°°"
+	PRINT "°°°°°ßÛß°°°°°"
+	PRINT "°°°°°±Þ±°°°°°"
+	PRINT "°°°°°±Ü±°°°°°"
+	PRINT "°°²²² ± ²²²°°"
+
+	CASE "Witch"
+
+	PRINT "°°²°²þ±þ°±°°°"
+	PRINT "°°°²°²ú°²°²°°"
+	PRINT "°°°²±²±±²±°°°"
+	PRINT "°°°ß°²±±°ß°°°"
+	PRINT "°°°°°±°±°°°°°"
+	PRINT "°°°°±°°±°°°°°"
+
+	CASE "Wild Bugio"
+
+	PRINT "°ßß°Ýþ±þÞ°°°°"
+	PRINT "°±±°±ÝÝÝ±°°°°"
+	PRINT "°±±±±±°±±±±±°"
+	PRINT "°°°°±²²²±°±±°"
+	PRINT "²°²±±²²²±±ÜÜ°"
+	PRINT "°²°±±±°±±±°°°"
+
+	CASE "Giant Scorpion"
+
+	PRINT "°°°°°°°°°°°°°"
+	PRINT "°°°°°²²±°°°°°"
+	PRINT "°°°²±°°°²±°°°"
+	PRINT "°°°°°°²²±°°°°"
+	PRINT "°°°±²*²*²²±°°"
+	PRINT "°°²°²°°°°²°²°"
+
+
+	CASE ELSE
+
+	PRINT "²°²±±²²²±±°²°"
+	PRINT "²°²°²²²²±±°²°"
+	PRINT "°±±±°²°±±±±±°"
+	PRINT "²°²±±²²²±±°²°"
+	PRINT "²°²±±²²²±±°²°"
+	PRINT "°²°±±±°±±±°°°"
+
+END SELECT
 
 END SUB
 
