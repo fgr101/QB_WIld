@@ -3535,8 +3535,8 @@ SELECT CASE Enemyname$
 	PRINT "°°°°±±±±±°°°°"
 	PRINT "°°°°°ßÛß°°°°°"
 	PRINT "°°°°°±Þ±°°°°°"
-	PRINT "°°°°°±Ü±°°°°°"
-	PRINT "°°²²² ± ²²²°°"
+	PRINT "°°°°±   ±°°°°"
+	PRINT "°°²²±±±±±²²°°"
 
 	CASE "Witch"
 
@@ -3565,6 +3565,14 @@ SELECT CASE Enemyname$
 	PRINT "°°°±²*²*²²±°°"
 	PRINT "°°²°²°°°°²°²°"
 
+	CASE "Crawler"
+
+	PRINT "°²±°|±²±|°±²°"
+	PRINT "²²°±þ±*±þ±°²²"
+	PRINT "°°°²±ÝÝÝ±±°°°"
+	PRINT "°°°°²ÞÞÞ±°°°°"
+	PRINT "°°²±²±ú±²²±°°"
+	PRINT "²±±°²±ú±²°±±²"
 
 	CASE ELSE
 
