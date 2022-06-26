@@ -1,3 +1,5 @@
+DECLARE SUB DrawSwamp ()
+DECLARE SUB DrawDesert ()
 DECLARE SUB DrawIcons ()
 DECLARE SUB PositiveSub ()
 DECLARE SUB DrawWolf ()
@@ -48,6 +50,12 @@ DECLARE SUB DrawBugio ()
 
 '- TRADUCIR JUEGO AL ESPANHOL
 '- TRADUCIR JUEGO A PT BRASIL
+
+'- COLOCAR TODOS LOS DRAWDESERT, DRAWMOUNTAINS, ETC. EN UN SOLO SUB LLAMADO
+'  DRAWBANNERS. USAR DE EJEMPLO SUB DRAWICONS.
+
+'- SCORE Y HIGHSCORE TABLE
+'- CREAR SISTEMA DE ITEMS Y EQUIPAMIENTOS
 
 '======================== SUBS AND FUNCTIONS =========================
 
@@ -356,27 +364,27 @@ SELECT CASE d1
 
 	CASE 1
 	BonusTerrain = 2
-	LandName$ = "forest"
+	LandName$ = "FOREST"
 
 	CASE 2
 	BonusTerrain = 6
-	LandName$ = "mountains"
+	LandName$ = "MOUNTAINS"
 
 	CASE 3
 	BonusTerrain = 8
-	LandName$ = "swamps"
+	LandName$ = "SWAMPS"
 
 	CASE 4
 	BonusTerrain = 14
-	LandName$ = "desert"
+	LandName$ = "DESERT"
 
 	CASE 5
 	BonusTerrain = 7
-	LandName$ = "frozen lands"
+	LandName$ = "FROZEN LANDS"
 
 	CASE 6
 	BonusTerrain = 1
-	LandName$ = "lakes and rivers"
+	LandName$ = "LAKES AND RIVERS"
 
 END SELECT
 
@@ -391,27 +399,27 @@ SELECT CASE d1
 
 	CASE 1
 	NegativeTerrain = 2
-	LandNameNegative$ = "forest"
+	LandNameNegative$ = "FOREST"
 
 	CASE 2
 	NegativeTerrain = 6
-	LandNameNegative$ = "mountains"
+	LandNameNegative$ = "MOUNTAINS"
 
 	CASE 3
 	NegativeTerrain = 8
-	LandNameNegative$ = "swamps"
+	LandNameNegative$ = "SWAMPS"
 
 	CASE 4
 	NegativeTerrain = 14
-	LandNameNegative$ = "desert"
+	LandNameNegative$ = "DESERT"
 
 	CASE 5
 	NegativeTerrain = 7
-	LandNameNegative$ = "frozen lands"
+	LandNameNegative$ = "FROZEN LANDS"
 
 	CASE 6
 	NegativeTerrain = 1
-	LandNameNegative$ = "lakes and rivers"
+	LandNameNegative$ = "LAKES AND RIVERS"
 
 END SELECT
 
@@ -3523,6 +3531,89 @@ PRINT "þ"
 
 END SUB
 
+SUB DrawDesert
+COLOR 14
+LOCATE 1, 1
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ DESERT ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+
+LOCATE 19
+PRINT "°                              °        °²±         °²±                         "
+LOCATE 20
+PRINT "²±   T     #     °²²±         °²±  T   °²²²±       °²²²²±  *    °²Û²Û²Û±   M   °"
+LOCATE 21
+PRINT "²²²±²²²²²²°²²²²²°²²²²²±²²²²²²°±²²±²²²°²²°±±±±²²²²²°²²²²²±²²²²²°²Û²Û²Û²Û²Û±²²²²°±"
+LOCATE 22
+PRINT "°²°²±²²²²°²±²²²°±²°²°²°²±²²²°²°²°²±²°±²°²°±±±²²²²°²°°°²°²±²²²°²Û²Û²Û²Û²Û²Û±²²°±±"
+LOCATE 23
+PRINT "²°²°²±²²°²°²±²°±°°²°°°²°²±²°±²°²°²±²°°°°°°²²±±²²°²°²°²°±°°°²°²Û°±Û°±Û°±Û°±Û²°±±±"
+
+LOCATE 16, 5
+COLOR 15
+PRINT "þ"
+
+LOCATE 16, 17
+PRINT "ß"
+
+LOCATE 16, 24
+PRINT "þ"
+
+LOCATE 16, 46
+PRINT "ß"
+
+LOCATE 16, 50
+PRINT "ß"
+
+LOCATE 16, 60
+PRINT "þ"
+
+LOCATE 16, 67
+PRINT "ß"
+
+LOCATE 17, 9
+PRINT "þ"
+
+LOCATE 17, 21
+PRINT "ß"
+
+LOCATE 17, 26
+PRINT "þ"
+
+LOCATE 17, 48
+PRINT "ß"
+
+LOCATE 17, 54
+PRINT "ß"
+
+LOCATE 17, 65
+PRINT "þ"
+
+LOCATE 17, 70
+PRINT "ß"
+
+LOCATE 18, 6
+PRINT "þ"
+
+LOCATE 18, 16
+PRINT "þ"
+
+LOCATE 18, 26
+PRINT "ß"
+
+LOCATE 18, 38
+PRINT "þ"
+
+LOCATE 18, 49
+PRINT "ß"
+
+LOCATE 18, 60
+PRINT "þ"
+
+LOCATE 18, 75
+PRINT "ß"
+END SUB
+
 SUB DrawIcons
 
 COLOR 10
@@ -3591,7 +3682,7 @@ SUB DrawMountains
 
 COLOR 6
 LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ MOUNTAINS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ MOUNTAINS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
 
 
@@ -3609,8 +3700,6 @@ LOCATE 22
 PRINT "²°²°²±  °²°²± °±°°²°°°²°²± °±²°²°²±²°°°°°°²²±±  °²°²°²°±°°°²°²Û°±Û°±Û°±Û°±Û²°±±±"
 LOCATE 23
 PRINT "°²°²°²±°²°²°²±±°°°°°±°°°°°±°°°°°°°°°°±²°°°°°°±°°²°°°°°°°°°²°²°°°°°°°°°°°°°°±°±°°"
-LOCATE 24
-PRINT "²°²°²°°°°²°°°°²°°°±°°°°°±°°°°°±°°°°°°°°±²°°°°°°±°°°±°°°°°°°°°°°°°°±°°°°°°°°°±°°°"
 
 LOCATE 16, 5
 COLOR 15
@@ -3738,6 +3827,33 @@ PRINT "***"
 LOCATE 13, 39
 COLOR 6
 PRINT "W W"
+
+END SUB
+
+SUB DrawSwamp
+
+COLOR 8
+LOCATE 20
+
+COLOR 2
+PRINT "ú     ú  +   ú    ú         -*-       +              ú     ú  -*-    ú  ú   ú  ú  ú"
+LOCATE 21
+COLOR 8
+PRINT "°²Ü²ß°ß±Ü°²ß²°ßÜ±²ß²Ü°²ß±Ü±ß²ß²°ÝÜ²°±ß°Ý±Ü²°ß²±Ü°²ÜÝ°ß°²Ü±ß²ßÝÛÜÛ²ÛßÛÜÛ²ßÝ²ßÝ±°±"
+LOCATE 22
+COLOR 7
+PRINT "²±°þ°²þ±þ°þ°Ýþ±²þ°ÝÜ±þ²°°þ°Ý±þ°Ýþ°±Ý°±þ°Ý±þ±þ±°þ²þ²°Ü°þ°þ°²Ý²°Ý°þ°°þ°Ýþ°²Ý°þ°±²°"
+LOCATE 23
+COLOR 8
+PRINT "±°²°²°²°°²±°°±²°²°±²°±°²±°°°°±±°±°°±±°°²°°±²°°²°±°±°²±²°°±°²°±°²°²±°°±°²°±²°²°±²"
+LOCATE 24
+COLOR 3
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+LOCATE 1
+COLOR 7
+PRINT "°°²°²°²°°²°±°²°°²±±²°±±°±°±°°±°±°²° [SWAMP] °²°°°±°±°°±°±°²°°°²°°±°°±°°±²°±°±°±²"
 
 END SUB
 
@@ -3920,6 +4036,11 @@ LOCATE 23, 1
 PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 
 
+'+++++++++++++++++++++++++++++    DESERT    +++++++++++++++++++++++++++++++++
+
+IF PositionCol(PositionCH) = 14 THEN
+CALL DrawDesert
+END IF
 
 ' ++++++++++++++++++++++++++++ FOREST BANNER ++++++++++++++++++++++++++++++++
 
@@ -4018,20 +4139,22 @@ END IF
 
 IF PositionCol(PositionCH) = 7 THEN
 
-COLOR PositionCol(PositionCH), 0
-LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ FROZEN LANDS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+COLOR 15
+LOCATE 19
+PRINT "*     *     *    *                                  *     *      *  *   *  *  *"
+LOCATE 20
+PRINT "°²Ü²ß°ß±Ü°²ß²°ßÜ±²ß²Ü°²ß±Ü±ß²ß²°ÝÜ²°±ß°Ý±Ü²°ß²±Ü°²ÜÝ°ß°²Ü±ß²ßÝÛÜÛ²ÛßÛÜÛ²ßÝ²ßÝ±°±"
+LOCATE 21
+PRINT "²±°þ°²þ±þ°þ°Ýþ±²þ°ÝÜ±þ²°°þ°Ý±þ°Ýþ°±Ý°±þ°Ý±þ±þ±°þ²þ²°Ü°þ°þ°²Ý²°Ý°þ°°þ°Ýþ°²Ý°þ°±²°"
+LOCATE 22
+PRINT "±°²°²°²°°²±°°±²°²°±²°±°²±°°°°±±°±°°±±°°²°°±²°°²°±°±°²±²°°±°²°±°²°²±°°±°²°±²°²°±²"
+LOCATE 23
+PRINT "²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²"
 
 
-LOCATE 21, 1
+LOCATE 1
 COLOR 15
-PRINT "  °°°°°°°   °°°°      °°° °°°   °°°°°°°    °°° °°°   °°°°°°°    °°°°°°°   °°°°°°"
-LOCATE 22, 1
-COLOR 15
-PRINT " °°°°°°°°°°°°°°°°°°° °°°°°°°°°° °°°°°°°°°° °°°°°°°°° °°°°°°°°°° °°°°°°°° °°°°°°°"
-LOCATE 23, 1
-COLOR 7
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+PRINT "²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²² [FROZEN LANDS] ²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²"
 
 END IF
 
@@ -4039,20 +4162,7 @@ END IF
 
 IF PositionCol(PositionCH) = 8 THEN
 
-COLOR PositionCol(PositionCH), 0
-LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°° [ SWAMPS ] °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
-
-
-LOCATE 21, 1
-COLOR 8
-PRINT "  °°°°°°°   °°°°      °°° °°°   °°°°°°°    °°° °°°   °°°°°°°    °°°°°°°   °°°°°°"
-LOCATE 22, 1
-COLOR 8
-PRINT " °°°°°°°°°°°°°°°°°°° °°°°°°°°°° °°°°°°°°°° °°°°°°°°° °°°°°°°°°° °°°°°°°° °°°°°°°"
-LOCATE 23, 1
-COLOR 8
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+CALL DrawSwamp
 
 END IF
 
