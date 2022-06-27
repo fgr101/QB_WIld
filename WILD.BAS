@@ -10,7 +10,7 @@ DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
 
-' - TERMINAR BANNERS
+' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 
 ' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
@@ -83,7 +83,6 @@ DECLARE SUB SaveChallenges ()
 DECLARE SUB LoadChallenges ()
 DECLARE SUB CheckChallenges ()
 DECLARE SUB Challenges ()
-
 
 'FIGHT INTRO & ASCII DRAWINGS:
 
@@ -3024,7 +3023,7 @@ END IF
 
 
 
-IF d1 > 1 AND d1 < 4 THEN
+IF d1 = 4 THEN
 Pause
 PRINT "The road divides in two different directions in front of you."
 Pause
@@ -3137,9 +3136,257 @@ ask1:
 
 END IF
 
-'-----------------------  2  -----------------------------
+'-----------------------  5  -----------------------------
 
-IF d1 > 3 AND d1 < 7 THEN
+
+IF d1 = 2 OR d1 = 3 OR d1 = 5 THEN
+
+line$(1) = "Witch: Combine two of the next ingredients to generate something else."
+line$(2) = "Choose Your Ingredients: "
+
+PrintLines
+
+
+ChooseIngredients:
+
+line$(1) = "[1] Very Strange Pepper"
+line$(2) = "[2] Light Blue Mushroom"
+line$(3) = "[3] Rotten Smelling Liquid"
+
+COLOR 3
+PRINT
+PrintLines
+PRINT
+PRINT "[10] Tell me more..."
+
+line$(1) = "For instance, write the number 12 if you choose PEPPER + MUSHROOM."
+line$(2) = "Write 23 if you choose MUSHROOM + LIQUID. You can combine ONLY two"
+line$(3) = "ingredients."
+
+COLOR 15
+PRINT
+PrintLines
+
+PRINT
+
+COLOR 10
+INPUT "What ingredients would you like to combine? ", opcion
+
+SELECT CASE opcion
+
+	CASE 10
+
+	COLOR 10
+
+	Pause
+	PRINT
+	PRINT "Ok, I'll tell you more..."
+
+	Pause
+	PRINT
+	PRINT "The PEPPER is really strange. Has a strange form, resembles a woman's face."
+	PRINT "Its color is between pink and purple. Actually, you cannot say if it's pepper,"
+	PRINT "a kind of garlic, or if it's a really rare fruit. "
+
+	Pause
+	PRINT
+	PRINT "The MUSHROOM is white on its base, but its top is of a strong and bright blue"
+	PRINT "color. It also has green, red and lighter blue dots on its surface. It looks"
+	PRINT "bright, colorful, full of life. However, it could also be poisonous."
+
+	Pause
+	PRINT
+	PRINT "The LIQUID smells awful. There's some kind of rotten meat or fluids inside that"
+	PRINT "jar. You're almost sure. You try to smell it from closer and it almost makes you"
+	PRINT "vomit."
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO ChooseIngredients
+
+	CASE 12
+
+	PRINT
+	Pause
+	COLOR 15
+	PRINT "PEPPER + MUSHROOM"
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails."
+	line$(3) = "The liquid inside the jar turns BLOOD RED."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	PRINT
+	PRINT "It tastes very spicy. Your body feels like burning. Your heart beats"
+	PRINT "really quickly, like you never felt before. Then you feel your muscles"
+	PRINT "contracting, then expanding. Your breathing gets deep, your lungs seem"
+	PRINT "to be able of receiving much more oxygen than usual. After some minutes"
+	PRINT "you feel much stronger, much resilient."
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.1 AT / + 0.2 DF / + 0.3 HP / + 0.4 MANA)"
+
+	AT = AT + .1
+	DF = DF + .2
+	MaxHP = MaxHP + .3
+	MaxMana = MaxMana + .4
+
+
+
+	CASE 21
+
+	PRINT
+	Pause
+	COLOR 15
+	PRINT "MUSHROOM + PEPPER"
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails."
+	line$(3) = "The liquid inside the jar turns BLOOD RED."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	PRINT
+	PRINT "It tastes very spicy. Your body feels like burning. Your heart beats"
+	PRINT "really quickly, like you never felt before. Then you feel your muscles"
+	PRINT "contracting, then expanding. Your breathing gets deep, your lungs seem"
+	PRINT "to be able of receiving much more oxygen than usual. After some minutes"
+	PRINT "you feel much stronger, much resilient."
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.1 AT / + 0.2 DF / + 0.3 HP / + 0.4 MANA)"
+
+	AT = AT + .1
+	DF = DF + .2
+	MaxHP = MaxHP + .3
+	MaxMana = MaxMana + .4
+
+	CASE 13
+
+	PRINT
+	Pause
+	COLOR 15
+	PRINT "PEPPER + ROTTEN LIQUID"
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
+	line$(3) = "inside the jar turns DARK GREEN. It smells horrible."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	PRINT
+	PRINT "It tastes awful. Your body trembles, your hands start shaking. Your heart"
+	PRINT "beats more than usual. You vomit, you vomit a lot. Your throat hurts, but,"
+	PRINT "but you can't stop throwing up. After that, you have a strong headache."
+	PRINT "The witch promises that you'll feel much better and will be much stronger"
+	PRINT "tomorrow. From suffering comes growth, from pain comes strength - she says."
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.3 AT / + 0.3 DF / + 0.1 HP / + 0.3 MANA)"
+
+	AT = AT + .3
+	DF = DF + .3
+	MaxHP = MaxHP + .1
+	MaxMana = MaxMana + .3
+
+
+	CASE 31
+
+	PRINT
+	Pause
+	COLOR 15
+	PRINT "ROTTEN LIQUID + PEPPER"
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
+	line$(3) = "inside the jar turns DARK GREEN. It smells horrible."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	PRINT
+	PRINT "It tastes awful. Your body trembles, your hands start shaking. Your heart"
+	PRINT "beats more than usual. You vomit, you vomit a lot. Your throat hurts, but,"
+	PRINT "but you can't stop throwing up. After that, you have a strong headache."
+	PRINT "The witch promises that you'll feel much better and will be much stronger"
+	PRINT "tomorrow. From suffering comes growth, from pain comes strength - she says."
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.3 AT / + 0.3 DF / + 0.1 HP / + 0.3 MANA)"
+
+	AT = AT + .3
+	DF = DF + .3
+	MaxHP = MaxHP + .1
+	MaxMana = MaxMana + .3
+
+	CASE 23
+	
+	PRINT
+	Pause
+	PRINT "MUSHROOM + ROTTEN LIQUID"
+	
+	CASE 32
+
+	PRINT
+	Pause
+	PRINT "ROTTEN LIQUID + MUSHROOM"
+
+	CASE ELSE
+
+	PRINT
+	PRINT "You can only choose two ingredients. Try to choose two of the"
+	PRINT "available options."
+
+	DO WHILE INKEY$ = ""
+	LOOP
+
+	GOTO ChooseIngredients
+
+END SELECT
+
+DO WHILE INKEY$ = ""
+LOOP
+
+GOTO EndSub
+
+END IF
+
+'-----------------------  6  -----------------------------
+
+IF d1 = 6 THEN
 Pause
 PRINT "You find a small cave entrance. Looks like it's a small place."
 Pause
@@ -3664,6 +3911,15 @@ SELECT CASE Enemyname$
 	PRINT "°°°°²ÞÞÞ±°°°°"
 	PRINT "°°²±²±ú±²²±°°"
 	PRINT "²±±°²±ú±²°±±²"
+
+	CASE "Wild Wolf"
+
+	PRINT "²°°±²±°±²±°°²"
+	PRINT "²°°°\°°°/°°°²"
+	PRINT "°²°±þ°±°þ±°²°"
+	PRINT "²°²°±ÞÞÞ±°²°²"
+	PRINT "°²°°°   °°°²°"
+	PRINT "²°²²°² ²°²²°²"
 
 	CASE ELSE
 
@@ -4745,7 +5001,9 @@ SUB Notes
 ' - NEW OPTION TO ESCAPE BATTLES ADDED. You can LEAVE ALL YOUR GOLD BEHIND
 '   and RUN from a battle now. You can LEAVE ALL GOLD BEHIND or TRY LUCK.
 '   Option suggested by YouTube user.
- 
+' - Battle: Icons for the 1ST WAVE of enemies added! 6 ASCII Icons added.
+' - 100% TERRAIN ASCII BANNERS added.
+
 
 ' v 0.4
 
