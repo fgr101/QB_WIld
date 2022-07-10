@@ -40,11 +40,18 @@ Version 0.4
 - Main menu and some visual details of the game improved.
 - CHARACTER screen added (Statistics and Information about the character)
 
+
 v 0.5
 
-- New method to PRINT LINES AND PAUSE TEXT ---> Suggested by @amonroejj (Alan Monroe).
-- New method to PRINT LINES AND PAUSE TEXT being applied to the rest of the code ---> Suggested by @amonroejj (Alan Monroe).
-- System of CHALLENGES created.
+- Method to PRINT LINES AND PAUSE TEXT improved ---> Suggested by
+  @amonroejj (Alan Monroe).
+- New method to PRINT LINES AND PAUSE TEXT being applied to the rest
+  of the code ---> Suggested by @amonroejj (Alan Monroe).
+- New Method applied to [SUB] NegativeSub.
+- New Method applied to [SUB] PositiveSub.
+- New Method applied to [SUB] TalkToStrangers.
+- New Method applied to [SUB] Information.
+- System of ACHIEVEMENTS created.
 - First challenges added.
 - GET 100 GOLD challenge, created.
 - FIND A CITY FOR THE FIRST TIME challenge, created.
@@ -64,3 +71,17 @@ v 0.5
 - "You are not used to be in <terrain>" showed in the CHARACTER screen.
 - Witch - ASCII graphic added.
 - LAKES & RIVERS banner added to the fighting intro.
+- Criminal - ASCII graphic added.
+- BUG "Enemies attack when their HP is 0 or less than 0" FIXED.
+  Bug spotted by YouTube user @dw817.
+- "CRITICAL HIT!" message is shown instead.
+- NEW OPTION TO ESCAPE BATTLES ADDED. You can LEAVE ALL YOUR GOLD BEHIND
+  and RUN from a battle now. You can LEAVE ALL GOLD BEHIND or TRY LUCK.
+  Option suggested by YouTube user @dw817.
+- Battle: Icons for the 1ST WAVE of enemies added! 6 ASCII Icons added.
+- 100% TERRAIN ASCII BANNERS added.
+- Sub for [DO WHILE INKEY$ = ""] created ---> Sub WaitKey
+- Code being improved with sub WaitKey.
+- LOOK AROUND: A text describing the area is randomly generated.
+  It needs to be improved and needs to be expanded with more words
+  and some other alternative paragraphs.
