@@ -17,5 +17,5 @@ I'd be very glad if you could help with:
 Thanks to the contributors:
 ===========================
 
-Alan Monroe from Ohio, USA.
-@dw817 [YouTube User]
+| Alan Monroe from Ohio, USA.
+| @dw817 [YouTube User]
