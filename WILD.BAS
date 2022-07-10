@@ -1,3 +1,5 @@
+DECLARE SUB GenDescription ()
+DECLARE SUB WaitKey ()
 DECLARE SUB DrawSwamp ()
 DECLARE SUB DrawDesert ()
 DECLARE SUB DrawIcons ()
@@ -9,9 +11,15 @@ DECLARE SUB NegativeSub ()
 DECLARE SUB Negative ()
 DECLARE SUB DrawBugio ()
 
-
 ' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
+' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
+' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
+
+
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
+
+' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
+' - MEJORAR CODIGO USANDO [SUB WaitKey] PARA `press any key to continue'.
 
 ' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
 '   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
@@ -20,7 +28,6 @@ DECLARE SUB DrawBugio ()
 ' - LLEGAR AL NIVEL 50.
 
 ' - AGREGAR DETALLES Y GRAFICOS ASCII
-' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
@@ -97,12 +104,17 @@ DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
 
-DIM SHARED d1, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
+DIM SHARED d1, DecisionResult, LastDecisionEvent, MANA, hp, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(25)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
 DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
+
+'[VARIABLES TO GENETARATE DESCRIPTIONS]
+
+DIM SHARED AdjPlace$(25), PluralNouns$(25), SingNoun$(25), hear$(25), feel$(25)
+DIM SHARED YouAre$(25), Its$(25)
 
 ' ENEMIES VARIABLES
 
@@ -340,7 +352,7 @@ PRINT "Generating random defence value..." '6 TO RANDOMIZE THEM, SIMULATING
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
 MaxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
-HP = MaxHP                                 'TO JUST TO KEEP IT SIMPLE.
+hp = MaxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
 
 MaxMana = 5 + rolld6
@@ -431,7 +443,7 @@ CALL Character
 inicio:
 
 d1 = (rolld6) / 10
-HP = HP + d1
+hp = hp + d1
 MANA = MANA + d1
 
 inicio2:
@@ -439,12 +451,12 @@ RANDOMIZE TIMER
 
 CALL CheckChallenges     'Checks if there are challenges acomplished and
 			 'if so, shows a message.
-IF HP <= 0 THEN
+IF hp <= 0 THEN
 GOTO GameOver
 END IF
 
-IF HP > MaxHP THEN
-HP = MaxHP
+IF hp > MaxHP THEN
+hp = MaxHP
 END IF
 
 IF MANA > MaxMana THEN
@@ -655,7 +667,7 @@ COLOR , 0
 
 COLOR 3
 LOCATE 3, 1
-PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "| ( LEVEL"; level; ")"
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
 LOCATE 4, 1
 PRINT "Mana"; MANA; "| Expert Points:"; xpoints; "| Gold:"; GOLD
 
@@ -673,6 +685,8 @@ END IF
 IF PositionCH = PositionCity4 OR PositionCH = PositionCity5 OR PositionCH = PositionCity6 THEN
 PRINT "5 - Enter in the city."
 END IF
+
+PRINT "6- Look around"
 
 PRINT
 PRINT
@@ -747,6 +761,7 @@ END IF
 
 
 DirectionCity:        '============= IF DIRECTION = 5, GO BACK TO THE CITY
+
 IF direction = 5 THEN
 
 SELECT CASE PositionCH
@@ -783,7 +798,7 @@ SELECT CASE PositionCH
 
 END SELECT
 
-	IF HP <= 0 THEN
+	IF hp <= 0 THEN
 	GOTO mainmenu
 	END IF
 
@@ -792,6 +807,12 @@ IF barfight = 1 THEN
 GOTO enemy
 END IF
 
+GOTO inicio
+END IF
+
+IF direction = 6 THEN
+CALL GenDescription
+WaitKey
 GOTO inicio
 END IF
 
@@ -836,7 +857,7 @@ IF direction = 555 THEN
 
 	CALL City
 
-		IF HP <= 0 THEN
+		IF hp <= 0 THEN
 		GOTO mainmenu
 		END IF
 
@@ -1281,13 +1302,13 @@ Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
 
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
 	enemyAT = 8
 	enemyDF = 10
 	END IF
 
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
 	enemyAT = 38
 	enemyDF = 43
@@ -1300,13 +1321,13 @@ Enemyname$ = "Wild Bugio"
 enemyAT = 4.5
 enemyDF = 6
 
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
 	enemyAT = 7
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
 	enemyAT = 26
 	enemyDF = 35
@@ -1319,13 +1340,13 @@ Enemyname$ = "Witch"
 enemyAT = 4
 enemyDF = 5.5
 	
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
 	enemyAT = 9
 	enemyDF = 12
 	END IF
 
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
 	enemyAT = 36
 	enemyDF = 40
@@ -1338,13 +1359,13 @@ Enemyname$ = "Crawler"
 enemyAT = 5
 enemyDF = 5
 
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
 	enemyAT = 11
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Goblin"
 	enemyAT = 35
 	enemyDF = 59
@@ -1357,13 +1378,13 @@ Enemyname$ = "Criminal"
 enemyAT = 4
 enemyDF = 5
 
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Forest Demon"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 	
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Draco"
 	enemyAT = 11
 	enemyDF = 15
@@ -1376,13 +1397,13 @@ Enemyname$ = "Giant Scorpion"
 enemyAT = 6
 enemyDF = 7
 
-	IF AT > 12 OR HP > 12 OR DF > 12 THEN
+	IF AT > 12 OR hp > 12 OR DF > 12 THEN
 	Enemyname$ = "Corrupted Soul"
 	enemyAT = 14
 	enemyDF = 16
 	END IF
 
-	IF AT > 22 OR HP > 22 OR DF > 22 THEN
+	IF AT > 22 OR hp > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Centipede"
 	enemyAT = 19
 	enemyDF = 21
@@ -1455,7 +1476,7 @@ combatINI:
 
 COLOR 2
 PRINT
-PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
+PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
 COLOR 4
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
 COLOR 2
@@ -1593,7 +1614,7 @@ PRINT "YOU receive"; finaldamage; "points of damage."
 COLOR 2
 
 
-HP = HP - finaldamage
+hp = hp - finaldamage
 
 PRINT
 PRINT "--------------------------------------------"
@@ -1605,7 +1626,7 @@ LOOP
 SkipEnemyAttack:         'CONTINUES HERE WHEN SKIPPING ENEMY'S ATTACK
 
 
-IF HP <= 0 THEN
+IF hp <= 0 THEN
 GOTO GameOver
 END IF
 
@@ -1705,7 +1726,7 @@ SELECT CASE opcion
 END SELECT
 
 MANA = MaxMana
-HP = MaxHP
+hp = MaxHP
 
 DO WHILE INKEY$ = ""
 LOOP
@@ -1809,9 +1830,9 @@ INPUT "What will you do...", opcion
 				PRINT "You try to escape but can't. It seems you aren't fast enough for that."
 				Pause
 				PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-				HP = HP - enemyAT
+				hp = hp - enemyAT
 				Pause
-				PRINT "Your HP is "; HP; " now."
+				PRINT "Your HP is "; hp; " now."
 				PRINT
 				COLOR 2
 				Pause
@@ -1820,7 +1841,7 @@ INPUT "What will you do...", opcion
 				DO WHILE INKEY$ = ""
 				LOOP
 
-				IF HP <= 0 THEN
+				IF hp <= 0 THEN
 				GOTO GameOver
 				END IF
 
@@ -1922,13 +1943,13 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 2 AND MANA >= 3 THEN
 		MANA = MANA - 3
-		HP = MaxHP
+		hp = MaxHP
 		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to recover your health"
 		Pause
-		PRINT "Your HP is now "; HP; "! You feel much better and renewed!"
+		PRINT "Your HP is now "; hp; "! You feel much better and renewed!"
 		Pause
 		PRINT "Ready to fight back!"
 		PRINT
@@ -2310,7 +2331,7 @@ END SUB
 SUB City
 CityIni:
 
-IF HP <= 0 THEN
+IF hp <= 0 THEN
 CALL GameOver
 GOTO endofsub
 END IF
@@ -2373,7 +2394,7 @@ SELECT CASE opcion
      PRINT
      PRINT "(HP 100% / MANA 100%)"
      GOLD = GOLD - 25
-     HP = MaxHP
+     hp = MaxHP
      MANA = MaxMana
      DO WHILE INKEY$ = ""
      LOOP
@@ -2435,7 +2456,7 @@ SELECT CASE opcion
 		PRINT "(-0.5 HP)"
 		GOLD = GOLD - 10
 		MANA = MANA + 3
-		HP = HP - .5
+		hp = hp - .5
 
 		DO WHILE INKEY$ = ""
 		LOOP
@@ -2667,7 +2688,7 @@ SELECT CASE opcion
 		Pause
 		d1 = rolld6
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; "HP."
-		HP = HP - (d1 * 2)
+		hp = hp - (d1 * 2)
 
 		d1 = rolld6
 		Pause
@@ -2862,7 +2883,7 @@ COLOR 10
 		PRINT "(+"; d1; " HP pts)"
 		COLOR 10
 
-		HP = HP + d1
+		hp = hp + d1
 		MANA = MANA + d1
 
 		DO WHILE INKEY$ = ""
@@ -2899,7 +2920,7 @@ COLOR 10
 		PRINT "been shot in the shoulder and are heavily wounded."
 
 		d1 = 5 + rolld6
-		HP = HP - d1
+		hp = hp - d1
 		
 		Pause
 		COLOR 3
@@ -3200,168 +3221,61 @@ SELECT CASE opcion
 	PRINT "jar. You're almost sure. You try to smell it from closer and it almost makes you"
 	PRINT "vomit."
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO ChooseIngredients
 
 	CASE 12
+
+	ResultIngredients = 1
 
 	PRINT
 	Pause
 	COLOR 15
 	PRINT "PEPPER + MUSHROOM"
 
-	COLOR 10
-	line$(1) = "The witch takes both ingredients and put them in a glass jar."
-	line$(2) = "She mixes it using her long and dirty finger nails."
-	line$(3) = "The liquid inside the jar turns BLOOD RED."
-	line$(4) = "She gives you the mix... You drink it..."
-
-	PRINT
-	PrintLines
-
-	DO WHILE INKEY$ = ""
-	LOOP
-
-	PRINT
-	PRINT "It tastes very spicy. Your body feels like burning. Your heart beats"
-	PRINT "really quickly, like you never felt before. Then you feel your muscles"
-	PRINT "contracting, then expanding. Your breathing gets deep, your lungs seem"
-	PRINT "to be able of receiving much more oxygen than usual. After some minutes"
-	PRINT "you feel much stronger, much resilient."
-
-	COLOR 3
-
-	PRINT
-	PRINT "(+ 0.1 AT / + 0.2 DF / + 0.3 HP / + 0.4 MANA)"
-
-	AT = AT + .1
-	DF = DF + .2
-	MaxHP = MaxHP + .3
-	MaxMana = MaxMana + .4
-
-
-
 	CASE 21
+
+	ResultIngredients = 1
 
 	PRINT
 	Pause
 	COLOR 15
 	PRINT "MUSHROOM + PEPPER"
 
-	COLOR 10
-	line$(1) = "The witch takes both ingredients and put them in a glass jar."
-	line$(2) = "She mixes it using her long and dirty finger nails."
-	line$(3) = "The liquid inside the jar turns BLOOD RED."
-	line$(4) = "She gives you the mix... You drink it..."
-
-	PRINT
-	PrintLines
-
-	DO WHILE INKEY$ = ""
-	LOOP
-
-	PRINT
-	PRINT "It tastes very spicy. Your body feels like burning. Your heart beats"
-	PRINT "really quickly, like you never felt before. Then you feel your muscles"
-	PRINT "contracting, then expanding. Your breathing gets deep, your lungs seem"
-	PRINT "to be able of receiving much more oxygen than usual. After some minutes"
-	PRINT "you feel much stronger, much resilient."
-
-	COLOR 3
-
-	PRINT
-	PRINT "(+ 0.1 AT / + 0.2 DF / + 0.3 HP / + 0.4 MANA)"
-
-	AT = AT + .1
-	DF = DF + .2
-	MaxHP = MaxHP + .3
-	MaxMana = MaxMana + .4
-
 	CASE 13
+
+	ResultIngredients = 2
 
 	PRINT
 	Pause
 	COLOR 15
 	PRINT "PEPPER + ROTTEN LIQUID"
-
-	COLOR 10
-	line$(1) = "The witch takes both ingredients and put them in a glass jar."
-	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
-	line$(3) = "inside the jar turns DARK GREEN. It smells horrible."
-	line$(4) = "She gives you the mix... You drink it..."
-
-	PRINT
-	PrintLines
-
-	DO WHILE INKEY$ = ""
-	LOOP
-
-	PRINT
-	PRINT "It tastes awful. Your body trembles, your hands start shaking. Your heart"
-	PRINT "beats more than usual. You vomit, you vomit a lot. Your throat hurts, but,"
-	PRINT "but you can't stop throwing up. After that, you have a strong headache."
-	PRINT "The witch promises that you'll feel much better and will be much stronger"
-	PRINT "tomorrow. From suffering comes growth, from pain comes strength - she says."
-
-	COLOR 3
-
-	PRINT
-	PRINT "(+ 0.3 AT / + 0.3 DF / + 0.1 HP / + 0.3 MANA)"
-
-	AT = AT + .3
-	DF = DF + .3
-	MaxHP = MaxHP + .1
-	MaxMana = MaxMana + .3
-
-
+	
 	CASE 31
+
+	ResultIngredients = 2
 
 	PRINT
 	Pause
 	COLOR 15
 	PRINT "ROTTEN LIQUID + PEPPER"
-
-	COLOR 10
-	line$(1) = "The witch takes both ingredients and put them in a glass jar."
-	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
-	line$(3) = "inside the jar turns DARK GREEN. It smells horrible."
-	line$(4) = "She gives you the mix... You drink it..."
-
-	PRINT
-	PrintLines
-
-	DO WHILE INKEY$ = ""
-	LOOP
-
-	PRINT
-	PRINT "It tastes awful. Your body trembles, your hands start shaking. Your heart"
-	PRINT "beats more than usual. You vomit, you vomit a lot. Your throat hurts, but,"
-	PRINT "but you can't stop throwing up. After that, you have a strong headache."
-	PRINT "The witch promises that you'll feel much better and will be much stronger"
-	PRINT "tomorrow. From suffering comes growth, from pain comes strength - she says."
-
-	COLOR 3
-
-	PRINT
-	PRINT "(+ 0.3 AT / + 0.3 DF / + 0.1 HP / + 0.3 MANA)"
-
-	AT = AT + .3
-	DF = DF + .3
-	MaxHP = MaxHP + .1
-	MaxMana = MaxMana + .3
-
+	
 	CASE 23
 	
+	ResultIngredients = 3
+
 	PRINT
 	Pause
+	COLOR 15
 	PRINT "MUSHROOM + ROTTEN LIQUID"
 	
 	CASE 32
 
+	ResultIngredients = 3
+
 	PRINT
 	Pause
+	COLOR 15
 	PRINT "ROTTEN LIQUID + MUSHROOM"
 
 	CASE ELSE
@@ -3370,16 +3284,120 @@ SELECT CASE opcion
 	PRINT "You can only choose two ingredients. Try to choose two of the"
 	PRINT "available options."
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO ChooseIngredients
 
 END SELECT
 
-DO WHILE INKEY$ = ""
-LOOP
 
+IF ResultIngredients = 1 THEN '+++++++++++++ RESULT 1 +++++++++++++++++++++++
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails."
+	line$(3) = "The liquid inside the jar turns BLOOD RED."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	WaitKey
+
+	line$(1) = "It tastes very spicy. Your body feels like burning. Your heart beats"
+	line$(2) = "really quickly, like you never felt before. Then you feel your muscles"
+	line$(3) = "contracting, then expanding. Your breathing gets deep, your lungs seem"
+	line$(4) = "to be able of receiving much more oxygen than usual. After some minutes"
+	line$(5) = "you feel much stronger, much resilient."
+
+	PRINT
+	PrintLines
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.1 AT / + 0.2 DF / + 0.3 HP / + 0.4 MANA)"
+
+	AT = AT + .1
+	DF = DF + .2
+	MaxHP = MaxHP + .3
+	MaxMana = MaxMana + .4
+	
+END IF
+
+
+IF ResultIngredients = 2 THEN '+++++++++++++ RESULT 2 +++++++++++++++++++++++
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
+	line$(3) = "inside the jar turns DARK GREEN. It smells horrible."
+	line$(4) = "She gives you the mix... You drink it..."
+
+	PRINT
+	PrintLines
+
+	WaitKey
+
+	line$(1) = "It tastes awful. Your body trembles, your hands start shaking. Your heart"
+	line$(2) = "beats more than usual. You vomit, you vomit a lot. Your throat hurts, but,"
+	line$(3) = "but you can't stop throwing up. After that, you have a strong headache."
+	line$(4) = "The witch promises that you'll feel much better and will be much stronger"
+	line$(5) = "tomorrow. From suffering comes growth, from pain comes strength - she says."
+
+	PRINT
+	PrintLines
+
+	COLOR 3
+
+	PRINT
+	PRINT "(+ 0.3 AT / + 0.3 DF / + 0.1 HP / + 0.3 MANA)"
+
+	AT = AT + .3
+	DF = DF + .3
+	MaxHP = MaxHP + .1
+	MaxMana = MaxMana + .3
+	
+END IF
+
+IF ResultIngredients = 3 THEN '+++++++++++++ RESULT 3 +++++++++++++++++++++++
+
+	COLOR 10
+	line$(1) = "The witch takes both ingredients and put them in a glass jar."
+	line$(2) = "She mixes it using her long and dirty finger nails. The liquid"
+	line$(3) = "inside the jar turns a color between PURPLE and BROWN."
+	line$(4) = "She gives you the mix... You look at it and smell it..."
+
+	PRINT
+	PrintLines
+
+	WaitKey
+
+	line$(1) = "You drink the purple brownish mix. It doesn't taste that bad after all."
+	line$(2) = "However after drinking it, your body starts trembling, your hands start"
+	line$(3) = "shaking. You feel your body burning. You have a strong headache, it feels"
+	line$(4) = "like someone is stabbing your brain. Then blood comes out from your nose."
+
+	PRINT
+	PrintLines
+
+	WaitKey
+
+	line$(1) = "The witch looks serious... very worried. "
+	line$(2) = "- It hasn't worked as expected! - she says."
+
+	PRINT
+	PrintLines
+
+	COLOR 3
+
+	Pause
+	PRINT
+	PRINT "(- 5 HP)"
+	hp = hp - 5
+
+END IF
+
+WaitKey
 GOTO EndSub
 
 END IF
@@ -3421,8 +3439,8 @@ COLOR 10
 	PRINT "There's an enemy or creature inside this cave!"
 	PRINT ""
 	PLAY Chance$
-	DO WHILE INKEY$ = ""
-	LOOP
+
+	WaitKey
 	DecisionResult = 1
 	GOTO EndSub
 
@@ -3436,8 +3454,8 @@ COLOR 10
 	PRINT "You found "; addgold; " GOLD!"
 	PRINT ""
 	PLAY Chance$
-	DO WHILE INKEY$ = ""
-	LOOP
+
+	WaitKey
 	GOLD = GOLD + addgold
 	GOTO EndSub
 
@@ -3456,8 +3474,8 @@ COLOR 10
 	PRINT "(+ "; addmana; " MANA pts)"
 	PRINT ""
 	PLAY Chance$
-	DO WHILE INKEY$ = ""
-	LOOP
+
+	WaitKey
 	MANA = MANA + addmana
 	GOTO EndSub
      
@@ -3478,9 +3496,9 @@ COLOR 10
 	PRINT "(-"; DiscountHP; " HP pts)"
 	PRINT ""
 	PLAY Chance$
-	DO WHILE INKEY$ = ""
-	LOOP
-	HP = HP - DiscountHP
+
+	WaitKey
+	hp = hp - DiscountHP
 	GOTO EndSub
 
 	CASE ELSE
@@ -3488,8 +3506,8 @@ COLOR 10
 	Pause
 	PRINT "The cave is empty... Nothing interesting to see here."
 	PRINT ""
-	DO WHILE INKEY$ = ""
-	LOOP
+
+	WaitKey
 	GOTO EndSub
 
 	END SELECT
@@ -3506,8 +3524,7 @@ END SELECT
 
 END IF
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 EndSub:
 END SUB
@@ -4501,6 +4518,148 @@ CLS
 
 END SUB
 
+SUB GenDescription 'GENERATE DESCRIPTION OF THE PLACE
+
+AdjPlace$(1) = "quiet"
+AdjPlace$(2) = "misterious"
+AdjPlace$(3) = "silent"
+AdjPlace$(4) = "scary"
+AdjPlace$(5) = "dark"
+AdjPlace$(6) = "relaxing"
+AdjPlace$(7) = "comfortable"
+AdjPlace$(8) = "haunted"
+AdjPlace$(9) = "cold"
+AdjPlace$(10) = "boring"
+AdjPlace$(11) = "interesting"
+AdjPlace$(12) = "awful"
+AdjPlace$(11) = "disgusting"
+AdjPlace$(13) = "uncomfortable"
+
+PluralNouns$(1) = "insects"
+PluralNouns$(2) = "rocks"
+PluralNouns$(3) = "flowers"
+PluralNouns$(4) = "dead animals"
+PluralNouns$(5) = "horses"
+PluralNouns$(6) = "cows"
+PluralNouns$(7) = "dunes"
+PluralNouns$(8) = "mountains"
+PluralNouns$(9) = "trees"
+PluralNouns$(10) = "creatures"
+PluralNouns$(11) = "enemies"
+SingNoun$(12) = "tents"
+
+SingNoun$(1) = "tree"
+SingNoun$(2) = "mountain"
+SingNoun$(3) = "abandoned house"
+SingNoun$(4) = "tower"
+SingNoun$(5) = "farm"
+SingNoun$(6) = "stone wall"
+SingNoun$(7) = "cave"
+SingNoun$(8) = "lake"
+SingNoun$(9) = "river"
+SingNoun$(10) = "fallen tree"
+SingNoun$(11) = "monument"
+SingNoun$(12) = "statue"
+SingNoun$(13) = "bridge"
+
+hear$(1) = "birds"
+hear$(2) = "people shouting"
+hear$(3) = "the wind"
+hear$(4) = "music"
+hear$(5) = "water"
+hear$(6) = "someone talking"
+hear$(7) = "nothing"
+hear$(8) = "dogs barking"
+hear$(9) = "explosions"
+hear$(10) = "strange sounds"
+hear$(11) = "a rooster"
+hear$(12) = "weird sounds"
+hear$(13) = "a storm coming"
+
+
+feel$(1) = "motivated"
+feel$(2) = "ok"
+feel$(3) = "bad"
+feel$(4) = "inspired"
+feel$(5) = "tired"
+feel$(6) = "exhausted"
+feel$(7) = "well rested"
+feel$(8) = "strong"
+feel$(9) = "overwhelmed"
+feel$(10) = "sad"
+feel$(11) = "weak"
+feel$(12) = "happy"
+feel$(13) = "anxious"
+feel$(14) = "worried"
+
+
+YouAre$(1) = "sitting on a rock"
+YouAre$(2) = "standing on a rock"
+YouAre$(3) = "on a tree"
+YouAre$(4) = "standing under a tree"
+YouAre$(5) = "following a path"
+YouAre$(6) = "not following a path"
+YouAre$(7) = "walking by a road"
+YouAre$(8) = "in the middle of nowhere"
+YouAre$(9) = "travelling out of the road, not following a path"
+YouAre$(10) = "quite lost"
+YouAre$(11) = "resting"
+YouAre$(12) = "drinking some water"
+YouAre$(13) = "eating something"
+YouAre$(14) = "laying on the ground"
+YouAre$(15) = "walking very fast"
+YouAre$(16) = "moving fast"
+YouAre$(17) = "going fast"
+YouAre$(18) = "walking fast, almost running"
+
+Its$(1) = "It's getting colder."
+Its$(2) = "It's a really good place to be."
+Its$(3) = "It doesn't seem to be a very good place to be for a long time."
+Its$(4) = "It looks very safe."
+Its$(5) = "It doesn't look very safe."
+Its$(6) = "It's getting colder."
+Its$(7) = "It's an interesting area."
+Its$(8) = "It's starting to rain."
+Its$(9) = "It's getting darker."
+Its$(10) = "There's fog in the air."
+Its$(11) = "It feels like something bad is about to happen."
+Its$(12) = "It feels like something good is about to happen."
+
+RANDOMIZE TIMER
+
+number1 = INT(RND * 12) + 1
+number2 = INT(RND * 12) + 1
+number3 = INT(RND * 12) + 1
+number4 = INT(RND * 12) + 1
+number5 = INT(RND * 14) + 1
+
+CLS
+COLOR 10
+
+PRINT
+Pause
+PRINT "The place is "; AdjPlace$(number1); ". There are "; PluralNouns$(number2); " all around the area."
+Pause
+PRINT "You can see a huge "; SingNoun$(number3); " at the distance. You can hear "; hear$(number4); "."
+
+number6 = INT(RND * 12) + 1
+number7 = INT(RND * 12) + 1
+number8 = INT(RND * 12) + 1
+number9 = INT(RND * 12) + 1
+
+PRINT
+Pause
+PRINT "On your right you see a(n) "; SingNoun$(number6); ", on your left you see a(n) "; SingNoun$(number7); "."
+Pause
+PRINT "In front of you there are "; PluralNouns$(number8); ". You feel "; feel$(number9); "."
+Pause
+PRINT "You are "; YouAre$(number3); "."
+Pause
+PRINT Its$(number2)
+
+
+END SUB
+
 SUB Information
 
 d1 = INT(RND * 7) + 1
@@ -4755,7 +4914,7 @@ line$(2) = "You hurt your back when falling (-1 HP)."
 
 PrintLines
 
-HP = HP - 1
+hp = hp - 1
 
 END IF
 
@@ -4801,7 +4960,7 @@ PRINT "Die:"; d1;
 
 	PrintLines
 
-	HP = HP - 6
+	hp = hp - 6
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4820,7 +4979,7 @@ PRINT "Die:"; d1;
 	
 	PrintLines
 
-	HP = HP - 3
+	hp = hp - 3
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4861,7 +5020,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	HP = HP - d1
+	hp = hp - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4906,7 +5065,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	HP = HP - d1
+	hp = hp - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -4931,7 +5090,7 @@ line$(4) = "wet feet and wet clothes. You also feel very cold. (-1 HP)"
 
 PrintLines
 
-HP = HP - 1.5
+hp = hp - 1.5
 
 END IF
 
@@ -5003,7 +5162,11 @@ SUB Notes
 '   Option suggested by YouTube user.
 ' - Battle: Icons for the 1ST WAVE of enemies added! 6 ASCII Icons added.
 ' - 100% TERRAIN ASCII BANNERS added.
-
+' - Sub for [DO WHILE INKEY$ = ""] created ---> Sub WaitKey
+' - Code being improved with sub WaitKey.
+' - LOOK AROUND: A text describing the area is randomly generated.
+'   It needs to be improved and needs to be expanded with more words
+'   and some other alternative paragraphs.
 
 ' v 0.4
 
@@ -5055,7 +5218,7 @@ COLOR 3
 PRINT
 PRINT "(+1 HP)"
 
-HP = HP + 1
+hp = hp + 1
 
 END IF
 
@@ -5077,7 +5240,7 @@ PRINT
 Pause
 PRINT "(+5 HP) (+20 GOLD) (100% MANA pts)"
 
-HP = HP + 5
+hp = hp + 5
 GOLD = GOLD + 20
 MANA = MaxMana
 END IF
@@ -5112,7 +5275,7 @@ COLOR 3
 PRINT
 PRINT "(+3 HP) (+0.5 AT) "
 
-HP = HP + 3
+hp = hp + 3
 AT = AT + .5
 
 END IF
@@ -5163,7 +5326,7 @@ INPUT "Would you like to buy something sir?"; opcion
 
 	PrintLines
 
-	HP = HP + 5
+	hp = hp + 5
 	GOLD = GOLD - 25
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5212,7 +5375,7 @@ PRINT
 PRINT "(+25 GOLD) (+10 HP) (+0.5 AT)"
 
 GOLD = GOLD + 25
-HP = HP + 10
+hp = hp + 10
 AT = AT + .5
 
 END IF
@@ -5394,5 +5557,12 @@ LOOP
 
 COLOR 2, 0
 CLS
+END SUB
+
+SUB WaitKey
+
+DO WHILE INKEY$ = ""
+LOOP
+
 END SUB
 
