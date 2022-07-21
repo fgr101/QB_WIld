@@ -1,21 +1,6 @@
-DECLARE SUB GenDescription ()
-DECLARE SUB WaitKey ()
-DECLARE SUB DrawSwamp ()
-DECLARE SUB DrawDesert ()
-DECLARE SUB DrawIcons ()
-DECLARE SUB PositiveSub ()
-DECLARE SUB DrawWolf ()
-DECLARE SUB DrawMountains ()
-DECLARE SUB PrintLines ()
-DECLARE SUB NegativeSub ()
-DECLARE SUB Negative ()
-DECLARE SUB DrawBugio ()
-
 ' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
 ' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
 ' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
-
-
 ' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
 
 ' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
@@ -66,6 +51,19 @@ DECLARE SUB DrawBugio ()
 
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB GenDescription ()
+DECLARE SUB WaitKey ()
+DECLARE SUB DrawSwamp ()
+DECLARE SUB DrawDesert ()
+DECLARE SUB DrawIcons ()
+DECLARE SUB PositiveSub ()
+DECLARE SUB DrawWolf ()
+DECLARE SUB DrawMountains ()
+DECLARE SUB PrintLines ()
+DECLARE SUB NegativeSub ()
+DECLARE SUB Negative ()
+DECLARE SUB DrawBugio ()
+
 DECLARE SUB Music ()
 DECLARE SUB GameOver ()
 DECLARE SUB Pause ()
@@ -111,10 +109,10 @@ DIM SHARED OptionMusic, barfight, line$(25)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
 DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
 
-'[VARIABLES TO GENETARATE DESCRIPTIONS]
+'[GLOBAL VARIABLES TO GENETARATE DESCRIPTIONS]
 
 DIM SHARED AdjPlace$(25), PluralNouns$(25), SingNoun$(25), hear$(25), feel$(25)
-DIM SHARED YouAre$(25), Its$(25)
+DIM SHARED YouAre$(25), Its$(25), nameterrain$, WeatherText$
 
 ' ENEMIES VARIABLES
 
@@ -1129,7 +1127,6 @@ lastterrain = PositionCol(PositionCH)
 weather:
 CALL DisplayWeather
 
-
 '---------------------------------------------------------
 situations:
 
@@ -1254,12 +1251,9 @@ CALL Information
 GOTO inicio
 END IF
 
-
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 GOTO inicio
-
 
 '+++++++++++++++++++++++++++++++ NEGATIVE EVENTS +++++++++++++++++++++++++++++
 Negative:
@@ -2028,10 +2022,10 @@ PRINT "Contributors from GitHub:"
 PRINT
 Pause
 PRINT "- Alan Monroe from Ohio, USA."
+Pause
+PRINT "- YouTube user @dw817"
 
-
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END SUB
 
@@ -2096,8 +2090,9 @@ SELECT CASE BetOptions
        PRINT
        Pause
        PRINT "You don't have that money! Better get out of here!"
-       DO WHILE INKEY$ = ""
-       LOOP
+       
+       WaitKey
+       
        GOTO BetEndOfSub
        END IF
 
@@ -2166,8 +2161,7 @@ SELECT CASE BetOptions
        PRINT "Your gold is"; GOLD; "now."
        COLOR 10
 
-       DO WHILE INKEY$ = ""
-       LOOP
+       WaitKey
 
        CASE 2
        PRINT
@@ -2225,9 +2219,7 @@ END IF
 Pause
 PRINT "# Reach level 10."
 
-
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END SUB
 
@@ -2283,9 +2275,7 @@ PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같�
 LOCATE 23, 1
 PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
 
-
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END SUB
 
@@ -2396,10 +2386,10 @@ SELECT CASE opcion
      GOLD = GOLD - 25
      hp = MaxHP
      MANA = MaxMana
-     DO WHILE INKEY$ = ""
-     LOOP
+    
+     WaitKey
      
-     CASE 2
+    CASE 2
 	COLOR , 0
 	CLS
 	COLOR 15, 5
@@ -2433,8 +2423,9 @@ SELECT CASE opcion
 		PRINT
 		Pause
 		PRINT "You don't have enough money for that!"
-		DO WHILE INKEY$ = ""
-		LOOP
+		
+		WaitKey
+		
 		GOTO BarIni
 		END IF
      
@@ -2458,8 +2449,8 @@ SELECT CASE opcion
 		MANA = MANA + 3
 		hp = hp - .5
 
-		DO WHILE INKEY$ = ""
-		LOOP
+		WaitKey
+		
 		GOTO BarIni
 
 		CASE 2
@@ -2581,8 +2572,9 @@ SELECT CASE opcion
      PLAY NegativeMusic$
      Pause
      PRINT "You don't have any money to pay me!"
-     DO WHILE INKEY$ = ""
-     LOOP
+     
+     WaitKey
+     
      GOTO CityIni
      END IF
 
@@ -2632,8 +2624,8 @@ SELECT CASE opcion
 
      END SELECT
 
-     DO WHILE INKEY$ = ""
-     LOOP
+     WaitKey
+     
      GOTO CityOpcionIni
 
 
@@ -2700,9 +2692,8 @@ SELECT CASE opcion
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; " MANA."
 		MANA = MANA - (d1 * 2)
 		
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		WaitKey
+		
 		GOTO CityIni
 		END IF
 		
@@ -2729,14 +2720,14 @@ SELECT CASE opcion
 		d1 = rolld6
 		PRINT "Die:"; d1; "*5 | you get +"; d1 * 5; "GOLD."
 		GOLD = GOLD + (d1 * 5)
-		DO WHILE INKEY$ = ""
-		LOOP
+		
+		WaitKey
+				
 		GOTO CityIni
 		END IF
 		
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		WaitKey
+		
 		CASE 2
 		
 		COLOR 10
@@ -2744,9 +2735,8 @@ SELECT CASE opcion
 		PRINT
 		PRINT "It doesn't seem to be a good idea. Better get out of here."
 
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		WaitKey
+		
 	END SELECT
      
 
@@ -2797,8 +2787,7 @@ line$(5) = "built by the ancient tribes that lived in the region."
 
 PrintLines
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 PRINT
 
@@ -2808,8 +2797,7 @@ line$(3) = "built to summon and pray to the gods of nature."
 
 PrintLines
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 PRINT
 
@@ -2818,8 +2806,7 @@ line$(2) = "be a good idea."
 
 PrintLines
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 PRINT
 COLOR 3
@@ -2840,9 +2827,8 @@ COLOR 10
 
 	PRINT
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
+	
 	d1 = rolld6
 
 	SELECT CASE d1
@@ -2852,9 +2838,9 @@ COLOR 10
 		Pause
 		PRINT "Nothing happens."
 		GOTO EndSub
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		
+		WaitKey
+		
 		CASE 2
 		'YOU FEEL BETTER AND RECOVER HP
 
@@ -2886,8 +2872,8 @@ COLOR 10
 		hp = hp + d1
 		MANA = MANA + d1
 
-		DO WHILE INKEY$ = ""
-		LOOP
+		WaitKey
+				
 		GOTO EndSub
 
 		CASE 3
@@ -2901,17 +2887,15 @@ COLOR 10
 		Pause
 		PRINT "thought came suddendly to your mind but you don't know why."
 
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		WaitKey
+		
 		PRINT
 		PRINT "BOOM! A strong explosion behind you. You realize that someone"
 		Pause
 		PRINT "is attacking you with a fire gun from the distance! "
 
-		DO WHILE INKEY$ = ""
-		LOOP
-
+		WaitKey
+		
 		PRINT
 		PRINT "You stand up and try to run away!"
 		Pause
@@ -3537,19 +3521,32 @@ PRINT "Die:"; d1;
 COLOR 2
 
 SELECT CASE d1
-CASE 1
-PRINT "It's sunny and mild."
-CASE 2
-PRINT "It's cloudy and breezy."
-CASE 3
-PRINT "It's snowy and cold."
-CASE 4
-PRINT "It's dry and very hot."
-CASE 5
-PRINT "It's stormy, heavy rain."
-CASE 6
-PRINT "Windy and cold."
-END SELECT
+
+	CASE 1
+	PRINT "It's sunny and mild."
+	WeatherText$ = "is sunny, not too cold, not too hot"
+
+	CASE 2
+	PRINT "It's cloudy and breezy."
+	WeatherText$ = "is cloudy and a little windy"
+
+	CASE 3
+	PRINT "It's snowy and cold."
+	WeatherText$ = "is very cold, it is snowing"
+
+	CASE 4
+	PRINT "It's dry and very hot."
+	WeatherText$ = "is dry and quite hot"
+
+	CASE 5
+	PRINT "It's stormy, heavy rain."
+	WeatherText$ = "is really bad, there is a huge storm going on"
+
+	CASE 6
+	PRINT "Windy and cold."
+	WeatherText$ = "is very windy and really cold"
+
+	END SELECT
 
 END SUB
 
@@ -4520,6 +4517,38 @@ END SUB
 
 SUB GenDescription 'GENERATE DESCRIPTION OF THE PLACE
 
+'===================================================
+'TERRAIN and WEATHER introduction.
+
+SELECT CASE PositionCol(PositionCH)
+CASE 2
+nameterrain$ = "in a forest"
+CASE 8
+nameterrain$ = "in the middle of a swamp"
+CASE 7
+nameterrain$ = "in frozen lands"
+CASE 14
+nameterrain$ = "in the desert"
+CASE 1
+nameterrain$ = "next to a lake or river"
+CASE 6
+nameterrain$ = "in the mountains"
+END SELECT
+
+CLS
+COLOR 10
+
+PRINT
+Pause
+PRINT "You are "; nameterrain$; ". "
+Pause
+PRINT "The day "; WeatherText$; "."
+PRINT
+'===================================================
+
+
+
+
 AdjPlace$(1) = "quiet"
 AdjPlace$(2) = "misterious"
 AdjPlace$(3) = "silent"
@@ -4534,6 +4563,9 @@ AdjPlace$(11) = "interesting"
 AdjPlace$(12) = "awful"
 AdjPlace$(11) = "disgusting"
 AdjPlace$(13) = "uncomfortable"
+AdjPlace$(14) = "dull"
+AdjPlace$(15) = "familiar"
+
 
 PluralNouns$(1) = "insects"
 PluralNouns$(2) = "rocks"
@@ -4546,7 +4578,13 @@ PluralNouns$(8) = "mountains"
 PluralNouns$(9) = "trees"
 PluralNouns$(10) = "creatures"
 PluralNouns$(11) = "enemies"
-SingNoun$(12) = "tents"
+PluralNouns$(12) = "tents"
+PluralNouns$(13) = "vultures"
+PluralNouns$(14) = "black camels"
+PluralNouns$(15) = "strange symbols"
+PluralNouns$(16) = "satanic symbols"
+
+
 
 SingNoun$(1) = "tree"
 SingNoun$(2) = "mountain"
@@ -4559,8 +4597,11 @@ SingNoun$(8) = "lake"
 SingNoun$(9) = "river"
 SingNoun$(10) = "fallen tree"
 SingNoun$(11) = "monument"
-SingNoun$(12) = "statue"
-SingNoun$(13) = "bridge"
+SingNoun$(11) = "huge rock with red symbols"
+SingNoun$(12) = "satanic monument"
+SingNoun$(13) = "statue"
+SingNoun$(14) = "bridge"
+SingNoun$(15) = "wild wolf"
 
 hear$(1) = "birds"
 hear$(2) = "people shouting"
@@ -4575,7 +4616,7 @@ hear$(10) = "strange sounds"
 hear$(11) = "a rooster"
 hear$(12) = "weird sounds"
 hear$(13) = "a storm coming"
-
+hear$(14) = "a wild wolf at the distance"
 
 feel$(1) = "motivated"
 feel$(2) = "ok"
@@ -4624,39 +4665,38 @@ Its$(9) = "It's getting darker."
 Its$(10) = "There's fog in the air."
 Its$(11) = "It feels like something bad is about to happen."
 Its$(12) = "It feels like something good is about to happen."
+Its$(13) = "You feel that something is watching you."
+Its$(14) = "An enemy or creature could appear any time."
+
+
+
 
 RANDOMIZE TIMER
 
-number1 = INT(RND * 12) + 1
-number2 = INT(RND * 12) + 1
-number3 = INT(RND * 12) + 1
-number4 = INT(RND * 12) + 1
+number1 = INT(RND * 14) + 1
+number2 = INT(RND * 14) + 1
+number3 = INT(RND * 14) + 1
+number4 = INT(RND * 14) + 1
 number5 = INT(RND * 14) + 1
 
-CLS
-COLOR 10
+Pause
+PRINT "You are "; YouAre$(number5); ". "; Its$(number2)
 
-PRINT
 Pause
 PRINT "The place is "; AdjPlace$(number1); ". There are "; PluralNouns$(number2); " all around the area."
 Pause
-PRINT "You can see a huge "; SingNoun$(number3); " at the distance. You can hear "; hear$(number4); "."
+PRINT "You can see a(n) "; SingNoun$(number3); " at the distance. You can hear "; hear$(number4); "."
 
-number6 = INT(RND * 12) + 1
-number7 = INT(RND * 12) + 1
-number8 = INT(RND * 12) + 1
-number9 = INT(RND * 12) + 1
+number1 = INT(RND * 14) + 1
+number2 = INT(RND * 14) + 1
+number3 = INT(RND * 14) + 1
+number4 = INT(RND * 14) + 1
 
 PRINT
 Pause
-PRINT "On your right you see a(n) "; SingNoun$(number6); ", on your left you see a(n) "; SingNoun$(number7); "."
+PRINT "On your left you can see a(n) "; SingNoun$(number1); ", on your right you see a(n) "; SingNoun$(number2); "."
 Pause
-PRINT "In front of you there are "; PluralNouns$(number8); ". You feel "; feel$(number9); "."
-Pause
-PRINT "You are "; YouAre$(number3); "."
-Pause
-PRINT Its$(number2)
-
+PRINT "In front of you there are "; PluralNouns$(number3); ". You feel "; feel$(number2); "."
 
 END SUB
 
@@ -5155,11 +5195,11 @@ SUB Notes
 ' - LAKES & RIVERS banner added to the fighting intro.
 ' - Criminal - ASCII graphic added.
 ' - BUG "Enemies attack when their HP is 0 or less than 0" FIXED.
-'   Bug spotted by YouTube user.
+'   Bug spotted by YouTube user @dw817.
 ' - "CRITICAL HIT!" message is shown instead.
 ' - NEW OPTION TO ESCAPE BATTLES ADDED. You can LEAVE ALL YOUR GOLD BEHIND
 '   and RUN from a battle now. You can LEAVE ALL GOLD BEHIND or TRY LUCK.
-'   Option suggested by YouTube user.
+'   Option suggested by YouTube user @dw817.
 ' - Battle: Icons for the 1ST WAVE of enemies added! 6 ASCII Icons added.
 ' - 100% TERRAIN ASCII BANNERS added.
 ' - Sub for [DO WHILE INKEY$ = ""] created ---> Sub WaitKey
