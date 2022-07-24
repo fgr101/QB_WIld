@@ -12,6 +12,10 @@
 ' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
 ' - LLEGAR AL NIVEL 50.
 
+' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
+'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
+'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC.
+
 ' - AGREGAR DETALLES Y GRAFICOS ASCII
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
@@ -1494,6 +1498,75 @@ COLOR 2
 damage1 = AT + d1
 PRINT " Damage: "; damage1
 
+'============================================================================
+'COMBAT LOOP 4         [CONTINUE WORKING HERE]
+
+IF combatloop = 4 THEN
+PRINT "COMBAT LOOP 4"
+WaitKey
+
+
+COLOR 15
+PRINT
+PRINT "You can choose your next move!"
+PRINT
+PRINT "[1] Attack"
+
+INPUT opcion
+
+d1 = rolld6
+
+IF d1 <= 3 THEN
+dodge = 0
+PRINT
+PRINT "THE ENEMY STANDS"
+END IF
+
+IF d1 > 3 THEN
+dodge = 1
+PRINT
+PRINT "THE ENEMY DODGES"
+END IF
+
+SELECT CASE opcion
+
+	CASE 1
+
+	IF dodge = 0 THEN
+	PRINT
+	PRINT "The enemy stands in the place and receives the impact of your attack!"
+	PRINT "Your attack is normal."
+	PRINT
+
+	COLOR 3
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = AT + d1
+	PRINT " Damage: "; damage1
+
+	END IF
+
+	IF dodge = 1 THEN
+	PRINT
+	PRINT "The enemy dodges and almost avoids your attack!"
+	PRINT "Your attack is not effective!"
+	PRINT
+	
+	COLOR 3
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = AT + d1
+	PRINT "Total Damage:"; damage1; "[ -50% ="; (damage1 / 2); "]"
+	damage1 = (AT + d1) / 2
+	COLOR 15
+	PRINT "Your damage pts are reduced to "; damage1; "!"
+	PRINT
+
+	END IF
+
+END SELECT
+
+END IF
 
 '================= TERRAIN AT BONUS DURING FIGHT ============================
 
@@ -1595,8 +1668,6 @@ PRINT
 END IF
 
 '============================================================================
-
-
 
 finaldamage = damageEN - yourdefence
 IF finaldamage < 0 THEN
