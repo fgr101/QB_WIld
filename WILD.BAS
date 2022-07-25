@@ -1,59 +1,7 @@
-' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
-' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
-' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
-' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
-
-' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
-' - MEJORAR CODIGO USANDO [SUB WaitKey] PARA `press any key to continue'.
-
-' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
-'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
-' - CONSEGUIR 10.000 DE ORO.
-' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
-' - LLEGAR AL NIVEL 50.
-
-' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
-'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
-'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC.
-
-' - AGREGAR DETALLES Y GRAFICOS ASCII
-' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
-' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
-' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
-' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
-' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
-'   ALEATORIOS.
-' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
-' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
-'   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
-
-'- CONTINUAR DESARROLLANDO LA HISTORIA
-'- CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
-'- AGREGAR MAS DETALLES EN LA HISTORIA INICIAL, INTRO.
-'- AGREGAR MAS SONIDOS
-'- AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
-'- PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
-'- CREAR ALGUNAS NUEVAS TRANSICIONES
-'- TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
-
-'- AGREGAR SISTEMA DE ITEMS, ARMAS, PROTECCION, ETC.
-'- AGREGAR MEDICINA QUE PUEDA SER USADA, COMPRADA Y VENDIDA
-
-'- MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
-'  TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO.
-
-'- MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
-
-'- TRADUCIR JUEGO AL ESPANHOL
-'- TRADUCIR JUEGO A PT BRASIL
-
-'- COLOCAR TODOS LOS DRAWDESERT, DRAWMOUNTAINS, ETC. EN UN SOLO SUB LLAMADO
-'  DRAWBANNERS. USAR DE EJEMPLO SUB DRAWICONS.
-
-'- SCORE Y HIGHSCORE TABLE
-'- CREAR SISTEMA DE ITEMS Y EQUIPAMIENTOS
-
 '======================== SUBS AND FUNCTIONS =========================
+
+DECLARE SUB MainMenu ()
+DECLARE SUB GameIntro1 ()
 
 DECLARE SUB GenDescription ()
 DECLARE SUB WaitKey ()
@@ -104,9 +52,11 @@ DECLARE SUB DrawCriminal ()
 
 DECLARE FUNCTION rolld6 ()
 
+'=====================================================================
+
 '| GLOBAL VARIABLES FOR SUBS |
 
-DIM SHARED d1, DecisionResult, LastDecisionEvent, MANA, hp, GOLD
+DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(25)
@@ -142,84 +92,23 @@ CALL LoadChallenges
 
 '======================== MAIN MENU =========================
 
-mainmenu:
+MainMenu:
 
-opcion = 0
+MainMenu  'PRINTS THE MAIN MENU
 
-CLS
-
-COLOR 15
-LOCATE 1, 1
-COLOR 10, 2
-PRINT "                              WILD 0.5 (2021 - 2022)                            "
-COLOR 15, 0
-PRINT
-PRINT
-PRINT "1) NEW GAME"
-PRINT "2) ACHIEVEMENTS"
-PRINT "3) CREDITS"
-PRINT "4) EXIT"
-PRINT ""
-
-IF OptionMusic = 1 THEN
-COLOR 15, 4
-LOCATE 2, 26
-PRINT "[12] Turn Sound OFF"
-END IF
-
-IF OptionMusic = 0 THEN
-COLOR 15, 4
-LOCATE 2, 26
-PRINT "[12] Turn Sound ON"
-END IF
-
-LOCATE 10, 1
-COLOR 15, 0
-INPUT "Choose an option: ", opcion
-
-
-IF opcion = 1 THEN
-CLS
-x = 0
-DO UNTIL x = 4000
-d1 = INT(RND * 75) + 1
-d2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 9
-LOCATE d2, d1
-PRINT "°±²"
-LOCATE 10, 34
-COLOR 15
-PRINT " GET READY FOR "
-LOCATE 11, 34
-PRINT "A NEW ADVENTURE"
-LOOP
-x = 0
-DO UNTIL x = 4000
-d1 = INT(RND * 75) + 1
-d2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 0
-LOCATE d2, d1
-PRINT "°±²"
-LOCATE 10, 34
-COLOR 15
-PRINT "   MS-DOS    "
-LOCATE 11, 34
-PRINT "-   WILD    -"
-LOOP
-CLS
+IF opcion = 1 THEN     'PASAR TODO A SELECT CASE
+GameIntro1
 GOTO startnewgame
 END IF
 
 IF opcion = 2 THEN
 CALL Challenges
-GOTO mainmenu
+GOTO MainMenu
 END IF
 
 IF opcion = 3 THEN
 CALL About
-GOTO mainmenu
+GOTO MainMenu
 END IF
 
 IF opcion = 4 THEN
@@ -236,7 +125,7 @@ IF opcion = 12 THEN
 	     CALL Music
 	     PRINT "Music OFF"
 	     Pause
-	     GOTO mainmenu
+	     GOTO MainMenu
 
 	END IF
 
@@ -246,14 +135,14 @@ IF opcion = 12 THEN
 	     CALL Music
 	     PRINT "Music ON"
 	     Pause
-	     GOTO mainmenu
+	     GOTO MainMenu
 
 	END IF
 
 END IF
 
 IF NOT (opcion = 1) AND NOT (opcion = 2) THEN
-GOTO mainmenu
+GOTO MainMenu
 END IF
 
 '======================== START NEW GAME =========================
@@ -354,7 +243,7 @@ PRINT "Generating random defence value..." '6 TO RANDOMIZE THEM, SIMULATING
 DF = (rolld6) * 2                          'SIMPLE D6 DIE.I'VE USED D6 RANDOM
 PRINT "Generating random HP value..."      'VARIABLES AS A BASE FOR THE WHOLE
 MaxHP = (rolld6) + 5                       'RANDOMIZATION SYSTEM IN THE GAME,
-hp = MaxHP                                 'TO JUST TO KEEP IT SIMPLE.
+HP = MaxHP                                 'TO JUST TO KEEP IT SIMPLE.
 PRINT "Generating random mana value..."
 
 MaxMana = 5 + rolld6
@@ -445,7 +334,7 @@ CALL Character
 inicio:
 
 d1 = (rolld6) / 10
-hp = hp + d1
+HP = HP + d1
 MANA = MANA + d1
 
 inicio2:
@@ -453,12 +342,12 @@ RANDOMIZE TIMER
 
 CALL CheckChallenges     'Checks if there are challenges acomplished and
 			 'if so, shows a message.
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
-IF hp > MaxHP THEN
-hp = MaxHP
+IF HP > MaxHP THEN
+HP = MaxHP
 END IF
 
 IF MANA > MaxMana THEN
@@ -469,8 +358,8 @@ END IF
 				   'THEN IT WILL BE GENERATED AGAIN IN ORDER
 CLS                                'TO BEING UPDATE AFTER THE PLAYER INPUTS A
 				   'DIRECTION (NORTH, SOUTH, EAST, WEST).
-y = 0
-DO UNTIL y = 10
+Y = 0
+DO UNTIL Y = 10
 x = 0
 
 DO UNTIL x = 40
@@ -631,7 +520,7 @@ position = position + 1
 
 LOOP
 
-y = y + 1
+Y = Y + 1
 lugary = lugary + 1
 lugarx = 25
 
@@ -669,7 +558,7 @@ COLOR , 0
 
 COLOR 3
 LOCATE 3, 1
-PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; hp; "| ( LEVEL"; level; ")"
+PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "| ( LEVEL"; level; ")"
 LOCATE 4, 1
 PRINT "Mana"; MANA; "| Expert Points:"; xpoints; "| Gold:"; GOLD
 
@@ -800,8 +689,8 @@ SELECT CASE PositionCH
 
 END SELECT
 
-	IF hp <= 0 THEN
-	GOTO mainmenu
+	IF HP <= 0 THEN
+	GOTO MainMenu
 	END IF
 
 
@@ -819,7 +708,7 @@ GOTO inicio
 END IF
 
 IF direction = 10 THEN
-GOTO mainmenu
+GOTO MainMenu
 END IF
 
 IF direction = 11 THEN
@@ -859,8 +748,8 @@ IF direction = 555 THEN
 
 	CALL City
 
-		IF hp <= 0 THEN
-		GOTO mainmenu
+		IF HP <= 0 THEN
+		GOTO MainMenu
 		END IF
 
 		IF barfight = 1 THEN
@@ -874,8 +763,8 @@ END IF
 
 'MAP UPDATE ========================== 'AFTER THE PLAYER GIVES A NEW DIRECTION
 				       'THE MAP GETS UPDATED. IT IS GENERATED
-y = 0                                  'FOR A SECOND TIME USING THE NEW
-DO UNTIL y = 10                        'VARIABLES.
+Y = 0                                  'FOR A SECOND TIME USING THE NEW
+DO UNTIL Y = 10                        'VARIABLES.
 x = 0
 
 DO UNTIL x = 40
@@ -1034,7 +923,7 @@ position = position + 1
 
 LOOP
 
-y = y + 1
+Y = Y + 1
 lugary = lugary + 1
 lugarx = 25
 
@@ -1300,13 +1189,13 @@ Enemyname$ = "Wild Wolf"
 enemyAT = 3
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
 	enemyAT = 8
 	enemyDF = 10
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
 	enemyAT = 38
 	enemyDF = 43
@@ -1319,13 +1208,13 @@ Enemyname$ = "Wild Bugio"
 enemyAT = 4.5
 enemyDF = 6
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
 	enemyAT = 7
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
 	enemyAT = 26
 	enemyDF = 35
@@ -1338,13 +1227,13 @@ Enemyname$ = "Witch"
 enemyAT = 4
 enemyDF = 5.5
 	
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
 	enemyAT = 9
 	enemyDF = 12
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
 	enemyAT = 36
 	enemyDF = 40
@@ -1357,13 +1246,13 @@ Enemyname$ = "Crawler"
 enemyAT = 5
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
 	enemyAT = 11
 	enemyDF = 15
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Goblin"
 	enemyAT = 35
 	enemyDF = 59
@@ -1376,13 +1265,13 @@ Enemyname$ = "Criminal"
 enemyAT = 4
 enemyDF = 5
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Forest Demon"
 	enemyAT = 6
 	enemyDF = 10
 	END IF
 	
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Draco"
 	enemyAT = 11
 	enemyDF = 15
@@ -1395,13 +1284,13 @@ Enemyname$ = "Giant Scorpion"
 enemyAT = 6
 enemyDF = 7
 
-	IF AT > 12 OR hp > 12 OR DF > 12 THEN
+	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Corrupted Soul"
 	enemyAT = 14
 	enemyDF = 16
 	END IF
 
-	IF AT > 22 OR hp > 22 OR DF > 22 THEN
+	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Centipede"
 	enemyAT = 19
 	enemyDF = 21
@@ -1474,7 +1363,7 @@ combatINI:
 
 COLOR 2
 PRINT
-PRINT "You: HP ("; hp; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
+PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
 COLOR 4
 PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
 COLOR 2
@@ -1485,12 +1374,16 @@ CALL DrawIcons
 
 PRINT
 PRINT "--------------------------------------------"
-DO WHILE INKEY$ = ""
-LOOP
+
+WaitKey
 
 PRINT
 PRINT "You ATTACK:"
 d1 = rolld6
+
+IF combatloop = 2 OR combatloop = 4 THEN
+GOTO combatloop24
+END IF
 
 COLOR 3
 PRINT "Die: "; d1;
@@ -1499,18 +1392,30 @@ damage1 = AT + d1
 PRINT " Damage: "; damage1
 
 '============================================================================
-'COMBAT LOOP 4         [CONTINUE WORKING HERE]
+'COMBAT LOOP 2 AND 4       [CONTINUE WORKING HERE]
+combatloop24:
 
-IF combatloop = 4 THEN
-PRINT "COMBAT LOOP 4"
-WaitKey
+IF combatloop = 2 OR combatloop = 4 THEN
 
 
-COLOR 15
+COLOR 15, 1
 PRINT
 PRINT "You can choose your next move!"
+COLOR 15, 0
+PRINT "±°²±°²±°²±°²±°²±°²±°²±°²±°²±°²"
+
+COLOR 0, 0
+LOCATE 22, 31
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+LOCATE 23, 31
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 PRINT
-PRINT "[1] Attack"
+PRINT
+PRINT
+COLOR 15
+
+LOCATE 22, 1
+PRINT "[1] Attack  [2] Charge"
 
 INPUT opcion
 
@@ -1519,12 +1424,14 @@ d1 = rolld6
 IF d1 <= 3 THEN
 dodge = 0
 PRINT
+Pause
 PRINT "THE ENEMY STANDS"
 END IF
 
 IF d1 > 3 THEN
 dodge = 1
 PRINT
+Pause
 PRINT "THE ENEMY DODGES"
 END IF
 
@@ -1534,9 +1441,12 @@ SELECT CASE opcion
 
 	IF dodge = 0 THEN
 	PRINT
-	PRINT "The enemy stands in the place and receives the impact of your attack!"
+	Pause
+	PRINT "The enemy stands in place and receives the impact of your attack!"
+	Pause
 	PRINT "Your attack is normal."
 	PRINT
+	Pause
 
 	COLOR 3
 	PRINT "Die: "; d1;
@@ -1548,10 +1458,13 @@ SELECT CASE opcion
 
 	IF dodge = 1 THEN
 	PRINT
+	Pause
 	PRINT "The enemy dodges and almost avoids your attack!"
+	Pause
 	PRINT "Your attack is not effective!"
 	PRINT
-	
+	Pause
+
 	COLOR 3
 	PRINT "Die: "; d1;
 	COLOR 2
@@ -1560,6 +1473,60 @@ SELECT CASE opcion
 	damage1 = (AT + d1) / 2
 	COLOR 15
 	PRINT "Your damage pts are reduced to "; damage1; "!"
+	PRINT
+
+	END IF
+
+	CASE 2
+
+	IF dodge = 0 THEN
+
+	PRINT
+	Pause
+	PRINT "You charge against the enemy! "
+	Pause
+	PRINT "The enemy stands in place and receives the"
+	Pause
+	PRINT "impact of all your body. Your attack is very strong!"
+	PRINT
+	Pause
+
+	COLOR 3
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = AT + d1
+	PRINT "Total Damage:"; damage1; "[ x2 ="; (damage1 * 2); "]"
+	damage1 = (AT + d1) * 2
+	COLOR 15
+	PRINT "Your damage pts have doubled to "; damage1; "!"
+	PRINT
+
+	END IF
+
+	IF dodge = 1 THEN
+
+	PRINT
+	Pause
+	PRINT "You charge against the enemy! "
+	Pause
+	PRINT "The enemy dodges and you end up landing against"
+	Pause
+	PRINT "the ground! You hurt yourself in the move!"
+	PRINT
+
+	COLOR 3
+	Pause
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = 0
+	PRINT "Total Damage:"; damage1; "[ATTACK FAILED]"
+	damage1 = 0
+	COLOR 15
+	reduce = HP / 2
+	PRINT "You hurt yourself [-"; reduce; "HP] during the attack!"
+	HP = HP - reduce
+	PRINT "Your HP is"; HP; "now."
+	PRINT
 	PRINT
 
 	END IF
@@ -1609,7 +1576,7 @@ enemyDF = enemyDF - finaldamage
 
 PRINT
 
-IF enemyDF < 0 THEN    'IF enemy's life is less than 0 SHOW MESSAGE.
+IF enemyDF <= 0 THEN  'IF enemy's life is LESS OR EQUAL than 0 SHOW MESSAGE.
 COLOR 15
 Pause
 PRINT "CRITICAL HIT!"
@@ -1621,9 +1588,7 @@ PRINT
 COLOR 2
 PRINT "--------------------------------------------"
 
-DO WHILE INKEY$ = ""
-LOOP
-
+WaitKey
 
 IF enemyDF < 0 THEN    'IF enemy's life is less than 0 then SKIP enemy's
 GOTO SkipEnemyAttack   'attack.
@@ -1679,19 +1644,17 @@ PRINT "YOU receive"; finaldamage; "points of damage."
 COLOR 2
 
 
-hp = hp - finaldamage
+HP = HP - finaldamage
 
 PRINT
 PRINT "--------------------------------------------"
 
-DO WHILE INKEY$ = ""
-LOOP
-
+WaitKey
 
 SkipEnemyAttack:         'CONTINUES HERE WHEN SKIPPING ENEMY'S ATTACK
 
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
@@ -1713,8 +1676,7 @@ PRINT "You receive"; d1; "expert points."
 COLOR 2
 
 PLAY endfight$
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 IF xpoints >= 10 THEN                            'WHEN YOU LEVEL UP!
 COLOR 3
@@ -1748,7 +1710,6 @@ PLAY levelup$
 
 OpcionLevelUp:
 INPUT opcion
-
 
 COLOR 15
 SELECT CASE opcion
@@ -1791,10 +1752,9 @@ SELECT CASE opcion
 END SELECT
 
 MANA = MaxMana
-hp = MaxHP
+HP = MaxHP
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END IF
 
@@ -1811,7 +1771,6 @@ GOTO inicio2
 END IF
 
 combatloop = combatloop + 1  '== LOOPS COUNTER FOR EACH COMBAT ROUND ==
-
 
 'FIVE LOOPS MENU ============
 
@@ -1865,9 +1824,8 @@ INPUT "What will you do...", opcion
 			COLOR 15
 			PRINT "You leave all your gold behind and run away!"
 
-			DO WHILE INKEY$ = ""
-			LOOP
-
+			WaitKey
+			
 			GOLD = 0
 			combatloop = 0
 			GOTO inicio2
@@ -1881,8 +1839,7 @@ INPUT "What will you do...", opcion
 			COLOR 3
 			PRINT "Die:"; d1; "[1 to 3 means failure - 4 to 6 means success]"
 
-			DO WHILE INKEY$ = ""
-			LOOP
+			WaitKey
 
 			COLOR 2
 		
@@ -1895,18 +1852,17 @@ INPUT "What will you do...", opcion
 				PRINT "You try to escape but can't. It seems you aren't fast enough for that."
 				Pause
 				PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-				hp = hp - enemyAT
+				HP = HP - enemyAT
 				Pause
-				PRINT "Your HP is "; hp; " now."
+				PRINT "Your HP is "; HP; " now."
 				PRINT
 				COLOR 2
 				Pause
 				PRINT "--------------------------------------------"
 
-				DO WHILE INKEY$ = ""
-				LOOP
+				WaitKey
 
-				IF hp <= 0 THEN
+				IF HP <= 0 THEN
 				GOTO GameOver
 				END IF
 
@@ -1925,8 +1881,7 @@ INPUT "What will you do...", opcion
 				Pause
 				PRINT "--------------------------------------------"
 
-				DO WHILE INKEY$ = ""
-				LOOP
+				WaitKey
 
 				combatloop = 0
 				GOTO inicio2
@@ -2008,13 +1963,13 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 2 AND MANA >= 3 THEN
 		MANA = MANA - 3
-		hp = MaxHP
+		HP = MaxHP
 		COLOR 15
 		PRINT
 		Pause
 		PRINT "You use your energy and concentration to recover your health"
 		Pause
-		PRINT "Your HP is now "; hp; "! You feel much better and renewed!"
+		PRINT "Your HP is now "; HP; "! You feel much better and renewed!"
 		Pause
 		PRINT "Ready to fight back!"
 		PRINT
@@ -2049,8 +2004,7 @@ INPUT "What will you do...", opcion
 		PRINT "You succeed and escape!"
 		PRINT
 		PLAY Chime$
-		DO WHILE INKEY$ = ""
-		LOOP
+		WaitKey
 		combatloop = 0
 		GOTO inicio2
 		END IF
@@ -2076,7 +2030,7 @@ GOTO combatINI
 'GAME OVER ======================================
 GameOver:
 CALL GameOver
-GOTO mainmenu
+GOTO MainMenu
 
 SUB About
 
@@ -2392,7 +2346,7 @@ END SUB
 SUB City
 CityIni:
 
-IF hp <= 0 THEN
+IF HP <= 0 THEN
 CALL GameOver
 GOTO endofsub
 END IF
@@ -2455,7 +2409,7 @@ SELECT CASE opcion
      PRINT
      PRINT "(HP 100% / MANA 100%)"
      GOLD = GOLD - 25
-     hp = MaxHP
+     HP = MaxHP
      MANA = MaxMana
     
      WaitKey
@@ -2518,7 +2472,7 @@ SELECT CASE opcion
 		PRINT "(-0.5 HP)"
 		GOLD = GOLD - 10
 		MANA = MANA + 3
-		hp = hp - .5
+		HP = HP - .5
 
 		WaitKey
 		
@@ -2751,7 +2705,7 @@ SELECT CASE opcion
 		Pause
 		d1 = rolld6
 		PRINT "Die:"; d1; "*2 | you get -"; d1 * 2; "HP."
-		hp = hp - (d1 * 2)
+		HP = HP - (d1 * 2)
 
 		d1 = rolld6
 		Pause
@@ -2940,7 +2894,7 @@ COLOR 10
 		PRINT "(+"; d1; " HP pts)"
 		COLOR 10
 
-		hp = hp + d1
+		HP = HP + d1
 		MANA = MANA + d1
 
 		WaitKey
@@ -2975,7 +2929,7 @@ COLOR 10
 		PRINT "been shot in the shoulder and are heavily wounded."
 
 		d1 = 5 + rolld6
-		hp = hp - d1
+		HP = HP - d1
 		
 		Pause
 		COLOR 3
@@ -3215,7 +3169,7 @@ END IF
 '-----------------------  5  -----------------------------
 
 
-IF d1 = 2 OR d1 = 3 OR d1 = 5 THEN
+IF d1 = 2 OR d1 = 3 THEN
 
 line$(1) = "Witch: Combine two of the next ingredients to generate something else."
 line$(2) = "Choose Your Ingredients: "
@@ -3448,7 +3402,7 @@ IF ResultIngredients = 3 THEN '+++++++++++++ RESULT 3 +++++++++++++++++++++++
 	Pause
 	PRINT
 	PRINT "(- 5 HP)"
-	hp = hp - 5
+	HP = HP - 5
 
 END IF
 
@@ -3459,7 +3413,7 @@ END IF
 
 '-----------------------  6  -----------------------------
 
-IF d1 = 6 THEN
+IF d1 = 6 OR d1 = 5 THEN
 Pause
 PRINT "You find a small cave entrance. Looks like it's a small place."
 Pause
@@ -3553,7 +3507,7 @@ COLOR 10
 	PLAY Chance$
 
 	WaitKey
-	hp = hp - DiscountHP
+	HP = HP - DiscountHP
 	GOTO EndSub
 
 	CASE ELSE
@@ -4549,6 +4503,41 @@ CLS
 
 END SUB
 
+SUB GameIntro1
+
+CLS
+x = 0
+DO UNTIL x = 4000
+d1 = INT(RND * 75) + 1
+d2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 9
+LOCATE d2, d1
+PRINT "°±²"
+LOCATE 10, 34
+COLOR 15
+PRINT " GET READY FOR "
+LOCATE 11, 34
+PRINT "A NEW ADVENTURE"
+LOOP
+x = 0
+DO UNTIL x = 4000
+d1 = INT(RND * 75) + 1
+d2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 0
+LOCATE d2, d1
+PRINT "°±²"
+LOCATE 10, 34
+COLOR 15
+PRINT "   MS-DOS    "
+LOCATE 11, 34
+PRINT "-   WILD    -"
+LOOP
+CLS
+
+END SUB
+
 SUB GameOver
 CLS
 x = 0
@@ -4977,6 +4966,42 @@ CLOSE #1
 
 END SUB
 
+SUB MainMenu
+
+opcion = 0
+CLS
+
+COLOR 15
+LOCATE 1, 1
+COLOR 10, 2
+PRINT "                              WILD 0.5 (2021 - 2022)                            "
+COLOR 15, 0
+PRINT
+PRINT
+PRINT "1) NEW GAME"
+PRINT "2) ACHIEVEMENTS"
+PRINT "3) CREDITS"
+PRINT "4) EXIT"
+PRINT ""
+
+IF OptionMusic = 1 THEN
+COLOR 15, 4
+LOCATE 2, 26
+PRINT "[12] Turn Sound OFF"
+END IF
+
+IF OptionMusic = 0 THEN
+COLOR 15, 4
+LOCATE 2, 26
+PRINT "[12] Turn Sound ON"
+END IF
+
+LOCATE 10, 1
+COLOR 15, 0
+INPUT "Choose an option: ", opcion
+
+END SUB
+
 SUB Music
 
 IF OptionMusic = 1 THEN
@@ -5025,7 +5050,7 @@ line$(2) = "You hurt your back when falling (-1 HP)."
 
 PrintLines
 
-hp = hp - 1
+HP = HP - 1
 
 END IF
 
@@ -5071,7 +5096,7 @@ PRINT "Die:"; d1;
 
 	PrintLines
 
-	hp = hp - 6
+	HP = HP - 6
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5090,7 +5115,7 @@ PRINT "Die:"; d1;
 	
 	PrintLines
 
-	hp = hp - 3
+	HP = HP - 3
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5131,7 +5156,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	hp = hp - d1
+	HP = HP - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5176,7 +5201,7 @@ PRINT "Die:"; d1;
 	COLOR 3
 	PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	hp = hp - d1
+	HP = HP - d1
 
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5201,7 +5226,7 @@ line$(4) = "wet feet and wet clothes. You also feel very cold. (-1 HP)"
 
 PrintLines
 
-hp = hp - 1.5
+HP = HP - 1.5
 
 END IF
 
@@ -5232,6 +5257,72 @@ END SUB
 
 SUB Notes
 
+' - AGREGAR `DRINK' AL ATAQUE JUNTO CON ATTACK Y CHARGE.
+'   INTERCAMBIAS HITPOINTS POR HP. LUEGO EL ENEMIGO PUEDE ATACARTE.
+
+' - PREGUNTAR SI REALMENTE DESEAS ACERCARTE A LA BRUJA.
+' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
+' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
+
+' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
+
+' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
+
+' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
+' - MEJORAR CODIGO USANDO [SUB WaitKey] PARA `press any key to continue'.
+
+' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
+'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
+' - CONSEGUIR 10.000 DE ORO.
+' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
+' - LLEGAR AL NIVEL 50.
+
+' - MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
+'   TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO.
+' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
+'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
+'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC.
+
+' - AGREGAR DETALLES Y GRAFICOS ASCII
+' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
+' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
+' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
+' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
+' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
+'   ALEATORIOS.
+' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
+' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
+'   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
+
+' - CONTINUAR DESARROLLANDO LA HISTORIA
+' - CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
+' - AGREGAR MAS DETALLES EN LA HISTORIA INICIAL, INTRO.
+' - AGREGAR MAS SONIDOS
+' - AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
+' - PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
+' - CREAR ALGUNAS NUEVAS TRANSICIONES
+' - TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
+
+' - AGREGAR SISTEMA DE ITEMS, ARMAS, PROTECCION, ETC.
+' - AGREGAR MEDICINA QUE PUEDA SER USADA, COMPRADA Y VENDIDA
+
+' - MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
+
+' - TRADUCIR JUEGO AL ESPANHOL
+' - TRADUCIR JUEGO A PT BRASIL
+
+' - COLOCAR TODOS LOS DRAWDESERT, DRAWMOUNTAINS, ETC. EN UN SOLO SUB LLAMADO
+'   DRAWBANNERS. USAR DE EJEMPLO SUB DRAWICONS.
+
+' - SCORE Y HIGHSCORE TABLE
+' - QUE EL SCORE DEPENDA DE LA CANTIDAD DE PASOS QUE EL JUGADOR DIO.
+
+' - CREAR SISTEMA DE ITEMS Y EQUIPAMIENTOS
+
+
+
+'================================================
+'                     VERSIONS
 '================================================
 
 'v 0.5
@@ -5278,6 +5369,9 @@ SUB Notes
 ' - LOOK AROUND: A text describing the area is randomly generated.
 '   It needs to be improved and needs to be expanded with more words
 '   and some other alternative paragraphs.
+' - New Mechanics during battle suggested by YouTube user @dw817.
+'   Now you can ATTACK or CHARGE at some speciffic stages in the combat.
+'   The enemy will DODGE or STAND, causing different results in battle.
 
 ' v 0.4
 
@@ -5329,7 +5423,7 @@ COLOR 3
 PRINT
 PRINT "(+1 HP)"
 
-hp = hp + 1
+HP = HP + 1
 
 END IF
 
@@ -5351,7 +5445,7 @@ PRINT
 Pause
 PRINT "(+5 HP) (+20 GOLD) (100% MANA pts)"
 
-hp = hp + 5
+HP = HP + 5
 GOLD = GOLD + 20
 MANA = MaxMana
 END IF
@@ -5386,7 +5480,7 @@ COLOR 3
 PRINT
 PRINT "(+3 HP) (+0.5 AT) "
 
-hp = hp + 3
+HP = HP + 3
 AT = AT + .5
 
 END IF
@@ -5437,7 +5531,7 @@ INPUT "Would you like to buy something sir?"; opcion
 
 	PrintLines
 
-	hp = hp + 5
+	HP = HP + 5
 	GOLD = GOLD - 25
 	DO WHILE INKEY$ = ""
 	LOOP
@@ -5486,7 +5580,7 @@ PRINT
 PRINT "(+25 GOLD) (+10 HP) (+0.5 AT)"
 
 GOLD = GOLD + 25
-hp = hp + 10
+HP = HP + 10
 AT = AT + .5
 
 END IF
