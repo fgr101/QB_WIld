@@ -1,3 +1,4 @@
+DECLARE SUB LoadTXT ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB MainMenu ()
@@ -56,6 +57,8 @@ DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
 
+
+DIM SHARED DatFile$
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
@@ -4966,6 +4969,20 @@ CLOSE #1
 
 END SUB
 
+SUB LoadTXT
+
+OPEN DatFile$ FOR INPUT AS #1
+
+loopx = 0
+DO UNTIL loopx = 9
+INPUT #1, line$(loopx)
+loopx = loopx + 1
+LOOP
+
+CLOSE #1
+
+END SUB
+
 SUB MainMenu
 
 opcion = 0
@@ -5656,55 +5673,25 @@ d1 = rolld6
 SELECT CASE d1
 
 	CASE 1
-
-	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
-	line$(2) = "Some random foreigners come over here from time to time, some of them"
-	line$(3) = "come to this bar looking for fight and trouble. See that man next to"
-	line$(4) = "the door? He's crazy, has been in prison for many years and now is our"
-	line$(5) = "security guard. See that other huge guy playing games at that table?"
-	line$(6) = "Seems pretty quiet, but that's cause you don't know him well. However,"
-	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
-	line$(8) = "nothing to fear over here, people are usually friendly."
+	DatFile$ = "bar1.dat"
+	LoadTXT
 
 	CASE 2
-	
-	line$(1) = "Jason: Some people say that they built something like a small city"
-	line$(2) = "inside the mountains. A huge place made of caves, connected by tunnels"
-	line$(3) = "and that they live there. Some other people say that there's a small"
-	line$(4) = "and hidden place in the haunted woods, where they have their houses that"
-	line$(5) = "they made using trees and stones. I have never seen these places, don't"
-	line$(6) = "even know if they really exist. No one  goes out of the town. No one."
+	DatFile$ = "bar2.dat"
+	LoadTXT
 
 	CASE 3
-	
-	line$(1) = "Soldier: Some years ago, me and a small group of soldiers, were sent to"
-	line$(2) = "patrol the forest and the surroundings of the city. It was usual to find"
-	line$(3) = "the areas where these people practice their rituals. Blood and corpses of"
-	line$(4) = "all kinds were found in those places, even human bodies and lots of strange"
-	line$(5) = "and scary dolls, made of plants, stones, feathers and animal skulls. Not so"
-	line$(6) = "long ago I found out that one of our superiors was also part of the order."
-	line$(7) = "You can't trust anyone here."
-	
-	CASE 4
+	DatFile$ = "bar3.dat"
+	LoadTXT
 
-	line$(1) = "Blonde Woman: There's some sort of magic in this town. Not so big, not too"
-	line$(2) = "small. If you go out to the streets and look around, the trees, the houses"
-	line$(3) = "and even the stores look tidy and neat, they are very nice. However, when"
-	line$(4) = "the sun goes down, people hide in their homes and only come out the next"
-	line$(5) = "morning. Everyone is terrified of darkness and no one dares to walk out of"
-	line$(6) = "the city into the  woods. It's very dangerous. Chances of being killed or"
-	line$(7) = "dissapearing are high."
+	CASE 4
+	DatFile$ = "bar4.dat"
+	LoadTXT
 	
 	CASE ELSE
+	DatFile$ = "bar1.dat"
+	LoadTXT
 
-	line$(1) = "Bar Tender: You don't look like you're from the town. Am I right?"
-	line$(2) = "Some random foreigners come over here from time to time, some of them"
-	line$(3) = "come to this bar looking for fight and trouble. See that man next to"
-	line$(4) = "the door? He's crazy, has been in prison for many years and now is our"
-	line$(5) = "security guard. See that other huge guy playing games at that table?"
-	line$(6) = "Seems pretty quiet, but that's cause you don't know him well. However,"
-	line$(7) = "if you come here in peace, just to relax and grab some beers. There's"
-	line$(8) = "nothing to fear over here, people are usually friendly."
 
 END SELECT
 
