@@ -1,8 +1,9 @@
-DECLARE SUB LoadTXT ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB MainMenu ()
 DECLARE SUB GameIntro1 ()
+
+DECLARE SUB LoadTXT ()
 
 DECLARE SUB GenDescription ()
 DECLARE SUB WaitKey ()
@@ -5062,45 +5063,35 @@ COLOR 10
 
 IF d1 = 1 THEN
 
-line$(1) = "You are trying to climb a huge rock that blocks the way and end up falling down."
-line$(2) = "You hurt your back when falling (-1 HP)."
-
+DatFile$ = "neg1.dat"
+LoadTXT
 PrintLines
 
 HP = HP - 1
 
 END IF
 
-
 IF d1 = 2 THEN
 
-line$(1) = "You are walking around the place and hear the sound of an animal coming"
-line$(2) = "towards you from behind. When you turn, you see a GIANT BUGIO (a huge"
-line$(3) = "and violent monkey) coming. You run, you run and save your life but in"
-line$(4) = "the escape you lose all your gold coins (Gold = 0)."
-
+DatFile$ = "neg2.dat"
+LoadTXT
 PrintLines
 
 GOLD = 0
 
 END IF
 
-
 IF d1 = 3 THEN
 
-line$(1) = "You feel something like a bite in your leg. You stop and check what it was."
-line$(2) = "You see two red points and a thin blood string coming out from your leg."
-line$(3) = "You wish it was only an insect and not a snake."
-
+DatFile$ = "neg3.dat"
+LoadTXT
 PrintLines
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 d1 = rolld6
 
 COLOR 3
-
 PRINT "Die:"; d1;
 
 '''''''''''
@@ -5115,9 +5106,7 @@ PRINT "Die:"; d1;
 
 	HP = HP - 6
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO EndOfNegative
 
 	END IF
@@ -5134,9 +5123,7 @@ PRINT "Die:"; d1;
 
 	HP = HP - 3
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO EndOfNegative
 
 	END IF
@@ -5151,12 +5138,12 @@ PRINT "Die:"; d1;
 
 	PrintLines
 
-	DO WHILE INKEY$ = ""
-	LOOP
+	WaitKey
 	GOTO EndOfNegative
 	END IF
 
 '''''''''''
+
 	IF d1 = 4 THEN
 
 	COLOR 10
@@ -5175,9 +5162,7 @@ PRINT "Die:"; d1;
 
 	HP = HP - d1
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO EndOfNegative
 
 	END IF
@@ -5192,9 +5177,7 @@ PRINT "Die:"; d1;
 
 	PrintLines
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO EndOfNegative
 
 	END IF
@@ -5205,10 +5188,8 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "Some centimeters away from your leg there's a huge poisonous centipede..."
-	line$(2) = "It's in attack position, seems to be annoyed. It's an horrible and disgusting"
-	line$(3) = "animal. That creepy thing bit you!"
-
+	DatFile$ = "neg3f.dat"
+	LoadTXT
 	PrintLines
 
 	d1 = rolld6
@@ -5220,9 +5201,7 @@ PRINT "Die:"; d1;
 
 	HP = HP - d1
 
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	GOTO EndOfNegative
 
 	END IF
@@ -5236,20 +5215,15 @@ IF d1 > 3 AND d1 < 7 THEN
 
 COLOR 10
 
-line$(1) = "There is a huge storm coming. You seem worried cause it looks very bad."
-line$(2) = "You try to hurry up and find a place to hide. However, you are not lucky today."
-line$(3) = "All your clothes get wet and you feel terrible after walking so much with"
-line$(4) = "wet feet and wet clothes. You also feel very cold. (-1 HP)"
-
+DatFile$ = "neg6.dat"
+LoadTXT
 PrintLines
 
 HP = HP - 1.5
 
 END IF
 
-
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 EndOfNegative:
 END SUB
@@ -5269,147 +5243,6 @@ PLAY positive$
 
 DO WHILE INKEY$ = ""
 LOOP
-
-END SUB
-
-SUB Notes
-
-' - AGREGAR `DRINK' AL ATAQUE JUNTO CON ATTACK Y CHARGE.
-'   INTERCAMBIAS HITPOINTS POR HP. LUEGO EL ENEMIGO PUEDE ATACARTE.
-
-' - PREGUNTAR SI REALMENTE DESEAS ACERCARTE A LA BRUJA.
-' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
-' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
-
-' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
-
-' - TERMINAR DE DESARROLLAR LA PARTE DEL TEMPLO. [DECISIONES]
-
-' - MEJORAR CODIGO USANDO [SUB PrintLines] PARA MOSTRAR LINEAS DE TEXTO.
-' - MEJORAR CODIGO USANDO [SUB WaitKey] PARA `press any key to continue'.
-
-' - DESARROLLAR OBJETIVO DEL JUEGO: 100% MAPA EXPLORADO, ENCONTRAR Y
-'   ELIMINAR A LOS TRES JEFES (MAGOS) OCULTOS DE LA BLACK ORDER.
-' - CONSEGUIR 10.000 DE ORO.
-' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
-' - LLEGAR AL NIVEL 50.
-
-' - MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
-'   TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO.
-' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
-'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
-'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC.
-
-' - AGREGAR DETALLES Y GRAFICOS ASCII
-' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
-' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
-' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
-' - QUE SE PUEDA SALVAR EL JUEGO EN LA CIUDAD (POR UN PRECIO MUY ALTO)
-' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
-'   ALEATORIOS.
-' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
-' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
-'   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
-
-' - CONTINUAR DESARROLLANDO LA HISTORIA
-' - CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
-' - AGREGAR MAS DETALLES EN LA HISTORIA INICIAL, INTRO.
-' - AGREGAR MAS SONIDOS
-' - AGREGAR ENCICLOPEDIA [SOBRE CRIATURAS, PERSONAJES Y LUGARES]
-' - PODER ELEGIR UN NOMBRE PARA EL PERSONAJE
-' - CREAR ALGUNAS NUEVAS TRANSICIONES
-' - TERMINAR DE ORGANIZAR EL CODIGO EN FUNCIONES/SUBS
-
-' - AGREGAR SISTEMA DE ITEMS, ARMAS, PROTECCION, ETC.
-' - AGREGAR MEDICINA QUE PUEDA SER USADA, COMPRADA Y VENDIDA
-
-' - MECANICAS DEL KARMA Y QUE ESTAS IMPACTEN EN EL JUEGO.
-
-' - TRADUCIR JUEGO AL ESPANHOL
-' - TRADUCIR JUEGO A PT BRASIL
-
-' - COLOCAR TODOS LOS DRAWDESERT, DRAWMOUNTAINS, ETC. EN UN SOLO SUB LLAMADO
-'   DRAWBANNERS. USAR DE EJEMPLO SUB DRAWICONS.
-
-' - SCORE Y HIGHSCORE TABLE
-' - QUE EL SCORE DEPENDA DE LA CANTIDAD DE PASOS QUE EL JUGADOR DIO.
-
-' - CREAR SISTEMA DE ITEMS Y EQUIPAMIENTOS
-
-
-
-'================================================
-'                     VERSIONS
-'================================================
-
-'v 0.5
-
-' - Method to PRINT LINES AND PAUSE TEXT improved ---> Suggested by
-'   @amonroejj (Alan Monroe).
-' - New method to PRINT LINES AND PAUSE TEXT being applied to the rest
-'   of the code ---> Suggested by @amonroejj (Alan Monroe).
-' - New Method applied to [SUB] NegativeSub.
-' - New Method applied to [SUB] PositiveSub.
-' - New Method applied to [SUB] TalkToStrangers.
-' - New Method applied to [SUB] Information.
-' - System of ACHIEVEMENTS created.
-' - First challenges added.
-' - GET 100 GOLD challenge, created.
-' - FIND A CITY FOR THE FIRST TIME challenge, created.
-' - REACH LEVEL 10 challenge, created.
-' - The chl.dat file is created to save challenges variables.
-' - Challenges variables are saved everytime you exit the game.
-' - Challenges variables are loaded everytime you start the game.
-' - The Fight Intro has been improved.
-' - Grapics made of ASCII characters added to Fight Intro.
-' - Wild Bugio - ASCII graphic added.
-' - Wild Wolf - ASCII graphic added.
-' - ASCII BANNERS represent the TERRAIN you are in.
-' - The kind of terrain influences in battle.
-' - A randomly chosen terrain will give you extra AT pts in battle.
-' - A randomly chosen terrain will decrese your DF pts in battle.
-' - "You were born in the <terrain>" showed in the CHARACTER screen.
-' - "You are not used to be in <terrain>" showed in the CHARACTER screen.
-' - Witch - ASCII graphic added.
-' - LAKES & RIVERS banner added to the fighting intro.
-' - Criminal - ASCII graphic added.
-' - BUG "Enemies attack when their HP is 0 or less than 0" FIXED.
-'   Bug spotted by YouTube user @dw817.
-' - "CRITICAL HIT!" message is shown instead.
-' - NEW OPTION TO ESCAPE BATTLES ADDED. You can LEAVE ALL YOUR GOLD BEHIND
-'   and RUN from a battle now. You can LEAVE ALL GOLD BEHIND or TRY LUCK.
-'   Option suggested by YouTube user @dw817.
-' - Battle: Icons for the 1ST WAVE of enemies added! 6 ASCII Icons added.
-' - 100% TERRAIN ASCII BANNERS added.
-' - Sub for [DO WHILE INKEY$ = ""] created ---> Sub WaitKey
-' - Code being improved with sub WaitKey.
-' - LOOK AROUND: A text describing the area is randomly generated.
-'   It needs to be improved and needs to be expanded with more words
-'   and some other alternative paragraphs.
-' - New Mechanics during battle suggested by YouTube user @dw817.
-'   Now you can ATTACK or CHARGE at some speciffic stages in the combat.
-'   The enemy will DODGE or STAND, causing different results in battle.
-
-' v 0.4
-
-' - Cities added
-' - Cities system and options under development
-' - Random number of cities (1 to 6)
-' - Random location of the cities in the map.
-' - Cities aren't shown until you discover them.
-' - "YOU DISCOVERED A CITY!" tex box when a city is found.
-' - HOTEL added to the cities.
-' - You can rest and spend the night at the HOTEL.
-' - LOCAL BAR added to cities
-' - You can HAVE A BEER at the bar
-' - You can BET at the bar
-' - You can FIGHT at the bar
-' - You can TALK TO STRANGERS at the bar.
-' - GYM/TRAINING GROUND added to cities
-' - You can train and improve your skills at the TRAINING GROUND.
-' - OPTIONS: Music ON/OFF added. (during the game and in the main menu)
-' - Main menu and some visual details of the game improved.
-' - CHARACTER screen added (Statistics and Information about the character)
 
 END SUB
 
