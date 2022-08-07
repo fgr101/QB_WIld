@@ -5263,10 +5263,8 @@ COLOR 10
 
 IF d1 = 1 THEN
 
-line$(1) = "You find a good place to sleep and spend the night there. It's an inn."
-line$(2) = "You've been there before and know the owner. You feel much better"
-line$(3) = "the next day."
-
+DatFile$ = "pos1.dat"
+LoadTXT
 PrintLines
 
 COLOR 3
@@ -5279,15 +5277,8 @@ END IF
 
 IF d1 = 2 THEN
 
-line$(1) = "You find an abandoned house in the place. It's an old house but seems"
-line$(2) = "to be in perfect conditions. The front door is open. You get in. The place"
-line$(3) = "is clean, there's even a room with a bed, old chairs and a big table. You "
-line$(4) = "even find a shelf with many old books. Books about black and white magic,"
-line$(5) = "the natural world, about creatures, the kingdom's history, music, poetry"
-line$(6) = "and even short stories. You also find some old gold coins around the place."
-line$(7) = "You spend the rest of the day resting and reading. Seems to be a safe and "
-line$(8) = "good place to spend the night too."
-
+DatFile$ = "pos2.dat"
+LoadTXT
 PrintLines
 
 COLOR 3
@@ -5317,13 +5308,8 @@ END IF
 
 IF d1 = 4 THEN
 
-line$(1) = "You stop, set a place to camp. Start a fire and cook something to eat."
-line$(2) = "You spend your time practicing fighting techniques and training with your"
-line$(3) = "knives and sword. The mission has been pretty rough and hard, so difficult.  "
-line$(4) = "You needed to take some time for you, to rest and relax a little bit. It's"
-line$(5) = "always a good thing to practice with your weapons and improve your fighting"
-line$(6) = "techniques."
-
+DatFile$ = "pos4.dat"
+LoadTXT
 PrintLines
 
 COLOR 3
@@ -5339,42 +5325,32 @@ IF d1 = 5 THEN
 
 Pause
 PRINT "Street vendor by the road! He offers you the following items:"
-
 PRINT
-line$(1) = "[1] Mix of Herbs   (+5 HP)   - $25"
-line$(2) = "[2] Energetic Soup (+5 MANA) - $25"
-line$(3) = "[3] NO, THANKS!"
 
+DatFile$ = "pos5.dat"
+LoadTXT
 PrintLines
 
 PRINT
+
+AskAgain78:
+
 Pause
 INPUT "Would you like to buy something sir?"; opcion
 
-'REHACER OPCIONES USANDO SELECT CASE:
+'===== NO MONEY TO BUY THAT =====
 
-	IF opcion = 3 THEN '===== NO, THANKS
-	Pause
-	PRINT "- Oh, that's ok then..."
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO PositiveEnd
-	END IF
+IF opcion = 1 AND GOLD < 25 OR opcion = 2 AND GOLD < 25 THEN
+opcion = 1344
+END IF
 
-	IF GOLD < 25 THEN '===== NO MONEY
-	Pause
-	PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
-	DO WHILE INKEY$ = ""
-	LOOP
-	GOTO PositiveEnd
-	END IF
+SELECT CASE opcion
 
-	IF opcion = 1 THEN  '===== MIX OF HERBS
+	CASE 1 '===== MIX OF HERBS
+	
 	Pause
 	PRINT "- Nice, MIX OF HERBS! Here you have!"
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	PRINT
 	line$(1) = "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
 	line$(2) = "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
@@ -5383,18 +5359,14 @@ INPUT "Would you like to buy something sir?"; opcion
 
 	HP = HP + 5
 	GOLD = GOLD - 25
-	DO WHILE INKEY$ = ""
-	LOOP
+	WaitKey
 	GOTO PositiveEnd
-	END IF
-
-	IF opcion = 2 THEN '===== ENERGETIC SOUP
+	
+	CASE 2 '===== ENERGETIC SOUP
 
 	Pause
 	PRINT "- Nice, ENERGETIC SOUP! Here you have!"
-	DO WHILE INKEY$ = ""
-	LOOP
-
+	WaitKey
 	PRINT
 	line$(1) = "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
 	line$(2) = "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
@@ -5405,24 +5377,34 @@ INPUT "Would you like to buy something sir?"; opcion
 	MANA = MANA + 5
 	GOLD = GOLD - 25
 
-	DO WHILE INKEY$ = ""
-	LOOP
+	WaitKey
 
 	GOTO PositiveEnd
 
-	END IF
+	CASE 3 '===== NO, THANKS
+	Pause
+	PRINT "- Oh, that's ok then..."
+	WaitKey
+	GOTO PositiveEnd
+	
+	CASE 1344 '===== NO MONEY TO BUY THAT
+	Pause
+	PRINT
+	PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
+	WaitKey
+	GOTO PositiveEnd
+	
+	CASE ELSE '===== GO TO LINE 78 AND ASK AGAIN
+	GOTO AskAgain78
+
+END SELECT
 
 END IF
 
 IF d1 = 6 THEN
 
-line$(1) = "You find a family of travelers by the road. They've heard about you and"
-line$(2) = "they know you are there to help. The husband invites you to join them. You"
-line$(3) = "rest, eat good food and take a shower. You stay a good time with them."
-line$(4) = "The man also teaches you some fighting and defensive techniques. Before"
-line$(5) = "you leave, they give you some food and gold coins to support you. "
-line$(6) = "You thank them and continue with your travel."
-
+DatFile$ = "pos6.dat"
+LoadTXT
 PrintLines
 
 COLOR 3
@@ -5435,8 +5417,7 @@ AT = AT + .5
 
 END IF
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 PositiveEnd:
 END SUB
@@ -5533,8 +5514,7 @@ PRINT
 
 CALL PrintLines        '========= SUB for printing the line$() ARRAY
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END SUB
 
