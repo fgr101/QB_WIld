@@ -4774,77 +4774,53 @@ COLOR 10
 
 IF d1 = 1 THEN
 
-line$(1) = "Officer: If you find the leaders of that group and end with their lives, I guess"
-line$(2) = "our lands might be back to normal and our kids and women will live in peace."
-line$(3) = "There are several savage monsters and wild creatures in the area but we can deal"
-line$(4) = "with that, we have soldiers and a local force for that. However, evil human"
-line$(5) = "beings can be much worse than any monsters or demons if they want to. I strongly"
-line$(6) = "believe that some human beings are just demons inside a human body."
-
+DatFile$ = "inf1.dat"
+LoadTXT
 PrintLines
 
 END IF
 
 IF d1 = 2 THEN
 
-line$(1) = "Peasant: So, you are looking for some terrible criminals, right?"
-line$(2) = "Well, some of them hide in places like forests or in the mountains"
-line$(3) = "if you are lucky, you'll find them in those places."
-
+DatFile$ = "inf2.dat"
+LoadTXT
 PrintLines
 
 END IF
 
 IF d1 = 3 THEN
 
-line$(1) = "Tavern owner: Good to know you are taking care of those terrible killers."
-line$(2) = "Some of them are wizards who practice the arts of the dark side. People"
-line$(3) = "even say they kidnap kids and young women for their sacrifices, offering"
-line$(4) = "them to the black lord. However, they've been around us most of the time"
-line$(5) = "and we don't even know who they are. You can't trust anyone here."
-
+DatFile$ = "inf3.dat"
+LoadTXT
 PrintLines
 
 END IF
 
 IF d1 = 4 THEN
 
-line$(1) = "Farmer: Be very careful man, we all know what you're doing over here"
-line$(2) = "and they know too. They expect to meet you soon, so I guess they are ready."
-line$(3) = "Don't be a fool, don't think they are weak. Get ready as much as you can."
-line$(4) = "These people are dark and they aren't ordinary ones, they posses supernatural"
-line$(5) = "powers, and this power doesn't come from light. Many families around here"
-line$(6) = "lost some of their children... and we all know they took them."
-
+DatFile$ = "inf4.dat"
+LoadTXT
 PrintLines
 
 END IF
 
 IF d1 = 5 THEN
 
-line$(1) = "Priest: They are part of a satanic order. These black sorcerers have already"
-line$(2) = "carried out thousands of killings and murders, terrifying our village."
-line$(3) = "They kidnap babies, kids and young women. We have already found the places"
-line$(4) = "where these beasts celebrate their bloody rituals and hideous feasts."
-
+DatFile$ = "inf5.dat"
+LoadTXT
 PrintLines
 
 END IF
 
 IF d1 = 6 THEN
 
-line$(1) = "You're following a narrow path, seeing huge vultures above in the sky. "
-line$(2) = "Something is not ok. A strong and awful smell gets to you. You continue"
-line$(3) = "walking not knowing what you're about to find. Behind some rocks, hidden "
-line$(4) = "by high grass, you find a rotten corpse. Rotten bones and flesh. You vomit,"
-line$(5) = "the view is overwhelming, disgusting. Danger seems to be near."
-
+DatFile$ = "inf6.dat"
+LoadTXT
 PrintLines
 
 END IF
 
-DO WHILE INKEY$ = ""
-LOOP
+WaitKey
 
 END SUB
 
