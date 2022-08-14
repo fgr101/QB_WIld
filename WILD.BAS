@@ -1,3 +1,5 @@
+DECLARE SUB Trans3 ()
+DECLARE SUB showD6 ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB MainMenu ()
@@ -59,7 +61,7 @@ DECLARE FUNCTION rolld6 ()
 '| GLOBAL VARIABLES FOR SUBS |
 
 
-DIM SHARED DatFile$
+DIM SHARED DatFile$, D6DieX, D6DieY
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
@@ -2033,8 +2035,30 @@ GOTO combatINI
 
 'GAME OVER ======================================
 GameOver:
+
+CALL Trans3
+
+LOCATE 2, 1
+PRINT "You are unconcious! Almost dead!"
+PRINT "Let's see if destiny gives you another chance!"
+
+CALL showD6
+
+IF d1 < 4 THEN
+COLOR 4
+PRINT "YOU COULDNT RESIST..."
+WaitKey
 CALL GameOver
 GOTO MainMenu
+END IF
+
+IF d1 > 3 THEN
+HP = MaxHP
+PRINT "YOU GOT A"; d1; "!"
+PRINT "YOU GOT ANOTHER CHANCE!"
+WaitKey
+GOTO inicio
+END IF
 
 SUB About
 
@@ -5455,6 +5479,98 @@ CLOSE #1
 
 END SUB
 
+SUB showD6
+
+D6DieX = 37       'CHANGE THIS TO MODIFY THE GENERAL X VALUE
+D6DieY = 10       'CHANGE THIS TO MODIFY THE GENERAL Y VALUE
+
+
+RANDOMIZE TIMER
+xloop = 0
+
+DO UNTIL INKEY$ = CHR$(32)     'LOOP UNTIL SPACE IS PRESSED
+
+COLOR 15
+repeatroll:
+D6 = INT(RND * 6) + 1
+
+IF D6 = rememberd6 THEN
+GOTO repeatroll
+END IF
+
+rememberd6 = D6
+
+SELECT CASE D6
+
+	CASE 1
+	LOCATE D6DieY, D6DieX
+	PRINT "²²²²²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²²*²²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²²²²²"
+
+
+	CASE 2
+	LOCATE D6DieY, D6DieX
+	PRINT "²²²²²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²*²*²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²²²²²"
+
+	CASE 3
+	LOCATE D6DieY, D6DieX
+	PRINT "²*²²²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²²*²²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²²²*²"
+
+	CASE 4
+	LOCATE D6DieY, D6DieX
+	PRINT "²*²*²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²²²²²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²*²*²"
+
+	CASE 5
+	LOCATE D6DieY, D6DieX
+	PRINT "²*²*²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²²*²²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²*²*²"
+
+	CASE 6
+	LOCATE D6DieY, D6DieX
+	PRINT "²*²*²"
+	LOCATE D6DieY + 1, D6DieX
+	PRINT "²*²*²"
+	LOCATE D6DieY + 2, D6DieX
+	PRINT "²*²*²"
+
+END SELECT
+
+COLOR 14
+PRINT
+LOCATE D6DieY + 4, D6DieX - 4
+PRINT "[Press SPACE]"
+
+xloop = xloop + 1
+
+aloop = 0    ' PAUSE
+DO UNTIL aloop = 2500
+aloop = aloop + 1
+LOOP
+
+LOOP
+
+d1 = D6
+
+END SUB
+
 SUB TalkToStrangers
 
 CLS
@@ -5538,6 +5654,44 @@ LOOP
 
 COLOR 2, 0
 CLS
+END SUB
+
+SUB Trans3 'LLUVIA ROJA INVERTIDA
+yloop = 0
+
+DO UNTIL yloop = 10000   'CHANGE IF YOU WANT TO CHANGE THE TIME OF TRANS3
+
+RandomX = INT(RND * 75) + 1
+RandomY = INT(RND * 24) + 1
+
+LOCATE RandomY, RandomX
+RandomChar = INT(RND * 3) + 1
+
+SELECT CASE RandomChar
+
+	CASE 1
+	COLOR 4
+	PRINT ":"
+
+	CASE 2
+	COLOR 4
+	PRINT "."
+
+	CASE 3
+	COLOR 4
+	PRINT "|"
+
+END SELECT
+
+SELECT CASE INKEY$
+	CASE CHR$(27)
+	END
+END SELECT
+
+yloop = yloop + 1
+
+LOOP
+
 END SUB
 
 SUB WaitKey
