@@ -14,6 +14,9 @@ I'd be very glad if you could help with:
 - Help me with the code making it more efficient.
 - Any other ideas, suggestions or feedback are welcome.  
 
+FOR A BETTER UNDERSTANDING OF THIS PROJECT, PLEASE CHECK THE NEXT PLAYLIST ON YOUTUBE: 
+https://www.youtube.com/watch?v=uHhclyAd7DA&list=PL0wVOWuPxpvdhqgy6ePs2BJ7XVA8eOmI5
+
 Thanks to the contributors:
 ===========================
 
