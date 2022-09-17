@@ -3704,80 +3704,61 @@ END SUB
 
 SUB DrawCrawler
 
+COLOR 6
+LOCATE 4, 29
+PRINT "    ²            ²"
+LOCATE 5, 29
+PRINT "   ° °    °     ° °"
+LOCATE 6, 29
+PRINT "  ±   °   ±    °   °"
+LOCATE 7, 29
+PRINT "       °  ²   °"
+LOCATE 8, 29
+PRINT "°      °±°²°²°°     °"
+LOCATE 9, 29
+PRINT "ú°     ß±²±²±²ß    °ú°"
+LOCATE 10, 29
+PRINT "°ú°    ±  ÝÝúú±   ° °"
+LOCATE 11, 29
+PRINT " °ú°   °°°ÝÝ°°   ° úú°"
+LOCATE 12, 29
+PRINT "²°úú°   °Ü°Ü°   °ú °²ú"
+LOCATE 13, 29
+PRINT " ²°úú°  Ý°Ý°Ý  °ú °²"
+LOCATE 14, 29
+PRINT "  ²°úú°  ÝÝÝ  °úú°²ú²"
+LOCATE 15, 29
+PRINT " °ú²°úÜßÜßÜßÜßÜú°²úú°"
+LOCATE 16, 29
+PRINT "°ú°ú°°°°ßÜßÜßÜ°°°° °ú°"
+LOCATE 17, 29
+PRINT "ú°ú°úú°°ßÜßÜßÜ°°úú°ú°"
+
+COLOR 15
+LOCATE 10, 41
+PRINT "úú"
+
 COLOR 4
-LOCATE 6, 26
-PRINT "#############################"
-LOCATE 7, 26
-PRINT "#                           #"
-LOCATE 8, 26
-PRINT "#                           #"
-LOCATE 9, 26
-PRINT "#                           #"
-LOCATE 10, 26
-PRINT "#                           #"
-LOCATE 11, 26
-PRINT "#                           #"
-LOCATE 12, 26
-PRINT "#                           #"
-LOCATE 13, 26
-PRINT "#                           #"
-LOCATE 14, 26
-PRINT "#                           #"
-LOCATE 15, 26
-PRINT "#                           #"
-LOCATE 16, 26
-PRINT "#                           #"
-LOCATE 17, 26
-PRINT "#############################"
+LOCATE 11, 36
+PRINT "°°"
+LOCATE 12, 37
+PRINT "°"
+LOCATE 12, 39
+PRINT "°"
+LOCATE 13, 38
+PRINT "°"
 
 COLOR 7
-LOCATE 8, 30
-PRINT "                   EPD"
-LOCATE 9, 30
-PRINT "  w|w|w           ##  "
-LOCATE 10, 30
-PRINT "  #*#*#    ###  ###|  "
-LOCATE 11, 30
-PRINT "   #-#   #### ####|   "
-LOCATE 12, 30
-PRINT "  #############|   "
-LOCATE 13, 30
-PRINT " ## \ ## -----"
-LOCATE 14, 30
-PRINT " W   ##  "
-LOCATE 15, 30
-PRINT "     WW  "
-LOCATE 16, 30
-PRINT "         "
-
-LOCATE 10, 33
-COLOR 4
-PRINT "*"
-
-LOCATE 10, 35
-COLOR 4
-PRINT "*"
-
-LOCATE 11, 34
-COLOR 4
-PRINT "-"
-
-LOCATE 8, 49
-COLOR 8
-PRINT "EPD"
-
-LOCATE 9, 32
-COLOR 15
-PRINT "w|w|w"
-
-LOCATE 14, 30
-COLOR 8
-PRINT "WW"
+LOCATE 14, 38
+PRINT "ÝÝÝ"
 
 LOCATE 15, 35
 COLOR 8
-PRINT "WW"
-
+PRINT "ÜßÜßÜßÜßÜ"
+LOCATE 16, 37
+PRINT "ßÜßÜßÜ"
+LOCATE 17, 37
+PRINT "ßÜßÜßÜ"
 END SUB
 
 SUB DrawCriminal
