@@ -2047,6 +2047,41 @@ CALL showD6
 IF d1 < 4 THEN
 COLOR 4
 PRINT "YOU COULDNT RESIST..."
+PRINT
+
+SELECT CASE d1
+
+	CASE 1 'OK
+
+	PRINT "Someone finds your dead body being eaten by crows and vultures."
+	PRINT "Such a disgusting scene it was. These awful birds were eating your"
+	PRINT "eyes at the moment the person found your corpse. The person reports"
+	PRINT "all the details with horror."
+
+	CASE 2
+
+	PRINT "Thanks to some good actions done in life, the gods give you"
+	PRINT "another chance. You see them in unconcious dreams and wake"
+	PRINT "up in the middle of the night. All is dark and you can only"
+	PRINT "hear the sound of insects and the wind. You feel weak, cannot"
+	PRINT "move or talk, breathing is really difficult."
+
+	CASE 3  'OK
+
+	PRINT "Such a violent and strong hit it was. Such a powerful impact"
+	PRINT "you received. Your face landed on the floor and your head hit"
+	PRINT "the ground with such a force. Then the blackout."
+	PRINT
+	PRINT "You feel like floating in the air and indeed you are. You hear a"
+	PRINT "very strange voice calling your name. You look down and see your"
+	PRINT "body below. You are being pulled up, and yes, you realize that the"
+	PRINT "dead body you are seeing down at the distance is you, laying on the"
+	PRINT "ground, lifeless. You are leaving your physical body."
+
+END SELECT
+
+
+
 WaitKey
 CALL GameOver
 GOTO MainMenu
@@ -2056,6 +2091,37 @@ IF d1 > 3 THEN
 HP = MaxHP
 PRINT "YOU GOT A"; d1; "!"
 PRINT "YOU GOT ANOTHER CHANCE!"
+PRINT
+
+SELECT CASE d1
+
+	CASE 4
+	PRINT "Someone finds your unconcious body being surrounded by vultures."
+	PRINT "He or she saves your life before they could eat your eyes."
+	PRINT "This unknown character takes you to a safe place nearby"
+	PRINT "and leaves."
+
+	CASE 5
+	PRINT "Thanks to some good actions done in life, the gods give you"
+	PRINT "another chance. You see them in unconcious dreams and wake"
+	PRINT "up in the middle of the night. All is dark and you can only"
+	PRINT "hear the sound of insects and the wind. You feel weak, cannot"
+	PRINT "move or talk, breathing is really difficult."
+
+	CASE 6
+	
+	PRINT "Such a violent and strong hit it was. Such a powerful impact"
+	PRINT "you received. Your face landed on the floor and your head hit"
+	PRINT "the ground with such a force. Then the blackout."
+	PRINT
+	PRINT "After some time you wake up. How much time has passed? Your head"
+	PRINT "hurts really bad and you don't know where you are or what happened."
+	PRINT "You realize someone has taken all your money and that you are really"
+	PRINT "injured. You need urgent medical assistance."
+
+END SELECT
+
+
 WaitKey
 GOTO inicio
 END IF
