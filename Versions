@@ -85,3 +85,19 @@ v 0.5
 - LOOK AROUND: A text describing the area is randomly generated.
   It needs to be improved and needs to be expanded with more words
   and some other alternative paragraphs.
+  
+ V 0.6
+
+- ASCII STATS BARS added for HP during combat and other screens.
+- Crawller - ASCII graphic added.
+- Visual effects when the character dies.
+- You have the chance to survive death by rolling a D6.
+  4, 5, 6 means you survive, 1, 2, 3 you cannot resist.
+- ASCII D6 DIE animation added. You can stop rolling it
+  by pressing the SPACE BAR, will generate a D6 value.
+- Pieces of text describing the character's death or how
+  he or she was able to survive and got another chance.
+- Notes and version information was taken out from the main BAS file
+  and stored in a separate TXT file called NOTES.TXT.
+- Big chunks of text organized in TXT files and loaded when needed.
+- Most problems with memory SOLVED.
