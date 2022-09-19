@@ -1,5 +1,3 @@
-DECLARE SUB Trans3 ()
-DECLARE SUB showD6 ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB MainMenu ()
@@ -23,7 +21,6 @@ DECLARE SUB DrawBugio ()
 DECLARE SUB Music ()
 DECLARE SUB GameOver ()
 DECLARE SUB Pause ()
-DECLARE SUB Trans1 ()
 
 DECLARE SUB About ()
 DECLARE SUB Intro ()
@@ -53,6 +50,16 @@ DECLARE SUB DrawCrawler ()
 DECLARE SUB DrawScorpion ()
 DECLARE SUB DrawCriminal ()
 
+'TRANSITIONS AND DIE
+
+DECLARE SUB Trans1 ()
+DECLARE SUB Trans3 ()
+DECLARE SUB showD6 ()
+
+'HP BARS AND OTHER STATS
+
+DECLARE SUB EnemyHPBar ()
+DECLARE SUB HPBar ()
 
 DECLARE FUNCTION rolld6 ()
 
@@ -77,6 +84,9 @@ DIM SHARED YouAre$(25), Its$(25), nameterrain$, WeatherText$
 ' ENEMIES VARIABLES
 
 DIM SHARED Enemyname$, enemyAT, enemyDF
+
+DIM SHARED HPChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
+DIM SHARED Xvalue, Yvalue AS INTEGER
 
 '==================== MUSIC and SOUNDS ======================
 
@@ -587,7 +597,18 @@ PRINT "6- Look around"
 
 PRINT
 PRINT
+
+COLOR 15
+LOCATE 2, 67
+PRINT "HP: "
+
+HPChangeLocation = 1 '====== Draws the HP bar in the top right corner of the screen.
+Xvalue = 2
+Yvalue = 69
+CALL HPBar
+
 COLOR 3
+LOCATE 14, 1
 INPUT "Where to go? ", direction
 PRINT
 COLOR 2
@@ -1359,6 +1380,7 @@ IF barfight = 1 THEN     '================ BAR FIGHT =================
 
 END IF
 
+EnemyMaxDF = enemyDF
 
 ' ======================== FIGHT INTRO SCENE ============================
 
@@ -1370,11 +1392,16 @@ combatINI:
 COLOR 2
 PRINT
 PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
-COLOR 4
-PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
-COLOR 2
+HPChangeLocation = 0
+CALL HPBar
+
 PRINT
 
+COLOR 4
+PRINT
+PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
+CALL EnemyHPBar
+COLOR 2
 
 CALL DrawIcons
 
@@ -2051,20 +2078,20 @@ PRINT
 
 SELECT CASE d1
 
-	CASE 1 'OK
+	CASE 1
 
 	PRINT "Someone finds your dead body being eaten by crows and vultures."
 	PRINT "Such a disgusting scene it was. These awful birds were eating your"
-	PRINT "eyes at the moment the person found your corpse. The person reports"
-	PRINT "all the details with horror."
+	PRINT "eyes at the moment the woman found your corpse. She reports"
+	PRINT "all the details with sorrow and horror."
 
 	CASE 2
 
-	PRINT "Thanks to some good actions done in life, the gods give you"
-	PRINT "another chance. You see them in unconcious dreams and wake"
-	PRINT "up in the middle of the night. All is dark and you can only"
-	PRINT "hear the sound of insects and the wind. You feel weak, cannot"
-	PRINT "move or talk, breathing is really difficult."
+	PRINT "As a result of bad actions done in life, the Gods cannot give you"
+	PRINT "another chance. You see them in unconcious dreams, they are angry"
+	PRINT "at you. Dark shadows fly around, laughing at you. Is it really you"
+	PRINT "the one who is there? What was your name? All turns black. The soul"
+	PRINT "liberates from the body."
 
 	CASE 3  'OK
 
@@ -2102,7 +2129,7 @@ SELECT CASE d1
 	PRINT "and leaves."
 
 	CASE 5
-	PRINT "Thanks to some good actions done in life, the gods give you"
+	PRINT "Thanks to some good actions done in life, the Gods give you"
 	PRINT "another chance. You see them in unconcious dreams and wake"
 	PRINT "up in the middle of the night. All is dark and you can only"
 	PRINT "hear the sound of insects and the wind. You feel weak, cannot"
@@ -2389,10 +2416,22 @@ COLOR 15
 
 COLOR 4
 LOCATE 1, 1
-PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
-
+PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
 LOCATE 23, 1
 PRINT "°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°"
+
+
+
+'====== Draw BARS ======
+
+COLOR 15
+LOCATE 2, 67
+PRINT "HP: "
+
+HPChangeLocation = 1
+Xvalue = 2
+Yvalue = 69
+CALL HPBar
 
 WaitKey
 
@@ -4363,6 +4402,37 @@ PRINT "°"
 
 END SUB
 
+SUB EnemyHPBar 'Barra HP del enemigo
+
+EnemyHPPercentage = (enemyDF / EnemyMaxDF) * 100
+EnemyHPPercentage = EnemyHPPercentage / 10
+
+xloop = 1
+DO UNTIL xloop >= EnemyHPPercentage
+
+IF EnemyHPPercentage > 0 THEN
+xcolor = 4
+END IF
+IF EnemyHPPercentage > 3 THEN
+xcolor = 14
+END IF
+IF EnemyHPPercentage > 6 THEN
+xcolor = 10
+END IF
+
+COLOR xcolor
+
+LOCATE , xloop + 1
+PRINT "²";
+xloop = xloop + 1
+row% = row% - 1
+LOOP
+
+PRINT
+PRINT
+
+END SUB
+
 SUB FightIntro
 
 PRINT
@@ -4833,6 +4903,69 @@ PRINT "On your left you can see a(n) "; SingNoun$(number1); ", on your right you
 Pause
 PRINT "In front of you there are "; PluralNouns$(number3); ". You feel "; feel$(number2); "."
 
+END SUB
+
+SUB HPBar '========== BARRAS
+
+'HPPercentage [Boolean] can change the bar location when activated [1].
+'Use variables Xvalue and Yvalue for passing location coordinates.
+
+' Variable % de HP declarada como SHARED INTEGER.
+
+HPPercentage = (HP / MaxHP) * 100
+HPPercentage = HPPercentage / 10
+
+' Para sacar % de un número respecto de otro, realizar división
+' del primero por el segundo y, posteriormente, multiplicar por 100.
+
+' Por ejemplo, si queremos saber qué % supone una rebaja de 2 EUR
+'respecto de 10 EUR hacemos (2/10) * 100 = 20%
+
+
+IF HPChangeLocation = 1 THEN
+COLOR 7
+LOCATE Xvalue, Yvalue + 1
+PRINT "°°°°°°°°°°"
+END IF
+
+IF HPChangeLocation = 0 THEN
+COLOR 7
+LOCATE , 1
+PRINT "°°°°°°°°°°"
+row% = row% - 1
+END IF
+
+
+xloop = 1
+
+DO UNTIL xloop >= HPPercentage + 1
+
+IF HPPercentage > 0 THEN
+xcolor = 4
+END IF
+IF HPPercentage > 3 THEN
+xcolor = 14
+END IF
+IF HPPercentage > 6 THEN
+xcolor = 10
+END IF
+
+COLOR xcolor
+
+IF HPChangeLocation = 1 THEN
+LOCATE Xvalue, xloop + Yvalue
+END IF
+
+IF HPChangeLocation = 0 THEN
+LOCATE , xloop + 0
+END IF
+
+PRINT "²";
+xloop = xloop + 1
+row% = row% - 1
+LOOP
+
+HPChangeLocation = 0
 END SUB
 
 SUB Information
