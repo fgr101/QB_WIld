@@ -86,7 +86,7 @@ DIM SHARED YouAre$(25), Its$(25), nameterrain$, WeatherText$
 DIM SHARED Enemyname$, enemyAT, enemyDF
 
 DIM SHARED HPChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
-DIM SHARED Xvalue, Yvalue AS INTEGER
+DIM SHARED Xvalue, Yvalue, WitchFight AS INTEGER
 
 '==================== MUSIC and SOUNDS ======================
 
@@ -1380,6 +1380,13 @@ IF barfight = 1 THEN     '================ BAR FIGHT =================
 
 END IF
 
+IF WitchFight = 1 THEN   '================ WITCH FIGHT =================
+Enemyname$ = "Witch"
+enemyAT = 5
+enemyDF = 6.5
+WitchFight = 0
+END IF
+
 EnemyMaxDF = enemyDF
 
 ' ======================== FIGHT INTRO SCENE ============================
@@ -2115,7 +2122,6 @@ GOTO MainMenu
 END IF
 
 IF d1 > 3 THEN
-HP = MaxHP
 PRINT "YOU GOT A"; d1; "!"
 PRINT "YOU GOT ANOTHER CHANCE!"
 PRINT
@@ -2127,13 +2133,31 @@ SELECT CASE d1
 	PRINT "He or she saves your life before they could eat your eyes."
 	PRINT "This unknown character takes you to a safe place nearby"
 	PRINT "and leaves."
+	PRINT
+
+	d2 = rolld6
+	HP = HP + d2
+	xpoints = 0
+
+	COLOR 15
+	PRINT "* Your health has been restored by"; d2; "pts."
+	PRINT "* You've lost all your confidence in battle."
 
 	CASE 5
 	PRINT "Thanks to some good actions done in life, the Gods give you"
 	PRINT "another chance. You see them in unconcious dreams and wake"
 	PRINT "up in the middle of the night. All is dark and you can only"
 	PRINT "hear the sound of insects and the wind. You feel weak, cannot"
-	PRINT "move or talk, breathing is really difficult."
+	PRINT "move or talk, breathing is difficult. However your feel well"
+	PRINT "to continue. You should be more careful next time."
+	PRINT
+
+	HP = MaxHP
+	xpoints = 0
+
+	COLOR 15
+	PRINT "* Your health has been completely restored."
+	PRINT "* You've lost all your confidence in battle."
 
 	CASE 6
 	
@@ -2145,6 +2169,17 @@ SELECT CASE d1
 	PRINT "hurts really bad and you don't know where you are or what happened."
 	PRINT "You realize someone has taken all your money and that you are really"
 	PRINT "injured. You need urgent medical assistance."
+	PRINT
+
+	d2 = rolld6
+	HP = HP + d2
+	xpoints = 0
+	GOLD = 0
+
+	COLOR 15
+	PRINT "* Your health has been restored by"; d2; "HP Pts."
+	PRINT "* You've lost all your confidence in battle."
+	PRINT "* All your gold has been stolen."
 
 END SELECT
 
@@ -2159,7 +2194,7 @@ CLS
 
 PRINT
 Pause
-PRINT "Wild 0.5 - 2021 / 2022"
+PRINT "Wild 0.6 - 2021 / 2022"
 Pause
 PRINT "Created by Fernando Gaston Ramirez as a free software and open source project."
 PRINT
@@ -3304,6 +3339,53 @@ END IF
 
 IF d1 = 2 OR d1 = 3 THEN
 
+
+PRINT "You see a witch at the distance."
+PRINT "Would you like to get closer and talk to her?"
+
+RepeatWTQuestion:
+PRINT
+PRINT "[1]Yes | [2]No";
+INPUT opcion
+
+SELECT CASE opcion
+
+	CASE 1
+
+	d1 = rolld6
+
+	IF d1 = 1 OR d1 = 2 THEN
+	DecisionResult = 1
+	WitchFight = 1
+	PRINT "It's coming towards you!"
+	PRINT "Seems to be very aggresive!"
+	WaitKey
+	GOTO EndSub
+	END IF
+	
+	IF d1 = 3 OR d1 = 4 THEN
+	PRINT "She sees you coming, makes an horrifying sound and runs away..."
+	WaitKey
+	GOTO EndSub
+	END IF
+
+	IF d1 = 5 OR d1 = 6 THEN
+	GOTO WitchLine
+	END IF
+
+	CASE 2
+	Pause
+	PRINT "You just continue walking..."
+	WaitKey
+	GOTO EndSub
+
+	CASE ELSE
+	GOTO RepeatWTQuestion
+
+END SELECT
+
+
+WitchLine:
 line$(1) = "Witch: Combine two of the next ingredients to generate something else."
 line$(2) = "Choose Your Ingredients: "
 
@@ -4929,10 +5011,9 @@ PRINT "∞∞∞∞∞∞∞∞∞∞"
 END IF
 
 IF HPChangeLocation = 0 THEN
-COLOR 7
+COLOR 2
 LOCATE , 1
-PRINT "∞∞∞∞∞∞∞∞∞∞"
-row% = row% - 1
+PRINT "‹‹‹‹‹‹‹‹‹‹"
 END IF
 
 
@@ -4962,7 +5043,6 @@ END IF
 
 PRINT "≤";
 xloop = xloop + 1
-row% = row% - 1
 LOOP
 
 HPChangeLocation = 0
@@ -5172,7 +5252,7 @@ CLS
 COLOR 15
 LOCATE 1, 1
 COLOR 10, 2
-PRINT "                              WILD 0.5 (2021 - 2022)                            "
+PRINT "                              WILD 0.6 (2021 - 2022)                            "
 COLOR 15, 0
 PRINT
 PRINT
