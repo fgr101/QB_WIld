@@ -80,7 +80,7 @@ DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
 '[GLOBAL VARIABLES TO GENETARATE DESCRIPTIONS]
 
 DIM SHARED AdjPlace$(25), PluralNouns$(25), SingNoun$(25), hear$(25), feel$(25)
-DIM SHARED YouAre$(25), Its$(25), nameterrain$, WeatherText$
+DIM SHARED YouAre$(25), its$(25), nameterrain$, WeatherText$
 
 ' ENEMIES VARIABLES
 
@@ -1471,14 +1471,22 @@ INPUT opcion
 
 d1 = rolld6
 
-IF d1 <= 3 THEN
+IF d1 > 0 AND d1 < 3 THEN
+dodge = 3
+PRINT
+Pause
+PRINT "THE ENEMY CHARGES AS WELL!"
+END IF
+
+
+IF d1 > 2 AND d1 < 5 THEN
 dodge = 0
 PRINT
 Pause
 PRINT "THE ENEMY STANDS"
 END IF
 
-IF d1 > 3 THEN
+IF d1 > 4 AND d1 < 7 THEN
 dodge = 1
 PRINT
 Pause
@@ -1526,6 +1534,31 @@ SELECT CASE opcion
 	PRINT
 
 	END IF
+
+	IF dodge = 3 THEN  ' =================AGREGAR OTRO RESULTADO DE ATAQUE
+	PRINT
+	Pause
+	PRINT "CHANGE to some other kind of combat result."
+	PRINT "The enemy dodges and almost avoids your attack!"
+	Pause
+	PRINT "Your attack is not effective!"
+	PRINT
+	Pause
+
+	COLOR 3
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = AT + d1
+	PRINT "Total Damage:"; damage1; "[ -50% ="; (damage1 / 2); "]"
+	damage1 = (AT + d1) / 2
+	COLOR 15
+	PRINT "Your damage pts are reduced to "; damage1; "!"
+	PRINT
+
+	END IF
+
+
+
 
 	CASE 2
 
@@ -1580,6 +1613,42 @@ SELECT CASE opcion
 	PRINT
 
 	END IF
+
+	IF dodge = 3 THEN
+
+	PRINT
+	Pause
+	PRINT "You charge against the enemy! "
+	Pause
+	PRINT "The enemy charges at the same time!"
+	Pause
+	PRINT "Both get hurt in the attack!"
+	PRINT
+
+	COLOR 3
+	Pause
+	PRINT "Die: "; d1;
+	COLOR 2
+	damage1 = 0
+	PRINT "Total Damage:"; damage1; "[ATTACK FAILED]"
+	
+	Pause
+	COLOR 15
+	reduce = HP / 2
+	PRINT "You hurt yourself [-"; reduce; "HP] during the attack!"
+	HP = HP - reduce
+	PRINT "Your HP is"; HP; "now."
+	
+	Pause
+	PRINT
+	PRINT "The enemy hurts itself too!"
+	PRINT "It loses half of its HP!"
+	enemyDF = enemyDF / 2
+	PRINT "Its HP is"; enemyDF; "now!"
+	PRINT
+	
+	END IF
+
 
 END SELECT
 
@@ -2081,6 +2150,8 @@ GOTO combatINI
 GameOver:
 
 CALL Trans3
+
+HP = 0
 
 LOCATE 2, 1
 PRINT "You are unconcious! Almost dead!"
@@ -4960,20 +5031,20 @@ YouAre$(16) = "moving fast"
 YouAre$(17) = "going fast"
 YouAre$(18) = "walking fast, almost running"
 
-Its$(1) = "It's getting colder."
-Its$(2) = "It's a really good place to be."
-Its$(3) = "It doesn't seem to be a very good place to be for a long time."
-Its$(4) = "It looks very safe."
-Its$(5) = "It doesn't look very safe."
-Its$(6) = "It's getting colder."
-Its$(7) = "It's an interesting area."
-Its$(8) = "It's starting to rain."
-Its$(9) = "It's getting darker."
-Its$(10) = "There's fog in the air."
-Its$(11) = "It feels like something bad is about to happen."
-Its$(12) = "It feels like something good is about to happen."
-Its$(13) = "You feel that something is watching you."
-Its$(14) = "An enemy or creature could appear any time."
+its$(1) = "It's getting colder."
+its$(2) = "It's a really good place to be."
+its$(3) = "It doesn't seem to be a very good place to be for a long time."
+its$(4) = "It looks very safe."
+its$(5) = "It doesn't look very safe."
+its$(6) = "It's getting colder."
+its$(7) = "It's an interesting area."
+its$(8) = "It's starting to rain."
+its$(9) = "It's getting darker."
+its$(10) = "There's fog in the air."
+its$(11) = "It feels like something bad is about to happen."
+its$(12) = "It feels like something good is about to happen."
+its$(13) = "You feel that something is watching you."
+its$(14) = "An enemy or creature could appear any time."
 
 
 
@@ -4987,7 +5058,7 @@ number4 = INT(RND * 14) + 1
 number5 = INT(RND * 14) + 1
 
 Pause
-PRINT "You are "; YouAre$(number5); ". "; Its$(number2)
+PRINT "You are "; YouAre$(number5); ". "; its$(number2)
 
 Pause
 PRINT "The place is "; AdjPlace$(number1); ". There are "; PluralNouns$(number2); " all around the area."
