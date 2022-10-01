@@ -1,3 +1,4 @@
+DECLARE SUB ManaBar ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB MainMenu ()
@@ -85,7 +86,7 @@ DIM SHARED YouAre$(25), Its$(25), nameterrain$, WeatherText$
 
 DIM SHARED Enemyname$, enemyAT, enemyDF
 
-DIM SHARED HPChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
+DIM SHARED BarChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
 DIM SHARED Xvalue, Yvalue, WitchFight AS INTEGER
 
 '==================== MUSIC and SOUNDS ======================
@@ -602,10 +603,19 @@ COLOR 15
 LOCATE 2, 67
 PRINT "HP: "
 
-HPChangeLocation = 1 '====== Draws the HP bar in the top right corner of the screen.
+LOCATE 3, 67
+PRINT "MN: "
+
+
+BarChangeLocation = 1 '====== Draws the HP bar in the top right corner of the screen.
 Xvalue = 2
 Yvalue = 69
 CALL HPBar
+
+BarChangeLocation = 1
+Xvalue = 3
+Yvalue = 69
+CALL ManaBar
 
 COLOR 3
 LOCATE 14, 1
@@ -1399,7 +1409,7 @@ combatINI:
 COLOR 2
 PRINT
 PRINT "You: HP ("; HP; ") === DEF ("; DF; ") / ATK ("; AT; ") === MANA ("; MANA; ")"
-HPChangeLocation = 0
+BarChangeLocation = 0
 CALL HPBar
 
 PRINT
@@ -2463,10 +2473,19 @@ COLOR 15
 LOCATE 2, 67
 PRINT "HP: "
 
-HPChangeLocation = 1
+LOCATE 3, 67
+PRINT "MN: "
+
+BarChangeLocation = 1
 Xvalue = 2
 Yvalue = 69
 CALL HPBar
+
+BarChangeLocation = 1
+Xvalue = 3
+Yvalue = 69
+CALL ManaBar
+
 
 WaitKey
 
@@ -4263,61 +4282,58 @@ PRINT "+"
 END SUB
 
 SUB DrawScorpion
-
-COLOR 4
-LOCATE 6, 26
-PRINT "#############################"
-LOCATE 7, 26
-PRINT "#                           #"
-LOCATE 8, 26
-PRINT "#                           #"
-LOCATE 9, 26
-PRINT "#                           #"
-LOCATE 10, 26
-PRINT "#                           #"
-LOCATE 11, 26
-PRINT "#                           #"
-LOCATE 12, 26
-PRINT "#                           #"
-LOCATE 13, 26
-PRINT "#                           #"
-LOCATE 14, 26
-PRINT "#                           #"
-LOCATE 15, 26
-PRINT "#                           #"
-LOCATE 16, 26
-PRINT "#                           #"
-LOCATE 17, 26
-PRINT "#############################"
-
 COLOR 14
 
-LOCATE 7, 30
-PRINT "            #### "
-LOCATE 8, 30
-PRINT "           W   ##, "
-LOCATE 9, 30
-PRINT "              ###, "
-LOCATE 10, 30
-PRINT "            ####, "
-LOCATE 11, 30
-PRINT "         #######, "
-LOCATE 12, 30
-PRINT "      ###***#####, "
-LOCATE 13, 30
-PRINT "    ##   W W   ## "
-LOCATE 14, 30
-PRINT "    ###       ### "
-LOCATE 15, 30
-PRINT "   #  #      #   # "
+LOCATE 7, 28
+PRINT "           ²²²²²²±"
+LOCATE 8, 28
+PRINT "          ²±²° ²²±"
+LOCATE 9, 28
+PRINT "               ²²²±"
+LOCATE 10, 28
+PRINT "              ²²²²±"
+LOCATE 11, 28
+PRINT "           ²²²²²²²±"
+LOCATE 12, 28
+COLOR 2
+PRINT "|ú|ú|úú|²²²***²²²²±ú|ú|'ú"
+LOCATE 13, 28
+PRINT "'ú ú  ²²°ú Ý Ýúú²²± ú'ú'ú"
+LOCATE 14, 28
+PRINT "ú ú|.²²²°' úú úú²²²± ú' ú "
+LOCATE 15, 28
+PRINT "''  ²°  ²° 'ú''²°  ²° ú' "
+
+
+COLOR 14
+LOCATE 12, 36
+PRINT "²²²***²²²²±"
+
+LOCATE 13, 34
+PRINT "²²°"
+
+LOCATE 13, 44
+PRINT "²²²±"
+
+LOCATE 14, 33
+PRINT "²²²°"
+
+LOCATE 14, 44
+PRINT "²²²±"
+
+LOCATE 15, 32
+PRINT "²°  ²°"
+
+LOCATE 15, 43
+PRINT "²°  ²°"
 
 LOCATE 12, 39
-COLOR 8
+COLOR 15
 PRINT "***"
 
 LOCATE 13, 39
 COLOR 6
-PRINT "W W"
+PRINT "Ý Ý"
 
 END SUB
 
@@ -4489,8 +4505,12 @@ SUB EnemyHPBar 'Barra HP del enemigo
 EnemyHPPercentage = (enemyDF / EnemyMaxDF) * 100
 EnemyHPPercentage = EnemyHPPercentage / 10
 
+COLOR 4
+LOCATE , 1
+PRINT "ÜÜÜÜÜÜÜÜÜÜ"
+
 xloop = 1
-DO UNTIL xloop >= EnemyHPPercentage
+DO UNTIL xloop >= EnemyHPPercentage + 1
 
 IF EnemyHPPercentage > 0 THEN
 xcolor = 4
@@ -4504,7 +4524,7 @@ END IF
 
 COLOR xcolor
 
-LOCATE , xloop + 1
+LOCATE , xloop + 0
 PRINT "²";
 xloop = xloop + 1
 row% = row% - 1
@@ -4989,28 +5009,27 @@ END SUB
 
 SUB HPBar '========== BARRAS
 
-'HPPercentage [Boolean] can change the bar location when activated [1].
+'BarChangeLocation [Boolean] can change the bar location when activated [1].
 'Use variables Xvalue and Yvalue for passing location coordinates.
 
-' Variable % de HP declarada como SHARED INTEGER.
+'Variable % de HP declarada como SHARED INTEGER.
 
 HPPercentage = (HP / MaxHP) * 100
 HPPercentage = HPPercentage / 10
 
-' Para sacar % de un número respecto de otro, realizar división
+' Para sacar % de un numero respecto de otro, realizar division
 ' del primero por el segundo y, posteriormente, multiplicar por 100.
 
 ' Por ejemplo, si queremos saber qué % supone una rebaja de 2 EUR
 'respecto de 10 EUR hacemos (2/10) * 100 = 20%
-
-
-IF HPChangeLocation = 1 THEN
+ 
+IF BarChangeLocation = 1 THEN
 COLOR 7
 LOCATE Xvalue, Yvalue + 1
 PRINT "°°°°°°°°°°"
 END IF
 
-IF HPChangeLocation = 0 THEN
+IF BarChangeLocation = 0 THEN
 COLOR 2
 LOCATE , 1
 PRINT "ÜÜÜÜÜÜÜÜÜÜ"
@@ -5033,11 +5052,11 @@ END IF
 
 COLOR xcolor
 
-IF HPChangeLocation = 1 THEN
+IF BarChangeLocation = 1 THEN
 LOCATE Xvalue, xloop + Yvalue
 END IF
 
-IF HPChangeLocation = 0 THEN
+IF BarChangeLocation = 0 THEN
 LOCATE , xloop + 0
 END IF
 
@@ -5045,7 +5064,7 @@ PRINT "²";
 xloop = xloop + 1
 LOOP
 
-HPChangeLocation = 0
+BarChangeLocation = 0
 END SUB
 
 SUB Information
@@ -5277,6 +5296,51 @@ END IF
 LOCATE 10, 1
 COLOR 15, 0
 INPUT "Choose an option: ", opcion
+
+END SUB
+
+SUB ManaBar
+
+MANAPercentage = (MANA / MaxMana) * 100
+MANAPercentage = MANAPercentage / 10
+
+IF BarChangeLocation = 1 THEN
+COLOR 7
+LOCATE Xvalue, Yvalue + 1
+PRINT "°°°°°°°°°°"
+END IF
+
+
+xloop = 1
+
+DO UNTIL xloop >= MANAPercentage + 1
+
+IF MANAPercentage > 0 THEN
+xcolor = 1
+END IF
+IF MANAPercentage > 3 THEN
+xcolor = 1
+END IF
+IF MANAPercentage > 6 THEN
+xcolor = 1
+END IF
+
+COLOR xcolor
+
+IF BarChangeLocation = 1 THEN
+LOCATE Xvalue, xloop + Yvalue
+END IF
+
+IF BarChangeLocation = 0 THEN
+LOCATE , xloop + 0
+END IF
+
+PRINT "²";
+xloop = xloop + 1
+LOOP
+
+BarChangeLocation = 0
+
 
 END SUB
 
