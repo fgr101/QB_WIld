@@ -1,45 +1,26 @@
-Version 0.1
+ V 0.6
 
-- Very basic prototype of the game created.
-- Basic D6 mechanics implemented.
-- Enemies added and fighting mechanics.
-- Randomized map added.
-- First parts of the story added.
-
-Version 0.2
-
-- Code structure improved (Organized in subs and functions) ---> Suggested by @amonroejj
-- Simple and small sounds added.
-- 'DECISIONS' made by the player added.
-
-Version 0.3
-
-- ?????????
-- ?????????
-- ?????????
-- ?????????
-
-Version 0.4
-
-- Cities added
-- Cities system and options under development
-- Random number of cities (1 to 6)
-- Random location of the cities in the map.
-- Cities aren't shown until you discover them.
-- "YOU DISCOVERED A CITY!" tex box when a city is found.
-- HOTEL added to the cities.
-- You can rest and spend the night at the HOTEL.
-- LOCAL BAR added to cities
-- You can HAVE A BEER at the bar
-- You can BET at the bar
-- You can FIGHT at the bar
-- You can TALK TO STRANGERS at the bar.
-- GYM/TRAINING GROUND added to cities
-- You can train and improve your skills at the TRAINING GROUND.
-- OPTIONS: Music ON/OFF added. (during the game and in the main menu)
-- Main menu and some visual details of the game improved.
-- CHARACTER screen added (Statistics and Information about the character)
-
+- Most problems with memory SOLVED.
+- Big chunks of text organized in TXT files and loaded when needed.
+- Notes and version information was taken out from the main BAS file
+  and stored in a separate TXT file called NOTES.TXT.
+- Pieces of text describing the character's death or how
+  he or she was able to survive and got another chance.
+- ASCII D6 DIE animation added. You can stop rolling it
+  by pressing the SPACE BAR, will generate a D6 value.
+- You have the chance to survive death by rolling a D6.
+  4, 5, 6 means you survive, 1, 2, 3 you cannot resist.
+- Visual effects when the character dies.
+- Crawller - ASCII graphic added.
+- ASCII STATS BARS added for HP during combat and other screens.
+- Whenever you find a WITCH in the middle of the path you can choose
+  to walk towards her or just to walk away. If you encounter a witch, a
+  D6 will be rolled and three different situations can be triggered from it.
+- Surviving Death: Negative consequences added, for instance you can
+  survive but will lose all your gold, XP points, get only some HP pts
+  restored, etc. Consequences are described in the screen.
+- ASCII STATS BARS added for MANA in different screens but not in battle.
+- Scorpion - ASCII graphic improved.
 
 v 0.5
 
@@ -85,19 +66,45 @@ v 0.5
 - LOOK AROUND: A text describing the area is randomly generated.
   It needs to be improved and needs to be expanded with more words
   and some other alternative paragraphs.
-  
- V 0.6
 
-- ASCII STATS BARS added for HP during combat and other screens.
-- Crawller - ASCII graphic added.
-- Visual effects when the character dies.
-- You have the chance to survive death by rolling a D6.
-  4, 5, 6 means you survive, 1, 2, 3 you cannot resist.
-- ASCII D6 DIE animation added. You can stop rolling it
-  by pressing the SPACE BAR, will generate a D6 value.
-- Pieces of text describing the character's death or how
-  he or she was able to survive and got another chance.
-- Notes and version information was taken out from the main BAS file
-  and stored in a separate TXT file called NOTES.TXT.
-- Big chunks of text organized in TXT files and loaded when needed.
-- Most problems with memory SOLVED.
+Version 0.4
+
+- Cities added
+- Cities system and options under development
+- Random number of cities (1 to 6)
+- Random location of the cities in the map.
+- Cities aren't shown until you discover them.
+- "YOU DISCOVERED A CITY!" tex box when a city is found.
+- HOTEL added to the cities.
+- You can rest and spend the night at the HOTEL.
+- LOCAL BAR added to cities
+- You can HAVE A BEER at the bar
+- You can BET at the bar
+- You can FIGHT at the bar
+- You can TALK TO STRANGERS at the bar.
+- GYM/TRAINING GROUND added to cities
+- You can train and improve your skills at the TRAINING GROUND.
+- OPTIONS: Music ON/OFF added. (during the game and in the main menu)
+- Main menu and some visual details of the game improved.
+- CHARACTER screen added (Statistics and Information about the character)
+
+Version 0.3
+
+- ?????????
+- ?????????
+- ?????????
+- ?????????
+
+Version 0.2
+
+- Code structure improved (Organized in subs and functions) ---> Suggested by @amonroejj
+- Simple and small sounds added.
+- 'DECISIONS' made by the player added.
+
+Version 0.1
+
+- Very basic prototype of the game created.
+- Basic D6 mechanics implemented.
+- Enemies added and fighting mechanics.
+- Randomized map added.
+- First parts of the story added.
