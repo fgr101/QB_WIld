@@ -1,10 +1,19 @@
-NOTES
+' ================================NOTES.TXT==================================
+
+' - MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
+'   TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO. OK
+
+' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
+'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
+'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC. OK
 
 ' - AGREGAR `DRINK' AL ATAQUE JUNTO CON ATTACK Y CHARGE.
-'   INTERCAMBIAS HITPOINTS POR HP. LUEGO EL ENEMIGO PUEDE ATACARTE.
+'   INTERCAMBIAR HITPOINTS POR HP. LUEGO EL ENEMIGO PUEDE ATACARTE.
+'   QUE EL ENEMIGO PUEDA USAR CHARGE, AMBOS PIERDEN VIDA SI USAN CHARGE
+'   AL MISMO TIEMPO.
 
-' - PREGUNTAR SI REALMENTE DESEAS ACERCARTE A LA BRUJA.
-' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES]
+' - PREGUNTAR SI REALMENTE DESEAS ACERCARTE A LA BRUJA. OK
+' - TERMINAR DE DESARROLLAR LA PARTE DE LA BRUJA. [DECISIONES] CASI
 ' - AGREGAR UN INGREDIENTE MAS EN PARTE DE LA BRUJA.
 
 ' - DESARROLLAR DESCRIPCION DEL TERRENO AUTOMATICA.
@@ -20,13 +29,8 @@ NOTES
 ' - AGREGAR BATALLAS CONTRA LOS MAGOS OSCUROS.
 ' - LLEGAR AL NIVEL 50.
 
-' - MEJORAR EL GAME OVER DEL JUEGO, QUE HAYA POSIBILIDADES DE CONTINUAR.
-'   TAL VEZ UNO O DOS CONTINUES. QUE PIERDAS ORO, ITEMS, TODO.
-' - AL MORIR SE TIRA EL DADO, PUEDEN HABER 6 CHANCES DIFERENTES DE FINALES
-'   PERDER TODO EL ORO Y LOS ITEMS, SER RESCATADO POR ALGUIEN, MORIR, SER SALVADO
-'   POR LOS DIOSES DE LA NATURALEZA. ETC. ETC.
-
 ' - AGREGAR DETALLES Y GRAFICOS ASCII
+
 ' - AGREGAR COMO EN STEAM, LOGROS DESBLOQUEABLES A ALCANZAR EN EL JUEGO.
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (BAR).
 ' - AGREGAR CONVERSACIONES EN TALK TO STRANGERS (CITY).
@@ -34,8 +38,12 @@ NOTES
 ' - AGREGAR PELEA DE PRACTICA EN EL GIMNASIO DE LA CIUDAD, CON VALORES
 '   ALEATORIOS.
 ' - DESARROLLAR LAS 6 SITUACIONES DE `DECISIONES' EN EL JUEGO.
+
 ' - AGREGAR ALGUNAS TORRES EN EL MAPA EN DONDE PUEDAS ENTRAR Y
 '   ENFRENTAR A ALGUN ENEMIGO MUCHO MAS FUERTE.
+' - AL ENTRAR EN ESTAS TORRES APARECEN UN NUMERO DE ENEMIGOS, UNO TRAS OTRO
+'   LOS CUALES DEBEN SER DERROTADOS EN FILA. PREGUNTAR AL JUGADOR SI DESEA
+'   ENTRAR A LA TORRE O NO.
 
 ' - CONTINUAR DESARROLLANDO LA HISTORIA
 ' - CREAR EVENTOS DE DECISIONES - EL JUGADOR ELIGE ENTRE VARIAS OPCIONES
@@ -67,6 +75,31 @@ NOTES
 '================================================
 '                     VERSIONS
 '================================================
+
+' V 0.6
+
+' - Scorpion - ASCII graphic improved.
+' - ASCII STATS BARS added for MANA in different screens but not in battle.
+' - Surviving Death: Negative consequences added, for instance you can
+'   survive but will lose all your gold, XP points, get only some HP pts
+'   restored, etc. Consequences are described in the screen.
+' - Whenever you find a WITCH in the middle of the path you can choose
+'   to walk towards her or just to walk away. If you encounter a witch, a
+'   D6 will be rolled and three different situations can be triggered from it.
+' - ASCII STATS BARS added for HP during combat and other screens.
+' - Crawller - ASCII graphic added.
+' - Visual effects when the character dies.
+' - You have the chance to survive death by rolling a D6.
+'   4, 5, 6 means you survive, 1, 2, 3 you cannot resist.
+' - ASCII D6 DIE animation added. You can stop rolling it
+'   by pressing the SPACE BAR, will generate a D6 value.
+' - Pieces of text describing the character's death or how
+'   he or she was able to survive and got another chance.
+' - Notes and version information was taken out from the main BAS file
+'   and stored in a separate TXT file called NOTES.TXT.
+' - Big chunks of text organized in TXT files and loaded when needed.
+' - Most problems with memory SOLVED.
+
 
 'v 0.5
 
