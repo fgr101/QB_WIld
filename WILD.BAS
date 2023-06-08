@@ -1,6 +1,6 @@
-DECLARE SUB ManaBar ()
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB ManaBar ()
 DECLARE SUB MainMenu ()
 DECLARE SUB GameIntro1 ()
 
@@ -73,7 +73,7 @@ DIM SHARED DatFile$, D6DieX, D6DieY
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
-DIM SHARED OptionMusic, barfight, line$(25)
+DIM SHARED OptionMusic, barfight, line$(30)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
 DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
 
@@ -5325,9 +5325,11 @@ SUB LoadTXT
 OPEN DatFile$ FOR INPUT AS #1
 
 loopx = 0
-DO UNTIL loopx = 9
-INPUT #1, line$(loopx)
-loopx = loopx + 1
+DO UNTIL loopx = 30
+
+	INPUT #1, line$(loopx)
+	loopx = loopx + 1
+
 LOOP
 
 CLOSE #1
@@ -5823,10 +5825,19 @@ SUB PrintLines
 
 loopx = 0               '========= LOOP for printing the line$() ARRAY
 
-DO UNTIL loopx = 24
+DO UNTIL loopx = 25
+
+ IF line$(loopx) = "****" THEN
+
+	PRINT
+	GOTO SkipLine
+
+ END IF
 
  IF line$(loopx) = "" THEN
- GOTO SkipLine
+
+	GOTO SkipLine
+
  END IF
 
  Pause
@@ -5843,7 +5854,7 @@ LOOP
 
 loopx = 0
 
-DO UNTIL loopx = 24
+DO UNTIL loopx = 25
 line$(loopx) = ""
 loopx = loopx + 1
 LOOP
