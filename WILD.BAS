@@ -73,7 +73,7 @@ DIM SHARED DatFile$, D6DieX, D6DieY
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
-DIM SHARED OptionMusic, barfight, line$(30)
+DIM SHARED OptionMusic, barfight, line$(40)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
 DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
 
