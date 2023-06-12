@@ -5519,14 +5519,13 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "Some meters ahead you see it... it was a brown spider! As you "
-	line$(2) = "make your way forward, your eyes catch something in the distance."
-	line$(3) = "Just a few meters ahead, perched delicately on a web, is a brown"
-	line$(4) = "spider. Its spindly legs quiver with anticipation, and its eight"
-	line$(5) = "beady eyes lock onto your presence. A wave of unease washes over"
-	line$(6) = "you as you realize the potential danger. The thought of its venomous"
-	line$(7) = "bite sends a chill down your spine, and you instinctively take a step"
-	line$(8) = "back. (-3 HP)"
+	line$(1) = "As you make your way forward, your eyes catch something in the distance."
+	line$(2) = "Just a few meters ahead, perched delicately on a web, is a brown"
+	line$(3) = "spider. Its spindly legs quiver with anticipation, and its eight"
+	line$(4) = "beady eyes lock onto your presence. A wave of unease washes over"
+	line$(5) = "you as you realize the potential danger. The thought of its venomous"
+	line$(6) = "bite sends a chill down your spine, and you instinctively take a step"
+	line$(7) = "back. (-3 HP)"
 	
 	PrintLines
 
@@ -5542,8 +5541,12 @@ PRINT "Die:"; d1;
 	IF d1 = 3 THEN
 	COLOR 10
 	
-	line$(1) = "You don't see anything... well maybe it was just a plant or a rock."
-	line$(2) = "The pain goes away..."
+	line$(1) = "Scanning the surroundings for any signs of danger, you find nothing"
+	line$(2) = "that matches your initial suspicion. It appears that your fears may have"
+	line$(3) = "been unfounded, and the pain in your leg gradually diminishes. Perhaps it"
+	line$(4) = "was nothing more than a harmless encounter with a plant or a rock, causing"
+	line$(5) = "only a minor scrape or bruise. You shake off the unease that had settled"
+	line$(6) = "within you and continue walking."
 
 	PrintLines
 
@@ -5557,8 +5560,11 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "It hurst a lot at the beginning! Then it feels better but the area"
-	line$(2) = "seems to be infected... It's swelling! "
+	line$(1) = "The initial pain in your leg intensifies, causing you to wince and"
+	line$(2) = "grip your throbbing limb. The discomfort is unbearable at first, making"
+	line$(3) = "you fear the worst. However, as time passes, the sharp agony gradually"
+	line$(4) = "subsides, replaced by a dull ache. Despite the diminishing pain, a new"
+	line$(5) = "concern arises — the area around the bite begins to show signs of infection."
 	
 	PrintLines
 
