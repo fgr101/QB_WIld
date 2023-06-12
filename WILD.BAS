@@ -5497,7 +5497,12 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "Some meters ahead you see it... it was a snake! (-6 HP)"
+	line$(1) = "As you move forward, a chilling sight meets your gaze."
+	line$(2) = "Just a few meters ahead, coiled and ready to strike, is"
+	line$(3) = "the slithering form of a snake. Its scales glisten with"
+	line$(4) = "a malevolent sheen, and its eyes fixate on you with predatory"
+	line$(5) = "intent. Fear grips your heart, and a primal instinct urges"
+	line$(6) = "you to retreat. (-6 HP)"
 
 	PrintLines
 
@@ -5514,7 +5519,14 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "Some meters ahead you see it... it was a brown spider! (-3 HP)"
+	line$(1) = "Some meters ahead you see it... it was a brown spider! As you "
+	line$(2) = "make your way forward, your eyes catch something in the distance."
+	line$(3) = "Just a few meters ahead, perched delicately on a web, is a brown"
+	line$(4) = "spider. Its spindly legs quiver with anticipation, and its eight"
+	line$(5) = "beady eyes lock onto your presence. A wave of unease washes over"
+	line$(6) = "you as you realize the potential danger. The thought of its venomous"
+	line$(7) = "bite sends a chill down your spine, and you instinctively take a step"
+	line$(8) = "back. (-3 HP)"
 	
 	PrintLines
 
