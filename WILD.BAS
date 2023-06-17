@@ -5588,7 +5588,10 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "Oh... it's nothing. Probably you cut your leg against a rock."
+	line$(1) = "You cautiously examine your leg, searching for any visible signs of damage."
+	line$(2) = "- Oh... it's nothing - you mutter, trying to dismiss the discomfort that lingers"
+	line$(3) = "in your leg. Rationalizing the pain, you convince yourself that it must have been"
+	line$(4) = "a mere scrape against a rock. A small, inconsequential accident, you assure yourself."
 
 	PrintLines
 
