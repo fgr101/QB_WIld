@@ -5855,6 +5855,14 @@ DO UNTIL loopx = 25
 
  END IF
 
+ IF line$(loopx) = "WaitKey" THEN
+
+	WaitKey
+	GOTO SkipLine
+
+ END IF
+
+
  IF line$(loopx) = "" THEN
 
 	GOTO SkipLine
