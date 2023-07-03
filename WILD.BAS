@@ -5259,8 +5259,10 @@ SUB Intro
 
 LOCATE 11, 34
 PRINT "LOADING..."
-PLAY IntroMusic$
 
+PLAY IntroMusic$
+DatFile$ = "INTRO.DAT"
+LoadTXT
 CLS
 
 COLOR 4
@@ -5271,73 +5273,8 @@ LOCATE 23, 1
 PRINT "같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같같"
 
 COLOR 14
-
 LOCATE 3, 1
-PRINT "Welcome explorer. Welcome to savage lands, inhabited by peaceful farmers "
-Pause
-LOCATE 4, 1
-PRINT "and villagers but also by the most awful, violent and repulsive creatures"
-Pause
-LOCATE 5, 1
-PRINT "never seen."
-PRINT
-
-PLAY Chime$
-
-DO WHILE INKEY$ = ""
-LOOP
-
-PRINT
-LOCATE 7, 1
-PRINT "The folklore and stories told by the peasants here are full of ghosts"
-Pause
-LOCATE 8, 1
-PRINT "stories, demons, witchery and satanic rituals."
-PRINT
-
-PLAY Chime$
-
-
-DO WHILE INKEY$ = ""
-LOOP
-
-LOCATE 10, 1
-PRINT "So that's why you are here. You've been an explorer all your life, a"
-Pause
-LOCATE 11, 1
-PRINT "demon hunter and one who knows all about rituals done by the dark side."
-Pause
-LOCATE 12, 1
-PRINT "You are here for curiosity but also because they promise a lot of money,"
-Pause
-LOCATE 13, 1
-PRINT "gold taken directly from their mines, to that one who can eliminate The"
-Pause
-LOCATE 14, 1
-PRINT "Order, a satanic group that lives hidden in the wild forests, swamps and"
-Pause
-LOCATE 15, 1
-PRINT "mountains."
-PRINT
-
-PLAY Chime$
-
-DO WHILE INKEY$ = ""
-LOOP
-
-LOCATE 17, 1
-PRINT "All along the history of this region, they've committed hundreds of atrocities"
-Pause
-LOCATE 18, 1
-PRINT "in the name of evil, in order to carry out their dark rituals performed by the"
-Pause
-LOCATE 19, 1
-PRINT "use of human blood and flesh."
-
-PLAY Chime$
-
-DO WHILE INKEY$ = ""
-LOOP
+PrintLines
 
 END SUB
 
