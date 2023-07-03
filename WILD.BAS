@@ -1,5 +1,8 @@
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB DrawDemon ()
+DECLARE SUB PrintIMG ()
+
 DECLARE SUB ManaBar ()
 DECLARE SUB MainMenu ()
 DECLARE SUB GameIntro1 ()
@@ -2272,8 +2275,10 @@ GOTO inicio
 END IF
 
 SUB About
+DrawDemon
 
-CLS
+COLOR 15
+LOCATE 1, 1
 
 PRINT
 Pause
@@ -2443,10 +2448,10 @@ BetEndOfSub:
 END SUB
 
 SUB Challenges
+DrawDemon
 
-CLS
-
-COLOR 4
+COLOR 7
+LOCATE 1, 1
 
 IF FindACity = 1 THEN
 COLOR 10
@@ -2456,7 +2461,7 @@ Pause
 PRINT
 PRINT "# Find a city for the first time."
 
-COLOR 4
+COLOR 7
 
 IF OneHundredGold = 1 THEN
 COLOR 10
@@ -2465,7 +2470,7 @@ END IF
 Pause
 PRINT "# Get 100 gold."
 
-COLOR 4
+COLOR 7
 
 IF OneThousandGold = 1 THEN
 COLOR 10
@@ -2474,7 +2479,7 @@ END IF
 Pause
 PRINT "# Get 1000 gold."
 
-COLOR 4
+COLOR 7
 
 IF ReachLevelTen = 1 THEN
 COLOR 10
@@ -4105,6 +4110,56 @@ PRINT "þ"
 
 END SUB
 
+SUB DrawDemon
+
+CLS
+
+DatFile$ = "IMGMENU.DAT"
+LoadTXT
+
+COLOR 4, 0
+PrintIMG
+
+xloop = 0
+
+DO UNTIL xloop = 50
+
+	COLOR 4
+
+	d2 = INT(RND * 23) + 1
+	d1 = INT(RND * 22) + 1
+
+	'°±²
+
+	LOCATE d2, d1
+	PRINT "° "
+
+	d1 = INT(RND * 23) + 1
+	d2 = INT(RND * 20) + 60
+
+	LOCATE d1, d2
+	PRINT " °"
+
+	xloop = xloop + 1
+
+LOOP
+
+COLOR 14
+LOCATE 10, 49
+PRINT "#"
+LOCATE 10, 36
+PRINT "#"
+
+LOCATE 20, 32
+COLOR 20
+PRINT "@ .@   @@@@ @.@@ .  @@"
+
+LOCATE 18, 27
+COLOR 20
+PRINT "   @@@%  &/(% &@ &%  &(@%@ "
+
+END SUB
+
 SUB DrawDesert
 COLOR 14
 LOCATE 1, 1
@@ -5339,74 +5394,7 @@ CLOSE #1
 END SUB
 
 SUB MainMenu
-
-COLOR 4, 0
-CLS
-
-CLS
-
-PRINT "///////*******,**,,*,,*,,@,,,@@&,,,@@&&,,,%@%&,,,&@,,,@@&*,,,,,,,,*,*******/////"
-PRINT "(//////*********,,,,,,,,@@@@@@&&,,,@&@@,,,&&%,,&&@,,,@@@@@,*,,,,,,**********////"
-PRINT "//////************,,,,#&@@@@@&&@&@@@@&@@& &@/%@@&&@&&@@@@@@*%,,,,,,*********////"
-PRINT "/////*****************/@@@@@@%@@@@@&&&&@& &&&.@@&@@&@@%@@@@//,,,,,,**********///"
-PRINT "//////**************,*/@@@@@@@@@@@@&&&&&% &&&/%@&@@%@%@@@@@*&,,,,,,**********///"
-PRINT "//////****************@(@@@@%@@%%&&&%##%( (&&%&@@%%%%@@@ @%*,,,,,,,**********///"
-PRINT "//////*****************(@@  @%@%&%%##/%%# &%##&%&@&&   @@@@,,,,,,,,**********///"
-PRINT "////*/*****************@%@@@ @%@&&&%(/##% %#(%%%%% @ @@&@&#,,,,,,,***********///"
-PRINT "//////*****************#@&&@@@ && #/#((/( #(/,%%(# #(&&@&@%*,,,,*************///"
-PRINT "///////***************@ @@@(&&&.,,(#/ /*, ,,*/ /#)..,&&%@@@@(,**************////"
-PRINT "((///////************* @ @@@@@% ., ./(/(( /#((%/*,...@@@@&@@#**************/////"
-PRINT "((((//////************(@@ &/&@@@@@@@@@@@% %@@@@@@@@@@@&#@@@@**************//////"
-PRINT "(((((////////***********&@ , &@@@@@@@@%#, .(#@@@@&@@@@&%#@#************/////////"
-PRINT "(((((///////*////*/**///*.@ &#%&@@@@@&**. ..,@@@&@@@//@@@**********///////////(("
-PRINT "(((((////////////////////%.@ &@*@(/@%*/#. .(//(%&%@# @&@@///////////////////(((("
-PRINT "((((((((/////////////////@ .@   /( &  @(/%#(@#% @ @ @@&@@//////////////////((((("
-PRINT "(((((/((////////////////#@ @@ @@&%&% %@@   @@/%@/     @@@(/////////////(///((((("
-PRINT "#(((((((((//////////////@@   @@@%  &/(% &@ &%  &(@%@ @@@@@////////////////(((((("
-PRINT "(#((((((((((((((////////@@@ @@@@ @@ @@ & */@%  %@@@@     @(///(///(//////((((((("
-PRINT "####((((((((((((/////((/@@@@@   @@@          @ @ @@  @@ @@@(((((/((((((((((((((("
-PRINT "#######((((((((((/(((((@@  @  @@@@   @@  @  @ @@ @@ @ @ @@@%(((((((((((((((((((("
-PRINT "########((((((((((((((@@@@@@@@@@@@@ @@@@@@@  @@@@@@@@@@@@@@@(((((((((((((((((((("
-PRINT "##########((((((#(@(((@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@(&((##(((((((((((((("
-
-xloop = 0
-
-DO UNTIL xloop = 50
-
-	COLOR 4
-	
-	d2 = INT(RND * 23) + 1
-	d1 = INT(RND * 22) + 1
-
-	'°±²
-
-	LOCATE d2, d1
-	PRINT "° "
-
-	d1 = INT(RND * 23) + 1
-	d2 = INT(RND * 20) + 60
-
-	LOCATE d1, d2
-	PRINT " °"
-
-	xloop = xloop + 1
-	
-LOOP
-
-COLOR 14
-LOCATE 10, 49
-PRINT "#"
-LOCATE 10, 36
-PRINT "#"
-
-LOCATE 20, 32
-COLOR 20
-PRINT "@ .@   @@@@ @.@@ .  @@"
-
-LOCATE 18, 27
-COLOR 20
-PRINT "   @@@%  &/(% &@ &%  &(@%@ "
-
+DrawDemon
 
 opcion = 0
 
@@ -5910,6 +5898,48 @@ WaitKey
 PositiveEnd:
 END SUB
 
+SUB PrintIMG
+
+'Sub routine that prints ASCII IMAGES.
+
+loopx = 0               '========= LOOP for printing the line$() ARRAY
+
+DO UNTIL loopx = 30
+
+	IF line$(loopx) = "WaitKey" THEN
+
+		WaitKey
+		GOTO SkipLineIMG
+
+	END IF
+
+	IF line$(loopx) = "" THEN
+
+		GOTO SkipLineIMG
+
+	END IF
+
+	PRINT line$(loopx)
+
+SkipLineIMG:
+
+	loopx = loopx + 1
+
+LOOP
+
+'++++++++++++++++++++ CLEAR STRING VARIABLES ++++++++++++++++++++++++++++++++
+
+loopx = 0
+
+DO UNTIL loopx = 25
+
+	line$(loopx) = ""
+	loopx = loopx + 1
+
+LOOP
+
+END SUB
+
 SUB PrintLines
 
 'Sub routine that prints text lines and the story lines.
@@ -5931,7 +5961,6 @@ DO UNTIL loopx = 25
 	GOTO SkipLine
 
  END IF
-
 
  IF line$(loopx) = "" THEN
 
