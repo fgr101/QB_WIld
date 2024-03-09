@@ -90,6 +90,8 @@
 
 * V 0.7
 
+- First wave of enemies: AT and DF values updated.
+- First wave of enemies: AT and DF randomized.
 - Music ON/OFF - Variable stored in config.dat
 - Option variables stored in config.dat. LOADED at the very beginning
   of the game and SAVED before exit.

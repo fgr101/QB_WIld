@@ -1,3 +1,4 @@
+DECLARE SUB RandomizeEnemy ()
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB Options ()
@@ -100,7 +101,8 @@ DIM SHARED YouAre$(25), its$(25), nameterrain$, WeatherText$
 
 ' ENEMIES VARIABLES
 
-DIM SHARED Enemyname$, enemyAT, enemyDF
+DIM SHARED Enemyname$, EnemyAT, EnemyDF, MaxEnemyAT, MaxEnemyDF
+
 
 DIM SHARED BarChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
 DIM SHARED Xvalue, Yvalue, WitchFight AS INTEGER
@@ -1249,115 +1251,125 @@ CALL Trans1
 d1 = rolld6
 
 IF d1 = 1 THEN
-Enemyname$ = "Wild Wolf"
-enemyAT = 3
-enemyDF = 5
+Enemyname$ = "Wild Wolf"   'RANDOMIZED --> OK
+
+MaxEnemyAT = 4
+MaxEnemyDF = 6
+RandomizeEnemy
 
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Demonic Black Panther"
-	enemyAT = 8
-	enemyDF = 10
+	EnemyAT = 8
+	EnemyDF = 10
 	END IF
 
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Mogmurch"
-	enemyAT = 38
-	enemyDF = 43
+	EnemyAT = 38
+	EnemyDF = 43
 	END IF
 	
 END IF
 
 IF d1 = 2 THEN
-Enemyname$ = "Wild Bugio"
-enemyAT = 4.5
-enemyDF = 6
+Enemyname$ = "Wild Bugio"  'RANDOMIZED --> OK
+
+MaxEnemyAT = 5
+MaxEnemyDF = 7
+RandomizeEnemy
 
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Damned Walker"
-	enemyAT = 7
-	enemyDF = 15
+	EnemyAT = 7
+	EnemyDF = 15
 	END IF
 
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Rat"
-	enemyAT = 26
-	enemyDF = 35
+	EnemyAT = 26
+	EnemyDF = 35
 	END IF
 
 END IF
 
 IF d1 = 3 THEN
-Enemyname$ = "Witch"
-enemyAT = 4
-enemyDF = 5.5
-	
+Enemyname$ = "Witch"  'RANDOMIZED --> OK
+
+MaxEnemyAT = 5
+MaxEnemyDF = 6
+RandomizeEnemy
+
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Tortured Soul"
-	enemyAT = 9
-	enemyDF = 12
+	EnemyAT = 9
+	EnemyDF = 12
 	END IF
 
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Spider"
-	enemyAT = 36
-	enemyDF = 40
+	EnemyAT = 36
+	EnemyDF = 40
 	END IF
 
 END IF
 
 IF d1 = 4 THEN
-Enemyname$ = "Crawler"
-enemyAT = 5
-enemyDF = 5
+Enemyname$ = "Crawler"  'RANDOMIZED --> OK
+
+MaxEnemyAT = 6
+MaxEnemyDF = 8
+RandomizeEnemy
 
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Giant Acid Centipede"
-	enemyAT = 11
-	enemyDF = 15
+	EnemyAT = 11
+	EnemyDF = 15
 	END IF
 
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Goblin"
-	enemyAT = 35
-	enemyDF = 59
+	EnemyAT = 35
+	EnemyDF = 59
 	END IF
 
 END IF
 
 IF d1 = 5 THEN
 Enemyname$ = "Criminal"
-enemyAT = 4
-enemyDF = 5
+EnemyAT = 5
+EnemyDF = 6
 
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Forest Demon"
-	enemyAT = 6
-	enemyDF = 10
+	EnemyAT = 6
+	EnemyDF = 10
 	END IF
 	
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Demonic Draco"
-	enemyAT = 11
-	enemyDF = 15
+	EnemyAT = 11
+	EnemyDF = 15
 	END IF
 
 END IF
 
 IF d1 = 6 THEN
 Enemyname$ = "Giant Scorpion"
-enemyAT = 6
-enemyDF = 7
+
+MaxEnemyAT = 7
+MaxEnemyDF = 8
+RandomizeEnemy
 
 	IF AT > 12 OR HP > 12 OR DF > 12 THEN
 	Enemyname$ = "Corrupted Soul"
-	enemyAT = 14
-	enemyDF = 16
+	EnemyAT = 14
+	EnemyDF = 16
 	END IF
 
 	IF AT > 22 OR HP > 22 OR DF > 22 THEN
 	Enemyname$ = "Giant Flying Centipede"
-	enemyAT = 19
-	enemyDF = 21
+	EnemyAT = 19
+	EnemyDF = 21
 	END IF
 
 END IF
@@ -1372,45 +1384,45 @@ IF barfight = 1 THEN     '================ BAR FIGHT =================
 		CASE 1
 		Enemyname$ = "Drunk Guy"
 		d1 = rolld6
-		enemyAT = 0 + d1
+		EnemyAT = 0 + d1
 		d1 = rolld6
-		enemyDF = 0 + d1
+		EnemyDF = 0 + d1
 	
 		CASE 2
 		Enemyname$ = "Random Guy"
 		d1 = rolld6
-		enemyAT = 5 + d1
+		EnemyAT = 5 + d1
 		d1 = rolld6
-		enemyDF = 5 + d1
+		EnemyDF = 5 + d1
 
 		CASE 3
 		Enemyname$ = "Strong Fat and Bald Guy"
 		d1 = rolld6
-		enemyAT = 10 + d1
+		EnemyAT = 10 + d1
 		d1 = rolld6
-		enemyDF = 10 + d1
+		EnemyDF = 10 + d1
 
 
 		CASE 4
 		Enemyname$ = "Guard"
 		d1 = rolld6
-		enemyAT = 15 + d1
+		EnemyAT = 15 + d1
 		d1 = rolld6
-		enemyDF = 15 + d1
+		EnemyDF = 15 + d1
 
 		CASE 5
 		Enemyname$ = "Huge Luciano"
 		d1 = rolld6
-		enemyAT = 20 + d1
+		EnemyAT = 20 + d1
 		d1 = rolld6
-		enemyDF = 20 + d1
+		EnemyDF = 20 + d1
 
 		CASE 6
 		Enemyname$ = "Soldier"
 		d1 = rolld6
-		enemyAT = 25 + d1
+		EnemyAT = 25 + d1
 		d1 = rolld6
-		enemyDF = 25 + d1
+		EnemyDF = 25 + d1
 
 
 	END SELECT
@@ -1419,12 +1431,12 @@ END IF
 
 IF WitchFight = 1 THEN   '================ WITCH FIGHT =================
 Enemyname$ = "Witch"
-enemyAT = 5
-enemyDF = 6.5
+EnemyAT = 5
+EnemyDF = 6.5
 WitchFight = 0
 END IF
 
-EnemyMaxDF = enemyDF
+EnemyMaxDF = EnemyDF
 
 ' ======================== FIGHT INTRO SCENE ============================
 
@@ -1443,7 +1455,7 @@ PRINT
 
 COLOR 4
 PRINT
-PRINT ; Enemyname$; ": HP ("; enemyDF; ") === DEF ("; enemyDF; ") / ATK ("; enemyAT; ")"
+PRINT ; Enemyname$; ": HP ("; EnemyDF; ") === DEF ("; EnemyDF; ") / ATK ("; EnemyAT; ")"
 CALL EnemyHPBar
 COLOR 2
 
@@ -1670,8 +1682,8 @@ SELECT CASE opcion
 	PRINT
 	PRINT "The enemy hurts itself too!"
 	PRINT "It loses half of its HP!"
-	enemyDF = enemyDF / 2
-	PRINT "Its HP is"; enemyDF; "now!"
+	EnemyDF = EnemyDF / 2
+	PRINT "Its HP is"; EnemyDF; "now!"
 	PRINT
 	
 	END IF
@@ -1708,7 +1720,7 @@ d1 = rolld6
 COLOR 3
 PRINT "Die (enemy defence):"; d1;
 COLOR 2
-def2 = enemyDF + d1
+def2 = EnemyDF + d1
 PRINT "Enemy Defence: "; def2
 finaldamage = damage1 - def2
 IF finaldamage < 0 THEN
@@ -1718,11 +1730,11 @@ COLOR 15
 PRINT "The "; Enemyname$; " receives"; finaldamage; "points of damage."
 COLOR 2
 
-enemyDF = enemyDF - finaldamage
+EnemyDF = EnemyDF - finaldamage
 
 PRINT
 
-IF enemyDF <= 0 THEN  'IF enemy's life is LESS OR EQUAL than 0 SHOW MESSAGE.
+IF EnemyDF <= 0 THEN  'IF enemy's life is LESS OR EQUAL than 0 SHOW MESSAGE.
 COLOR 15
 Pause
 PRINT "CRITICAL HIT!"
@@ -1736,7 +1748,7 @@ PRINT "--------------------------------------------"
 
 WaitKey
 
-IF enemyDF < 0 THEN    'IF enemy's life is less than 0 then SKIP enemy's
+IF EnemyDF < 0 THEN    'IF enemy's life is less than 0 then SKIP enemy's
 GOTO SkipEnemyAttack   'attack.
 END IF
 
@@ -1748,7 +1760,7 @@ d1 = rolld6
 COLOR 3
 PRINT "Die: "; d1;
 COLOR 2
-damageEN = enemyAT + d1
+damageEN = EnemyAT + d1
 PRINT "Enemy Damage: "; damageEN
 d1 = rolld6
 COLOR 3
@@ -1804,7 +1816,7 @@ IF HP <= 0 THEN
 GOTO GameOver
 END IF
 
-IF enemyDF <= 0 THEN                             'WHEN YOU WIN A COMBAT
+IF EnemyDF <= 0 THEN                             'WHEN YOU WIN A COMBAT
 PRINT
 COLOR 3
 Pause
@@ -1997,8 +2009,8 @@ INPUT "What will you do...", opcion
 				Pause
 				PRINT "You try to escape but can't. It seems you aren't fast enough for that."
 				Pause
-				PRINT "You receive "; enemyAT; " points of damage from "; Enemyname$; "."
-				HP = HP - enemyAT
+				PRINT "You receive "; EnemyAT; " points of damage from "; Enemyname$; "."
+				HP = HP - EnemyAT
 				Pause
 				PRINT "Your HP is "; HP; " now."
 				PRINT
@@ -2076,7 +2088,7 @@ INPUT "What will you do...", opcion
 
 		IF opcion = 1 AND MANA >= 3 THEN
 		MANA = MANA - 3
-		enemyDF = enemyDF - AT
+		EnemyDF = EnemyDF - AT
 		COLOR 15
 		PRINT
 		Pause
@@ -2086,7 +2098,7 @@ INPUT "What will you do...", opcion
 		Pause
 		PRINT "The "; Enemyname$; " gets "; AT; " points of damage!"
 		Pause
-		PRINT "Its HP is"; enemyDF; " now!"
+		PRINT "Its HP is"; EnemyDF; " now!"
 		PRINT
 		COLOR 2
 		Pause
@@ -4518,64 +4530,64 @@ SUB DrawTSoul '===== Draw Tortured Soul
 
 COLOR 4
 
-LOCATE 4, 29
-PRINT "תתתתתת°ת°ת°ת°ת°ת°תתתתתת"
 LOCATE 5, 29
-PRINT "תתתתת° ° ° ° ° ° °תתתתת"
+PRINT "תתתתתת°ת°ת°ת°ת°ת°תתתתתת"
 LOCATE 6, 29
-PRINT "תתת±°± ° ° ° ° ± ±°תתתת"
+PRINT "תתתתת° ° ° ° ° ° °תתתתת"
 LOCATE 7, 29
-PRINT "תתת°±²°°°° °°°°²±°ת°תתת"
+PRINT "תתת±°± ° ° ° ° ± ±°תתתת"
 LOCATE 8, 29
-PRINT "ת°ת°±²±±°° °°±±²°ת°ת°תת"
+PRINT "תתת°±²°°°° °°°°²±°ת°תתת"
 LOCATE 9, 29
-PRINT "°ת°ת°²±°°   °°±²°תת°ת°ת"
+PRINT "ת°ת°±²±±°° °°±±²°ת°ת°תת"
 LOCATE 10, 29
-PRINT "ת°ת°תת°  Û Û  °תת°ת°תת°"
+PRINT "°ת°ת°²±°°   °°±²°תת°ת°ת"
 LOCATE 11, 29
-PRINT "°ת°תתת± ‏ ° ‏ ±תתת°ת°ת°"
+PRINT "ת°ת°תת°  Û Û  °תת°ת°תת°"
 LOCATE 12, 29
-PRINT "ת°תתתת° ת ° ת °תתתת°ת°ת"
+PRINT "°ת°תתת± ‏ ° ‏ ±תתת°ת°ת°"
 LOCATE 13, 29
-PRINT "°תתתת±ß° ° ° °ß±תתתת°תת"
+PRINT "ת°תתתת° ת ° ת °תתתת°ת°ת"
 LOCATE 14, 29
-PRINT "תתתת° ° ° ° ° ° °תתתת°ת"
+PRINT "°תתתת±ß° ° ° °ß±תתתת°תת"
 LOCATE 15, 29
-PRINT "תת  ² Ý ±   ± Þ ± תתתתת"
+PRINT "תתתת° ° ° ° ° ° °תתתת°ת"
 LOCATE 16, 29
-PRINT "ת±°±° ° ° ° ° ° °±°±°תת"
+PRINT "תת  ² Ý ±   ± Þ ± תתתתת"
 LOCATE 17, 29
+PRINT "ת±°±° ° ° ° ° ° °±°±°תת"
+LOCATE 18, 29
 PRINT "°°±    ° ° ° °    ±°°°°"
 
 
 COLOR 14
-LOCATE 4, 35
+LOCATE 5, 35
 PRINT "° ° ° ° ° °"
-LOCATE 5, 34
+LOCATE 6, 34
 PRINT "° ° ° ° ° ° °"
-LOCATE 6, 32
-PRINT "±°± ° ° ° ° ± ±°"
 LOCATE 7, 32
+PRINT "±°± ° ° ° ° ± ±°"
+LOCATE 8, 32
 PRINT "°±²°°°° °°°°²±°"
-LOCATE 8, 30
+LOCATE 9, 30
 PRINT "° °±²±±°° °°±±²°"
-LOCATE 9, 29
+LOCATE 10, 29
 PRINT "° ° °²±°°   °°±²°"
 
 COLOR 15
-LOCATE 11, 37
+LOCATE 12, 37
 PRINT "‏ ° ‏"
-LOCATE 14, 34
-PRINT " ° ° ° ° °"
 LOCATE 15, 34
-PRINT " Ý ±   ± Þ"
+PRINT " ° ° ° ° °"
 LOCATE 16, 34
+PRINT " Ý ±   ± Þ"
+LOCATE 17, 34
 PRINT " ° ° ° ° °"
 
 COLOR 4
-LOCATE 8, 29
-PRINT "ת°ת"
 LOCATE 9, 29
+PRINT "ת°ת"
+LOCATE 10, 29
 PRINT "°ת°ת"
 
 END SUB
@@ -4718,7 +4730,7 @@ END SUB
 
 SUB EnemyHPBar 'Barra HP del enemigo
 
-EnemyHPPercentage = (enemyDF / EnemyMaxDF) * 100
+EnemyHPPercentage = (EnemyDF / EnemyMaxDF) * 100
 EnemyHPPercentage = EnemyHPPercentage / 10
 
 COLOR 4
@@ -4803,13 +4815,13 @@ IF Enemyname$ = "Wild Wolf" THEN
 LOCATE 5, 3
 PRINT Enemyname$; "!"
 LOCATE 6, 3
-PRINT "ATTACK:"; enemyAT
+PRINT "ATTACK:"; EnemyAT
 LOCATE 7, 3
-PRINT "DEFENCE:"; enemyDF
+PRINT "DEFENCE:"; EnemyDF
 GOTO Skip
 END IF
 
-PRINT Enemyname$; "! ATTACK:"; enemyAT; "DEFENCE:"; enemyDF
+PRINT Enemyname$; "! ATTACK:"; EnemyAT; "DEFENCE:"; EnemyDF
 
 Skip:
 
@@ -6097,6 +6109,14 @@ DO UNTIL loopx = 25
 line$(loopx) = ""
 loopx = loopx + 1
 LOOP
+
+END SUB
+
+SUB RandomizeEnemy
+
+RANDOMIZE TIMER
+EnemyAT = INT(RND * MaxEnemyAT) + 1
+EnemyDF = INT(RND * MaxEnemyDF) + 1
 
 END SUB
 
