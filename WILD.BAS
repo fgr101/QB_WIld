@@ -1,5 +1,8 @@
 '======================== SUBS AND FUNCTIONS =========================
 
+DECLARE SUB Options ()
+DECLARE SUB ExitAnimation ()
+
 DECLARE SUB DrawDemon ()
 DECLARE SUB PrintIMG ()
 
@@ -39,12 +42,17 @@ DECLARE SUB NewCityText ()
 DECLARE SUB TalkToStrangers ()
 DECLARE SUB BetGame ()
 
-' CHALLENGES:
+'CHALLENGES:
 
 DECLARE SUB SaveChallenges ()
 DECLARE SUB LoadChallenges ()
 DECLARE SUB CheckChallenges ()
 DECLARE SUB Challenges ()
+
+'CONFIG & OPTIONS:
+
+DECLARE SUB SaveConfig ()
+DECLARE SUB LoadConfig ()
 
 'FIGHT INTRO & ASCII DRAWINGS:
 
@@ -71,6 +79,8 @@ DECLARE FUNCTION rolld6 ()
 
 '| GLOBAL VARIABLES FOR SUBS |
 
+DIM SHARED GameSpeed AS INTEGER
+GameSpeed = 6000
 
 DIM SHARED DatFile$, D6DieX, D6DieY
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
@@ -98,7 +108,7 @@ DIM SHARED Chance$, endfight$, enemy$, Chime$, levelup$, NegativeMusic$, positiv
 DIM SHARED IntroMusic$
 
 OptionMusic = 1      'BOOLEAN for Music ON and OFF
-CALL Music           'CREATES Music string variables
+Music                'CREATES Music string variables
 
 '======================== CHALLENGES =========================
 DIM SHARED FindACity, OneHundredGold, OneThousandGold, ReachLevelTen
@@ -108,7 +118,8 @@ OneHundredGold = 0
 OneThousandGold = 0
 ReachLevelTen = 0
 
-CALL LoadChallenges
+LoadChallenges
+LoadConfig
 
 '======================== MAIN MENU =========================
 
@@ -116,56 +127,64 @@ MainMenu:
 
 MainMenu  'PRINTS THE MAIN MENU
 
-IF opcion = 1 THEN     'PASAR TODO A SELECT CASE
-GameIntro1
-GOTO startnewgame
-END IF
+SELECT CASE opcion  'MENU OPTIONS
 
-IF opcion = 2 THEN
-CALL Challenges
-GOTO MainMenu
-END IF
+	CASE 1
 
-IF opcion = 3 THEN
-CALL About
-GOTO MainMenu
-END IF
+		GameIntro1
+		GOTO startnewgame
 
-IF opcion = 4 THEN
-CALL SaveChallenges
-CLS
-END
-END IF
+	CASE 2
 
-IF opcion = 12 THEN
+		CALL Challenges
+		GOTO MainMenu
 
-	LOCATE , 2
+	CASE 3
 
-	IF OptionMusic = 1 THEN
+		CALL About
+		GOTO MainMenu
 
-	     OptionMusic = 0
-	     CALL Music
-	     PRINT "Music OFF"
-	     Pause
-	     GOTO MainMenu
+	CASE 4
 
-	END IF
+		Options
+		GOTO MainMenu
 
-	IF OptionMusic = 0 THEN
+	CASE 5
 
-	     OptionMusic = 1
-	     CALL Music
-	     PRINT "Music ON"
-	     Pause
-	     GOTO MainMenu
+		SaveChallenges
+		SaveConfig
+		ExitAnimation
+		END
 
-	END IF
+	CASE 12
 
-END IF
+		LOCATE , 2
 
-IF NOT (opcion = 1) AND NOT (opcion = 2) THEN
-GOTO MainMenu
-END IF
+		IF OptionMusic = 1 THEN
+
+			OptionMusic = 0
+			CALL Music
+			PRINT "Music OFF"
+			Pause
+			GOTO MainMenu
+
+		END IF
+
+		IF OptionMusic = 0 THEN
+
+		     OptionMusic = 1
+		     CALL Music
+		     PRINT "Music ON"
+		     Pause
+		     GOTO MainMenu
+
+		END IF
+
+	CASE ELSE
+
+		GOTO MainMenu
+
+END SELECT
 
 '======================== START NEW GAME =========================
 
@@ -4663,6 +4682,33 @@ PRINT
 
 END SUB
 
+SUB ExitAnimation
+
+x = 0
+DO UNTIL x = 3600
+d1 = INT(RND * 76) + 1
+d2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 4
+LOCATE d2, d1
+PRINT "±° °²"
+LOOP
+
+x = 0
+DO UNTIL x = 3600
+'RANDOMIZE TIMER
+d1 = INT(RND * 76) + 1
+d2 = INT(RND * 23) + 1
+x = x + 1
+COLOR 0
+LOCATE d2, d1
+PRINT "°± °²"
+LOOP
+
+CLS
+
+END SUB
+
 SUB FightIntro
 
 PRINT
@@ -5314,11 +5360,50 @@ CLOSE #1
 
 END SUB
 
+SUB LoadConfig
+'Checking FILES +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'If FILES don't exist the program creates them. ++++++++++++++++++++++++++++
+
+OPEN "config.dat" FOR BINARY AS #1
+
+IF LOF(1) = 0 THEN
+
+	CLOSE #1
+
+	OPEN "config.dat" FOR OUTPUT AS #1
+
+	loopx = 0
+
+	DO UNTIL loopx = 100
+
+		WRITE #1, ""
+		loopx = loopx + 1
+
+	LOOP
+
+	CLS
+	PRINT "Option file created..."
+	Pause
+
+END IF
+
+CLOSE #1
+
+OPEN "config.dat" FOR INPUT AS #1
+
+INPUT #1, GameSpeed
+INPUT #1, OptionMusic
+
+CLOSE #1
+
+END SUB
+
 SUB LoadTXT
 
 OPEN DatFile$ FOR INPUT AS #1
 
 loopx = 0
+
 DO UNTIL loopx = 30
 
 	INPUT #1, line$(loopx)
@@ -5347,7 +5432,10 @@ PRINT "2) ACHIEVEMENTS"
 LOCATE 9, 3
 PRINT "3) CREDITS"
 LOCATE 10, 3
-PRINT "4) EXIT"
+PRINT "4) CHANGE GAME SPEED"
+LOCATE 11, 3
+PRINT "5) EXIT"
+
 
 IF OptionMusic = 1 THEN
 COLOR 15, 4
@@ -5361,7 +5449,7 @@ LOCATE 2, 26
 PRINT "[12] Turn Sound ON"
 END IF
 
-LOCATE 12, 2
+LOCATE 13, 2
 COLOR 15, 0
 INPUT "Choose an option: ", opcion
 
@@ -5659,10 +5747,25 @@ LOOP
 
 END SUB
 
+SUB Options
+
+DrawDemon
+
+COLOR 15
+
+LOCATE 2, 1
+PRINT "Changing speed. Choose a number from 1 (fastest) to 10000 (slowest): ";
+INPUT GameSpeed
+
+SaveConfig
+
+
+END SUB
+
 SUB Pause
 pausex = 0
 
-DO UNTIL pausex = 10000
+DO UNTIL pausex = GameSpeed
 pausex = pausex + 1
 LOOP
 
@@ -5942,9 +6045,23 @@ WRITE #1, OneThousandGold
 WRITE #1, FindACity
 WRITE #1, ReachLevelTen
 
-
 LOCATE , 30
 PRINT "Challenges saved..."
+Pause
+CLOSE #1
+
+END SUB
+
+SUB SaveConfig
+'=================== SAVES CONFIG & OPTIONS VARIABLES  ======================
+
+OPEN "config.dat" FOR OUTPUT AS #1
+
+WRITE #1, GameSpeed
+WRITE #1, OptionMusic
+
+LOCATE , 30
+PRINT "Option file updated..."
 Pause
 CLOSE #1
 
