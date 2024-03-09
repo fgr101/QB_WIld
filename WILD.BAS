@@ -14,12 +14,15 @@ DECLARE SUB LoadTXT ()
 
 DECLARE SUB GenDescription ()
 DECLARE SUB WaitKey ()
+
 DECLARE SUB DrawSwamp ()
 DECLARE SUB DrawDesert ()
 DECLARE SUB DrawIcons ()
 DECLARE SUB PositiveSub ()
 DECLARE SUB DrawWolf ()
 DECLARE SUB DrawMountains ()
+DECLARE SUB DrawTSoul ()
+
 DECLARE SUB PrintLines ()
 DECLARE SUB NegativeSub ()
 DECLARE SUB Negative ()
@@ -4511,6 +4514,72 @@ PRINT "°°²°²°²°°²°±°²°°²±±²°±±°±°±°°±°±°²° [SWAMP] °²°°°±°±°°±°±°²°°°²°°±°°±°°±²
 
 END SUB
 
+SUB DrawTSoul '===== Draw Tortured Soul
+
+COLOR 4
+
+LOCATE 4, 29
+PRINT "תתתתתת°ת°ת°ת°ת°ת°תתתתתת"
+LOCATE 5, 29
+PRINT "תתתתת° ° ° ° ° ° °תתתתת"
+LOCATE 6, 29
+PRINT "תתת±°± ° ° ° ° ± ±°תתתת"
+LOCATE 7, 29
+PRINT "תתת°±²°°°° °°°°²±°ת°תתת"
+LOCATE 8, 29
+PRINT "ת°ת°±²±±°° °°±±²°ת°ת°תת"
+LOCATE 9, 29
+PRINT "°ת°ת°²±°°   °°±²°תת°ת°ת"
+LOCATE 10, 29
+PRINT "ת°ת°תת°  Û Û  °תת°ת°תת°"
+LOCATE 11, 29
+PRINT "°ת°תתת± ‏ ° ‏ ±תתת°ת°ת°"
+LOCATE 12, 29
+PRINT "ת°תתתת° ת ° ת °תתתת°ת°ת"
+LOCATE 13, 29
+PRINT "°תתתת±ß° ° ° °ß±תתתת°תת"
+LOCATE 14, 29
+PRINT "תתתת° ° ° ° ° ° °תתתת°ת"
+LOCATE 15, 29
+PRINT "תת  ² Ý ±   ± Þ ± תתתתת"
+LOCATE 16, 29
+PRINT "ת±°±° ° ° ° ° ° °±°±°תת"
+LOCATE 17, 29
+PRINT "°°±    ° ° ° °    ±°°°°"
+
+
+COLOR 14
+LOCATE 4, 35
+PRINT "° ° ° ° ° °"
+LOCATE 5, 34
+PRINT "° ° ° ° ° ° °"
+LOCATE 6, 32
+PRINT "±°± ° ° ° ° ± ±°"
+LOCATE 7, 32
+PRINT "°±²°°°° °°°°²±°"
+LOCATE 8, 30
+PRINT "° °±²±±°° °°±±²°"
+LOCATE 9, 29
+PRINT "° ° °²±°°   °°±²°"
+
+COLOR 15
+LOCATE 11, 37
+PRINT "‏ ° ‏"
+LOCATE 14, 34
+PRINT " ° ° ° ° °"
+LOCATE 15, 34
+PRINT " Ý ±   ± Þ"
+LOCATE 16, 34
+PRINT " ° ° ° ° °"
+
+COLOR 4
+LOCATE 8, 29
+PRINT "ת°ת"
+LOCATE 9, 29
+PRINT "°ת°ת"
+
+END SUB
+
 SUB DrawWitch
 
 
@@ -4917,9 +4986,11 @@ IF Enemyname$ = "Wild Bugio" THEN
 CALL DrawBugio
 END IF
 
-DO WHILE INKEY$ = ""
-LOOP
+IF Enemyname$ = "Tortured Soul" THEN
+CALL DrawTSoul
+END IF
 
+WaitKey
 CLS
 
 END SUB

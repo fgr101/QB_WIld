@@ -2,6 +2,22 @@
                               WILD -NOTES
 ========================================================================
 
+- Crear un apartado como si fuese el POKEDEX con la imagen ASCII de los
+  enemigos e informaciones o algun texto. Que se pueda acceder desde el
+  menu principal y desde el juego. Foto + Info + Texto o relato. Que haya
+  un texto como en las Magic. Para ganar, desbloquear cada enemigo y que
+  aparezca, hay que vencerlos en las batallas.
+
+
+- CREAR DUNGEONS Y CASTILLOS EN DONDE PUEDES ENTRAR, LOS DUNGEONS
+  POSEEN ENTRE 1 Y 6 HABITACIONES (D6), EN CADA UNA DE ESTAS HABITACIONES
+  PUEDEN ENCONTRAR ALGO POSITIVO: UN ITEM, ORO, PUNTOS DE XP, ETC. O
+  PUEDES ENCONTRAR ENEMIGOS PARA LUCHAR UNO DETRÁS DEL OTRO. CREAR UN
+  TIPO DE DUNGEON EN DONDE SOLO SE ENCUENTREN ENEMIGOS Y AL FINAL HAYA
+  UN TESORO, UNA RECOMPENSA QUE PODRÍA SER ORO. ESTOS LUGARES PODRÍAN
+  SER "NIDOS". PUEDEN HABER "NIDOS", "CASTILLOS" Y  "MAZMORRAS" CADA UNO
+  DE LOS LUGARES CON LOGICAS Y MECÁNICAS DIFERENTES.
+  
 - MEJORAR TEXTOS USANDO IA
 - AGREGAR NUEVAS IMAGENES ASCII DE ENEMIGOS
 
