@@ -2,7 +2,9 @@
                               WILD -NOTES
 ========================================================================
 
-- 
+MAKE TEXT SIMPLER AND BETTER USING AI
+
+- NEG1.DAT, NEG2.DAT, NEG3.DAT, NEG3B, NEG3F.DAT, NEG6.DAT [OK]
 
 - Crear un apartado como si fuese el POKEDEX con la imagen ASCII de los
   enemigos e informaciones o algun texto. Que se pueda acceder desde el
@@ -10,10 +12,6 @@
   un texto como en las Magic. Para ganar, desbloquear cada enemigo y que
   aparezca, hay que vencerlos en las batallas.
 
-- CREAR MERCADOS, EN DONDE PUEDAS ENTRAR. ESTOS MERCADOS SON GRANDES CARPAS
-  A LOS LADOS DEL CAMINO O ENTRE LOS ARBOLES, ENTRE LAS MONTAÑAS. EN DONDE
-  GITANOS VENDEN TODO TIPO DE ITEMS. PUEDES INGRESAR AL LUGAR Y COMPRAR 
-  POCIONES, BALAS, MANA, ETC.
 
 - CREAR DUNGEONS Y CASTILLOS EN DONDE PUEDES ENTRAR, LOS DUNGEONS
   POSEEN ENTRE 1 Y 6 HABITACIONES (D6), EN CADA UNA DE ESTAS HABITACIONES
