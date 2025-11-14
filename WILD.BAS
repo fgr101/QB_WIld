@@ -1,4 +1,8 @@
+DECLARE SUB FightTrouble ()
+DECLARE SUB LoadLongTXT ()
+DECLARE SUB Newspaper ()
 DECLARE SUB RandomizeEnemy ()
+
 '======================== SUBS AND FUNCTIONS =========================
 
 DECLARE SUB Options ()
@@ -92,7 +96,7 @@ DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(40)
 DIM SHARED LastNegativeEvent, LastPositiveEvent, LinesToPrint
-DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$
+DIM SHARED BonusTerrain, LandName$, NegativeTerrain, LandNameNegative$, KindOfTerrain
 
 '[GLOBAL VARIABLES TO GENETARATE DESCRIPTIONS]
 
@@ -102,7 +106,6 @@ DIM SHARED YouAre$(25), its$(25), nameterrain$, WeatherText$
 ' ENEMIES VARIABLES
 
 DIM SHARED Enemyname$, EnemyAT, EnemyDF, MaxEnemyAT, MaxEnemyDF
-
 
 DIM SHARED BarChangeLocation, HPPercentage, EnemyHPPercentage, EnemyMaxDF AS INTEGER
 DIM SHARED Xvalue, Yvalue, WitchFight AS INTEGER
@@ -116,6 +119,7 @@ OptionMusic = 1      'BOOLEAN for Music ON and OFF
 Music                'CREATES Music string variables
 
 '======================== CHALLENGES =========================
+
 DIM SHARED FindACity, OneHundredGold, OneThousandGold, ReachLevelTen
 
 FindACity = 0
@@ -184,6 +188,12 @@ SELECT CASE opcion  'MENU OPTIONS
 		     GOTO MainMenu
 
 		END IF
+
+
+	CASE 1234
+
+		Newspaper
+		GOTO MainMenu
 
 	CASE ELSE
 
@@ -376,7 +386,6 @@ END SELECT
 
 CALL Character
 
-
 inicio:
 
 d1 = (rolld6) / 10
@@ -389,7 +398,9 @@ RANDOMIZE TIMER
 CALL CheckChallenges     'Checks if there are challenges acomplished and
 			 'if so, shows a message.
 IF HP <= 0 THEN
-GOTO GameOver
+
+	GOTO GameOver
+
 END IF
 
 IF HP > MaxHP THEN
@@ -595,8 +606,10 @@ PRINT "[12] Turn Sound OFF"
 END IF
 
 IF OptionMusic = 0 THEN
-LOCATE 1, 26
-PRINT "[12] Turn Sound ON"
+
+	LOCATE 1, 26
+	PRINT "[12] Turn Sound ON"
+
 END IF
 
 
@@ -653,7 +666,7 @@ PRINT
 COLOR 2
 
 
-'DIRECTIONS ==========================
+' DIRECTIONS ==========================
 
 IF direction = 0 THEN
 GOTO inicio2
@@ -761,7 +774,9 @@ END SELECT
 
 
 IF barfight = 1 THEN
-GOTO enemy
+
+	GOTO enemy
+
 END IF
 
 GOTO inicio
@@ -815,11 +830,15 @@ IF direction = 555 THEN
 	CALL City
 
 		IF HP <= 0 THEN
-		GOTO MainMenu
+
+			GOTO MainMenu
+
 		END IF
 
 		IF barfight = 1 THEN
-		GOTO enemy
+
+			GOTO enemy
+
 		END IF
 
 	GOTO inicio
@@ -1056,9 +1075,12 @@ copyd1 = d1
 END IF
 
 IF d1 = 3 THEN
-PRINT "FROZEN LANDS"
-PositionCol(PositionCH) = 7
-copyd1 = d1
+
+	KindOfTerrain = 3
+	PRINT "FROZEN LANDS"
+	PositionCol(PositionCH) = 7
+	copyd1 = d1
+
 END IF
 
 IF d1 = 4 THEN
@@ -1222,13 +1244,24 @@ GOTO inicio
 
 '+++++++++++++++++++++++++++++++ DECISION EVENTS +++++++++++++++++++++++++++++
 Decision:
+
 CALL Decision
 
 SELECT CASE DecisionResult
-CASE 0
-GOTO inicio
-CASE 1
-GOTO enemy
+
+	CASE 0
+
+		IF barfight = 1 THEN
+
+			GOTO enemy
+			
+		END IF
+
+		GOTO inicio
+
+	CASE 1
+
+		GOTO enemy
 END SELECT
 
 '+++++++++++++++++++++++++++++++ POSITIVE EVENTS +++++++++++++++++++++++++++++
@@ -1595,10 +1628,7 @@ SELECT CASE opcion
 	PRINT
 
 	END IF
-
-
-
-
+	
 	CASE 2
 
 	IF dodge = 0 THEN
@@ -1627,29 +1657,29 @@ SELECT CASE opcion
 
 	IF dodge = 1 THEN
 
-	PRINT
-	Pause
-	PRINT "You charge against the enemy! "
-	Pause
-	PRINT "The enemy dodges and you end up landing against"
-	Pause
-	PRINT "the ground! You hurt yourself in the move!"
-	PRINT
+		PRINT
+		Pause
+		PRINT "You charge against the enemy! "
+		Pause
+		PRINT "The enemy dodges and you end up landing against"
+		Pause
+		PRINT "the ground! You hurt yourself in the move!"
+		PRINT
 
-	COLOR 3
-	Pause
-	PRINT "Die: "; d1;
-	COLOR 2
-	damage1 = 0
-	PRINT "Total Damage:"; damage1; "[ATTACK FAILED]"
-	damage1 = 0
-	COLOR 15
-	reduce = HP / 2
-	PRINT "You hurt yourself [-"; reduce; "HP] during the attack!"
-	HP = HP - reduce
-	PRINT "Your HP is"; HP; "now."
-	PRINT
-	PRINT
+		COLOR 3
+		Pause
+		PRINT "Die: "; d1;
+		COLOR 2
+		damage1 = 0
+		PRINT "Total Damage:"; damage1; "[ATTACK FAILED]"
+		damage1 = 0
+		COLOR 15
+		reduce = HP / 2
+		PRINT "You hurt yourself [-"; reduce; "HP] during the attack!"
+		HP = HP - reduce
+		PRINT "Your HP is"; HP; "now."
+		PRINT
+		PRINT
 
 	END IF
 
@@ -2186,8 +2216,9 @@ GOTO combatINI
 
 
 'GAME OVER ======================================
-GameOver:
 
+GameOver:
+barfight = 0
 CALL Trans3
 
 HP = 0
@@ -3757,9 +3788,173 @@ GOTO EndSub
 
 END IF
 
+'-------------------------- 5 -------------------------
+
+'                      THE VILLAGE
+
+'------------------------------------------------------
+
+
+IF d1 = 5 THEN
+
+	Pause
+	PRINT "You find a very small village by the road. There are some huts, farms and small"
+	Pause
+	PRINT "shops here. Would you like to take advantage of this place?"
+	Pause
+	PRINT
+	COLOR 3
+	Pause
+	PRINT
+	PRINT "1) Visit the NURSE."
+	Pause
+	PRINT "2) Visit the TAVERN."
+	Pause
+	PRINT "3) Visit the INN."
+	Pause
+	PRINT "4) Visit the BANK."
+	Pause
+	PRINT "5) Visit the CHAPEL."
+	Pause
+	PRINT "6) Visit the SQUARE."
+	Pause
+	PRINT "7) Visit the MARKET."
+	Pause
+	PRINT "8) LEAVE the village."
+	Pause
+B333:
+	COLOR 3
+	INPUT "What is your choose?", opcion
+	COLOR 10
+
+	SELECT CASE opcion
+
+		CASE 1:
+
+			PRINT
+			PRINT "You go on walking quietly on the cobblestone streets, making your way to the "
+			Pause
+			PRINT "nurse's house. A slender young woman greets you at the door, her golden hair"
+			Pause
+			PRINT "frames a delicate face. Her light brown eyes shine with kindness and a unique"
+			Pause
+			PRINT "blend of compassion and intelligence. She cures your wounds applying a soothing"
+			Pause
+			PRINT "balm that seems to ease the pain. She also gives you a special antibiotics to"
+			Pause
+			PRINT "treat any lurking infections. Yet, deep down, you understand that it is her"
+			Pause
+			PRINT "tender touch and unwavering care that truly facilitates your recovery."
+			Pause
+			PRINT "You leave her presence not just healed but renewed."
+			Pause
+			
+			COLOR 3
+			PRINT
+			PRINT "(+100% HP) (+100% MANA pts)"
+			Pause
+			COLOR 10
+			
+			HP = MaxHP
+			MANA = MaxMana
+
+			PLAY Chance$
+			
+		CASE 2: 'AT THE VILLAGE TAVERN =================================
+				
+				PRINT
+				PRINT "1- Share stories with locals"
+				Pause
+				PRINT "2- Get drunk, start a fight"
+				Pause
+				PRINT "3- Sing a song or tell a story"
+				Pause
+				PRINT "4- Work in exchange of money, food or a bed"
+				Pause
+				PRINT "5- Gamble and Play Games"
+				Pause
+				PRINT "6- Have some beers           [15G]"
+				Pause
+				PRINT "7- Have something to eat     [20G]"
+				Pause
+				PRINT "8- Rent a bed to sleep       [25G]"
+
+				INPUT "Option: "; Opciones2
+				
+				
+				SELECT CASE Opciones2
+				
+					CASE 2:
+
+						FightTrouble
+						GOTO EndSub
+
+					CASE 5:
+
+						BetGame
+
+					CASE 6:
+				
+						PRINT
+						Pause
+						PRINT "You go to the village tavern."
+						Pause
+						PRINT
+						Pause
+				
+						IF GOLD < 10 THEN
+						
+							COLOR 10, 0
+							PRINT
+							Pause
+							PRINT "You don't have enough money for that!"
+							WaitKey
+				
+						ELSE
+			 
+							COLOR 10, 0
+							PRINT
+							PRINT "You go to the local bar..."
+							Pause
+							PRINT "Drink a couple beers and relax at the place..."
+							Pause
+							PRINT "The beer costs you around 10 gold coins. You are having a good time."
+							Pause
+							PRINT "You feel much better now. Are you gonna have another one?"
+							COLOR 3
+							Pause
+							PRINT "(+2 MANA)"
+							Pause
+							PRINT "(-10 GOLD)"
+							Pause
+							PRINT "(-0.5 HP)"
+							GOLD = GOLD - 10
+							MANA = MANA + 3
+							HP = HP - .5
+
+						END IF
+					
+					
+					END SELECT
+
+		CASE 8:
+
+			PRINT
+			PRINT "You decide to leave and continue with the journey..."
+	
+
+	END SELECT
+
+
+
+
+END IF
+
+
+
 '-----------------------  6  -----------------------------
 
-IF d1 = 6 OR d1 = 5 THEN
+IF d1 = 6 THEN
 Pause
 PRINT "You find a small cave entrance. Looks like it's a small place."
 Pause
@@ -3891,6 +4086,14 @@ COLOR 3
 PRINT "Die:"; d1;
 COLOR 2
 
+'If it is a snowy terrain the weather will be cold.
+
+IF KindOfTerrain = 3 THEN
+
+	d1 = 6
+
+END IF
+
 SELECT CASE d1
 
 	CASE 1
@@ -3918,6 +4121,8 @@ SELECT CASE d1
 	WeatherText$ = "is very windy and really cold"
 
 	END SELECT
+
+
 
 END SUB
 
@@ -5007,6 +5212,72 @@ CLS
 
 END SUB
 
+SUB FightTrouble
+
+		COLOR 10
+		CLS
+		Pause
+		PRINT
+		PRINT "You look around the place..."
+		PRINT
+		Pause
+		PRINT "There's a drunk guy falling asleep in one of the corners."
+		Pause
+		PRINT "There are some random guys and women having a beer, talking and smoking."
+		Pause
+		PRINT
+		PRINT "There's a big and bald guy who looks very strong, he's chatting with"
+		Pause
+		PRINT "some women and drinking beer with them."
+		Pause
+		PRINT
+		PRINT "There is another big and fat guy, he has only one eye. He is bald and he's"
+		Pause
+		PRINT "playing cards and rolling some dice. He looks huge!"
+		Pause
+		PRINT
+		PRINT "The security guard is standing next to the door. He's pretty tall "
+		Pause
+		PRINT "and looks very serious."
+		Pause
+		PRINT
+		PRINT "There's a lonely soldier, he's writing something on a paper while smoking "
+		Pause
+		PRINT "a cigarrete. He's wearing a navy blue military uniform."
+		PRINT
+		Pause
+		COLOR 3
+		PRINT "Are you sure you want to create trouble?"
+		Pause
+A175:
+		COLOR 3
+		INPUT "1) Yes - 2) No: ", BarOption
+		COLOR 10
+
+		SELECT CASE BarOption
+
+			CASE 1
+
+				barfight = 1
+				GOTO EndFightTrouble
+
+			CASE 2
+
+				PRINT
+				PRINT "Maybe it's not a good idea..."
+				Pause
+				GOTO EndFightTrouble
+
+			CASE ELSE
+
+				GOTO A175
+
+			END SELECT
+
+EndFightTrouble:
+
+END SUB
+
 SUB GameIntro1
 
 CLS
@@ -5481,13 +5752,31 @@ CLOSE #1
 
 END SUB
 
+SUB LoadLongTXT
+
+OPEN DatFile$ FOR INPUT AS #1
+
+loopx = 0
+
+DO UNTIL loopx = 40
+
+	INPUT #1, line$(loopx)
+	loopx = loopx + 1
+
+LOOP
+
+CLOSE #1
+
+
+END SUB
+
 SUB LoadTXT
 
 OPEN DatFile$ FOR INPUT AS #1
 
 loopx = 0
 
-DO UNTIL loopx = 30
+DO UNTIL loopx = 35
 
 	INPUT #1, line$(loopx)
 	loopx = loopx + 1
@@ -5506,7 +5795,7 @@ opcion = 0
 COLOR 15
 LOCATE 1, 1
 COLOR 10, 2
-PRINT "                              WILD 0.7 (2021 - 2023)                            "
+PRINT "                              WILD 0.8 (2021 - 2025)                            "
 COLOR 15, 0
 LOCATE 7, 3
 PRINT "1) NEW GAME"
@@ -5521,15 +5810,19 @@ PRINT "5) EXIT"
 
 
 IF OptionMusic = 1 THEN
-COLOR 15, 4
-LOCATE 2, 26
-PRINT "[12] Turn Sound OFF"
+
+	COLOR 15, 4
+	LOCATE 2, 26
+	PRINT "[12] Turn Sound OFF"
+
 END IF
 
 IF OptionMusic = 0 THEN
-COLOR 15, 4
-LOCATE 2, 26
-PRINT "[12] Turn Sound ON"
+
+	COLOR 15, 4
+	LOCATE 2, 26
+	PRINT "[12] Turn Sound ON"
+
 END IF
 
 LOCATE 13, 2
@@ -5669,6 +5962,7 @@ PRINT "Die:"; d1;
 	line$(4) = "a malevolent sheen, and its eyes fixate on you with predatory"
 	line$(5) = "intent. Fear grips your heart, and a primal instinct urges"
 	line$(6) = "you to retreat. (-6 HP)"
+	line$(7) = "*END*"
 
 	PrintLines
 
@@ -5685,14 +5979,8 @@ PRINT "Die:"; d1;
 
 	COLOR 10
 
-	line$(1) = "As you make your way forward, your eyes catch something in the distance."
-	line$(2) = "Just a few meters ahead, perched delicately on a web, is a brown"
-	line$(3) = "spider. Its spindly legs quiver with anticipation, and its eight"
-	line$(4) = "beady eyes lock onto your presence. A wave of unease washes over"
-	line$(5) = "you as you realize the potential danger. The thought of its venomous"
-	line$(6) = "bite sends a chill down your spine, and you instinctively take a step"
-	line$(7) = "back. (-3 HP)"
-	
+	DatFile$ = "neg3b.dat"
+	LoadTXT
 	PrintLines
 
 	HP = HP - 3
@@ -5713,6 +6001,7 @@ PRINT "Die:"; d1;
 	line$(4) = "was nothing more than a harmless encounter with a plant or a rock, causing"
 	line$(5) = "only a minor scrape or bruise. You shake off the unease that had settled"
 	line$(6) = "within you and continue walking."
+	line$(7) = "*END*"
 
 	PrintLines
 
@@ -5731,7 +6020,8 @@ PRINT "Die:"; d1;
 	line$(3) = "you fear the worst. However, as time passes, the sharp agony gradually"
 	line$(4) = "subsides, replaced by a dull ache. Despite the diminishing pain, a new"
 	line$(5) = "concern arises — the area around the bite begins to show signs of infection."
-	
+	line$(6) = "*END*"
+
 	PrintLines
 
 	RANDOMIZE TIMER
@@ -5758,6 +6048,7 @@ PRINT "Die:"; d1;
 	line$(2) = "- Oh... it's nothing - you mutter, trying to dismiss the discomfort that lingers"
 	line$(3) = "in your leg. Rationalizing the pain, you convince yourself that it must have been"
 	line$(4) = "a mere scrape against a rock. A small, inconsequential accident, you assure yourself."
+	line$(5) = "*END*"
 
 	PrintLines
 
@@ -5830,6 +6121,17 @@ LOOP
 
 END SUB
 
+SUB Newspaper
+
+DatFile$ = "PAPER1.DAT"
+LoadLongTXT
+CLS
+PrintLines
+
+WaitKey
+
+END SUB
+
 SUB Options
 
 DrawDemon
@@ -5856,53 +6158,55 @@ END SUB
 
 SUB PositiveSub
 
-COLOR 3
-PRINT "Die:"; d1;
-COLOR 10
+	COLOR 3
+	PRINT "Die:"; d1;
+	COLOR 10
 
 IF d1 = 1 THEN
 
-DatFile$ = "pos1.dat"
-LoadTXT
-PrintLines
+	DatFile$ = "pos1.dat"
+	LoadTXT
+	PrintLines
 
-COLOR 3
-PRINT
-PRINT "(+1 HP)"
+	COLOR 3
+	PRINT
+	PRINT "(+1 HP)"
 
-HP = HP + 1
+	HP = HP + 1
 
 END IF
 
 IF d1 = 2 THEN
 
-DatFile$ = "pos2.dat"
-LoadTXT
-PrintLines
+	DatFile$ = "pos2.dat"
+	LoadTXT
+	PrintLines
 
-COLOR 3
-PRINT
-Pause
-PRINT "(+5 HP) (+20 GOLD) (100% MANA pts)"
+	COLOR 3
+	PRINT
+	Pause
+	PRINT "(+5 HP) (+20 GOLD) (100% MANA pts)"
 
-HP = HP + 5
-GOLD = GOLD + 20
-MANA = MaxMana
+	HP = HP + 5
+	GOLD = GOLD + 20
+	MANA = MaxMana
+
 END IF
 
 IF d1 = 3 THEN
 
-line$(1) = "You see something shiny in the middle of the path."
-line$(2) = "Some gold coins are spread all over the place!!!"
+	line$(1) = "You see something shiny in the middle of the path."
+	line$(2) = "Some gold coins are spread all over the place!!!"
 
-PrintLines
+	PrintLines
 
-COLOR 3
-PRINT
-Pause
-PRINT "(+10 GOLD)"
+	COLOR 3
+	PRINT
+	Pause
+	PRINT "(+10 GOLD)"
 
-GOLD = GOLD + 10
+	GOLD = GOLD + 10
+
 END IF
 
 IF d1 = 4 THEN
@@ -5922,97 +6226,104 @@ END IF
 
 IF d1 = 5 THEN
 
-Pause
-PRINT "Street vendor by the road! He offers you the following items:"
-PRINT
+	Pause
+	PRINT "Street vendor by the road! He offers you the following items:"
+	PRINT
 
-DatFile$ = "pos5.dat"
-LoadTXT
-PrintLines
+	DatFile$ = "pos5.dat"
+	LoadTXT
+	PrintLines
 
-PRINT
+	PRINT
 
 AskAgain78:
 
-Pause
-INPUT "Would you like to buy something sir?"; opcion
-
-'===== NO MONEY TO BUY THAT =====
-
-IF opcion = 1 AND GOLD < 25 OR opcion = 2 AND GOLD < 25 THEN
-opcion = 1344
-END IF
-
-SELECT CASE opcion
-
-	CASE 1 '===== MIX OF HERBS
-	
 	Pause
-	PRINT "- Nice, MIX OF HERBS! Here you have!"
-	WaitKey
-	PRINT
-	line$(1) = "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
-	line$(2) = "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
+	INPUT "Would you like to buy something sir?"; opcion
 
-	PrintLines
+	'===== NO MONEY TO BUY THAT =====
 
-	HP = HP + 5
-	GOLD = GOLD - 25
-	WaitKey
-	GOTO PositiveEnd
+	IF opcion = 1 AND GOLD < 25 OR opcion = 2 AND GOLD < 25 THEN
+
+		opcion = 1344
+
+	END IF
+
+	SELECT CASE opcion
+
+		CASE 1 '===== MIX OF HERBS
 	
-	CASE 2 '===== ENERGETIC SOUP
+			Pause
+			PRINT "- Nice, MIX OF HERBS! Here you have!"
+			WaitKey
+			PRINT
 
-	Pause
-	PRINT "- Nice, ENERGETIC SOUP! Here you have!"
-	WaitKey
-	PRINT
-	line$(1) = "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
-	line$(2) = "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
-	line$(3) = "PRETTY GOOD."
+			line$(1) = "YOU DRINK IT AND FEEL MUCH BETTER. YOU FEEL LESS TIRED, RELAXED, WITH"
+			line$(2) = "LOTS OF NEW ENERGY. YOUR BODY DOESN'T HURT ANYMORE."
 
-	PrintLines
+			PrintLines
 
-	MANA = MANA + 5
-	GOLD = GOLD - 25
-
-	WaitKey
-
-	GOTO PositiveEnd
-
-	CASE 3 '===== NO, THANKS
-	Pause
-	PRINT "- Oh, that's ok then..."
-	WaitKey
-	GOTO PositiveEnd
+			HP = HP + 5
+			GOLD = GOLD - 25
+			WaitKey
+			GOTO PositiveEnd
 	
-	CASE 1344 '===== NO MONEY TO BUY THAT
-	Pause
-	PRINT
-	PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
-	WaitKey
-	GOTO PositiveEnd
-	
-	CASE ELSE '===== GO TO LINE 78 AND ASK AGAIN
-	GOTO AskAgain78
+		CASE 2 '===== ENERGETIC SOUP
 
-END SELECT
+			Pause
+			PRINT "- Nice, ENERGETIC SOUP! Here you have!"
+			WaitKey
+
+			PRINT
+			line$(1) = "YOU DRINK IT AND FEEL YOUR BODY MUCH STRONGER. YOU FEEL MORE CONFIDENT"
+			line$(2) = "IS IT ACTUALLY SOUP? OR IS IT LIKE A DRUG OR SOMETHING? IT EVEN TASTES"
+			line$(3) = "PRETTY GOOD."
+
+			PrintLines
+
+			MANA = MANA + 5
+			GOLD = GOLD - 25
+
+			WaitKey
+
+			GOTO PositiveEnd
+
+		CASE 3 '===== NO, THANKS
+
+			Pause
+			PRINT "- Oh, that's ok then..."
+			WaitKey
+			GOTO PositiveEnd
+	
+		CASE 1344 '===== NO MONEY TO BUY THAT
+
+			Pause
+			PRINT
+			PRINT "- Mmmm... you don't have that money. I didn't say it was for free!"
+			WaitKey
+			GOTO PositiveEnd
+	
+		CASE ELSE '===== GO TO LINE 78 AND ASK AGAIN
+
+			GOTO AskAgain78
+
+	END SELECT
 
 END IF
 
 IF d1 = 6 THEN
 
-DatFile$ = "pos6.dat"
-LoadTXT
-PrintLines
+	DatFile$ = "pos6.dat"
+	LoadTXT
+	PrintLines
 
-COLOR 3
-PRINT
-PRINT "(+25 GOLD) (+10 HP) (+0.5 AT)"
+	COLOR 3
+	PRINT
+	PRINT "(+25 GOLD) (+10 HP) (+0.5 AT)"
 
-GOLD = GOLD + 25
-HP = HP + 10
-AT = AT + .5
+	GOLD = GOLD + 25
+	HP = HP + 10
+	AT = AT + .5
 
 END IF
 
@@ -6067,48 +6378,51 @@ SUB PrintLines
 
 'Sub routine that prints text lines and the story lines.
 
-loopx = 0               '========= LOOP for printing the line$() ARRAY
+FOR i = 0 TO 40
 
-DO UNTIL loopx = 25
+	IF line$(i) = "*END*" THEN
 
- IF line$(loopx) = "****" THEN
+		EXIT FOR
 
-	PRINT
-	GOTO SkipLine
+	END IF
 
- END IF
 
- IF line$(loopx) = "WaitKey" THEN
+	IF line$(i) = "****" THEN
 
-	WaitKey
-	GOTO SkipLine
+		PRINT
+		GOTO SkipLine
 
- END IF
+	END IF
 
- IF line$(loopx) = "" THEN
+	IF line$(i) = "WaitKey" THEN
 
-	GOTO SkipLine
+		WaitKey
+		GOTO SkipLine
 
- END IF
+	END IF
 
- Pause
- PRINT line$(loopx)
+	IF line$(i) = "" THEN
+
+		GOTO SkipLine
+
+	END IF
+
+	Pause
+	PRINT line$(i)
 
 SkipLine:
 
- loopx = loopx + 1
-
-LOOP
-
+NEXT i
 
 '++++++++++++++++++++ CLEAR STRING VARIABLES ++++++++++++++++++++++++++++++++
 
-loopx = 0
+i = 0
 
-DO UNTIL loopx = 25
-line$(loopx) = ""
-loopx = loopx + 1
-LOOP
+FOR i = 0 TO 40
+
+	line$(i) = ""
+
+NEXT i
 
 END SUB
 
