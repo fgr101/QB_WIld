@@ -1,3 +1,6 @@
+DECLARE SUB BankSub ()
+DECLARE SUB MenuCity ()
+DECLARE SUB TavernMenu ()
 DECLARE SUB FightTrouble ()
 DECLARE SUB LoadLongTXT ()
 DECLARE SUB Newspaper ()
@@ -92,6 +95,7 @@ GameSpeed = 6000
 
 DIM SHARED DatFile$, D6DieX, D6DieY
 DIM SHARED d1, opcion, DecisionResult, LastDecisionEvent, MANA, HP, GOLD
+DIM SHARED Account
 DIM SHARED AT, DF, MaxHP, MaxMana
 DIM SHARED City1Exists, City2Exists, City3Exists, City4Exists, City5Exists, City6Exists
 DIM SHARED OptionMusic, barfight, line$(40)
@@ -619,7 +623,7 @@ COLOR 3
 LOCATE 3, 1
 PRINT "ATK:"; AT; "| DEF:"; DF; "| HP:"; HP; "| ( LEVEL"; level; ")"
 LOCATE 4, 1
-PRINT "Mana"; MANA; "| Expert Points:"; xpoints; "| Gold:"; GOLD
+PRINT "Mana"; MANA; "| Expert Points:"; xpoints; "| Gold: G$"; GOLD
 
 COLOR 2
 PRINT
@@ -661,19 +665,19 @@ CALL ManaBar
 
 COLOR 3
 LOCATE 14, 1
-INPUT "Where to go? ", direction
+INPUT "Where to go? ", Direction
 PRINT
 COLOR 2
 
 
 ' DIRECTIONS ==========================
 
-IF direction = 0 THEN
+IF Direction = 0 THEN
 GOTO inicio2
 END IF
 
 
-IF direction = 3 THEN
+IF Direction = 3 THEN
 
 	IF PositionCH = 39 OR PositionCH = (39 + 40) OR PositionCH = (39 + (40 * 2)) THEN
 	PositionCH = PositionCH - 40
@@ -691,7 +695,7 @@ IF direction = 3 THEN
 
 END IF
 
-IF direction = 4 THEN
+IF Direction = 4 THEN
 
 	IF PositionCH = 0 OR PositionCH = 40 OR PositionCH = 80 THEN
 	PositionCH = PositionCH + 40
@@ -709,7 +713,7 @@ IF direction = 4 THEN
 
 END IF
 
-IF direction = 1 THEN
+IF Direction = 1 THEN
 PositionCH = PositionCH - 40
 
 	IF PositionCH < 0 THEN
@@ -718,7 +722,7 @@ PositionCH = PositionCH - 40
 
 END IF
 
-IF direction = 2 THEN
+IF Direction = 2 THEN
 PositionCH = PositionCH + 40
 
 	IF PositionCH > 399 THEN
@@ -732,7 +736,7 @@ END IF
 
 DirectionCity:        '============= IF DIRECTION = 5, GO BACK TO THE CITY
 
-IF direction = 5 THEN
+IF Direction = 5 THEN
 
 SELECT CASE PositionCH
 
@@ -782,23 +786,23 @@ END IF
 GOTO inicio
 END IF
 
-IF direction = 6 THEN
+IF Direction = 6 THEN
 CALL GenDescription
 WaitKey
 GOTO inicio
 END IF
 
-IF direction = 10 THEN
+IF Direction = 10 THEN
 GOTO MainMenu
 END IF
 
-IF direction = 11 THEN
+IF Direction = 11 THEN
 CALL Character
 GOTO inicio
 END IF
 
 
-IF direction = 12 THEN
+IF Direction = 12 THEN
 
 	IF OptionMusic = 1 THEN
 
@@ -825,7 +829,7 @@ END IF
 
 
 
-IF direction = 555 THEN
+IF Direction = 555 THEN
 
 	CALL City
 
@@ -845,6 +849,11 @@ IF direction = 555 THEN
 
 END IF
 
+IF Direction = 556 THEN
+
+	BankSub
+
+END IF
 
 'MAP UPDATE ========================== 'AFTER THE PLAYER GIVES A NEW DIRECTION
 				       'THE MAP GETS UPDATED. IT IS GENERATED
@@ -2363,6 +2372,93 @@ WaitKey
 
 END SUB
 
+SUB BankSub
+
+'PONER LA LLAMADA A BankSub EN LOS LUGARES QUE CORRESPONDA.
+'EN LA CIUDAD Y EN EL PUEBLO.
+
+IniBankSub:
+
+	CLS
+	LOCATE 1, 1
+	COLOR 14, 2
+	PRINT "WELCOME TO THE BANK",
+
+
+	LOCATE 1, 25
+
+	COLOR 14, 0
+	PRINT "Gold in pocket: G$"; GOLD; " || Gold in Account >> G$"; Account
+
+	COLOR 7
+	PRINT
+	PRINT "[1] Deposit GOLD"
+	PRINT "[2] Withdraw GOLD"
+	PRINT "[3] Exit the bank"
+
+	PRINT
+	INPUT "What will you do: "; OPT1
+	PRINT
+
+
+	SELECT CASE OPT1:
+
+		CASE 1:
+
+			COLOR 10
+			INPUT "How much gold would you like to deposit? ", Deposit
+			PRINT
+
+			IF Deposit <= GOLD THEN
+
+				Account = Account + Deposit
+				GOLD = GOLD - Deposit
+	
+				PRINT "Gold --> G$"; GOLD
+				PRINT "Account Money --> G$"; Account
+	
+			ELSE :
+
+				PRINT "There's no money to deposit."
+				WaitKey
+				
+			END IF
+
+			WaitKey
+			GOTO IniBankSub
+
+		CASE 2:
+		
+			COLOR 10
+			INPUT "How much money would you like to withdraw? ", Withdraw
+			PRINT
+
+			IF Withdraw <= Account THEN
+
+				Account = Account - Withdraw
+				GOLD = GOLD + Withdraw
+
+				PRINT "Gold --> G$"; GOLD
+				PRINT "Account Money --> G$"; Account
+
+			ELSE :
+
+				PRINT "You don't have that money to withdraw."
+				
+			END IF
+
+			WaitKey
+			GOTO IniBankSub
+
+		CASE 3:
+
+			GOTO EndBankSub
+	
+	END SELECT
+	
+EndBankSub:
+END SUB
+
 SUB BetGame
 
 CLS
@@ -2585,7 +2681,7 @@ PRINT "  MANA = "; MaxMana; "    "
 COLOR , 0
 PRINT
 COLOR 14, 9
-PRINT "  GOLD   = "; GOLD; "   "
+PRINT "  Gold with you: G$"; GOLD; "| Stored in Bank: G$"; Account
 COLOR , 0
 
 PRINT
@@ -2681,28 +2777,29 @@ CALL GameOver
 GOTO endofsub
 END IF
 
-CLS
-COLOR 15, 9
+'CLS
+'COLOR 15, 9
 
-PRINT "         WELCOME TO THE CITY                    "
-PRINT
-PRINT "1) Sleep one night at the local hotel ($25 GOLD)"
-PRINT "2) Go for some beers at the local pub           "
-PRINT "3) Train at the Local Fighting GYM              "
-PRINT "4) See if you can steal something.              "
-PRINT "5) Talk to strangers.                           "
-PRINT "6) Get out of the city.                         "
-PRINT
+'PRINT "         WELCOME TO THE CITY                    "
+'PRINT
+'PRINT "1) Sleep one night at the local hotel ($25 GOLD)"
+'PRINT "2) Go for some beers at the local pub           "
+'PRINT "3) Train at the Local Fighting GYM              "
+'PRINT "4) See if you can steal something.              "
+'PRINT "5) Talk to strangers.                           "
+'PRINT "6) Get out of the city.                         "
+'PRINT
 
-LOCATE 1, 50
-COLOR 14, 0
-PRINT "Gold: "; GOLD;
+'LOCATE 1, 50
+'COLOR 14, 0
+'PRINT "Gold: "; Gold;
 
-LOCATE 10, 1
-COLOR 15, 9
-PLAY Chime$
-INPUT "What to do? ", opcion
+'LOCATE 10, 1
+'COLOR 15, 9
+'PLAY Chime$
+'INPUT "What to do? ", opcion
 
+MenuCity
 
 CityOpcionIni:
 BarIni:
@@ -3809,16 +3906,16 @@ IF d1 = 5 THEN
 	PRINT "1) Visit the NURSE."
 	Pause
 	PRINT "2) Visit the TAVERN."
-	Pause
-	PRINT "3) Visit the INN."
+	'Pause
+	'PRINT "3) Visit the INN."
 	Pause
 	PRINT "4) Visit the BANK."
-	Pause
-	PRINT "5) Visit the CHAPEL."
-	Pause
-	PRINT "6) Visit the SQUARE."
-	Pause
-	PRINT "7) Visit the MARKET."
+	'Pause
+	'PRINT "5) Visit the CHAPEL."
+	'Pause
+	'PRINT "6) Visit the SQUARE."
+	'Pause
+	'PRINT "7) Visit the MARKET."
 	Pause
 	PRINT "8) LEAVE the village."
 	Pause
@@ -3862,32 +3959,79 @@ B333:
 			
 		CASE 2: 'AT THE VILLAGE TAVERN =================================
 				
-				PRINT
-				PRINT "1- Share stories with locals"
-				Pause
-				PRINT "2- Get drunk, start a fight"
-				Pause
-				PRINT "3- Sing a song or tell a story"
-				Pause
-				PRINT "4- Work in exchange of money, food or a bed"
-				Pause
-				PRINT "5- Gamble and Play Games"
-				Pause
-				PRINT "6- Have some beers           [15G]"
-				Pause
-				PRINT "7- Have something to eat     [20G]"
-				Pause
-				PRINT "8- Rent a bed to sleep       [25G]"
+			TavernMenu
 
-				INPUT "Option: "; Opciones2
-				
-				
-				SELECT CASE Opciones2
-				
-					CASE 2:
+			LOCATE 17, 1
+			COLOR 15, 9
+			PLAY Chime$
+			INPUT " What to do? ", Opciones2
+			COLOR 10, 0
 
-						FightTrouble
-						GOTO EndSub
+			PRINT
+			PRINT
+
+			SELECT CASE Opciones2
+				
+				CASE 2:
+
+					FightTrouble
+					GOTO EndSub
+
+				CASE 4:
+
+					'Arreglar ===========================================
+
+					COLOR 10
+
+					PRINT "You offer yourself to work in exchange of money or accomodation."
+						
+					d1 = rolld6
+						
+					IF d1 <= 3 THEN
+
+						PRINT "The bar owner offers you some work and you get paid for the night."
+
+						a = rolld6
+						b = rolld6
+						c = a * b
+						GOLD = GOLD + c
+
+						PRINT "You earned"; c; "pieces of gold! Now you have have "; GOLD; "G!"
+
+						COLOR 3
+						PRINT
+						PRINT "(+"; c; "G || Total $"; GOLD; "G)"
+							
+					END IF
+
+					IF d1 >= 4 THEN
+
+						COLOR 10
+
+						PRINT "The bar owner offers you some work and you get a quiet bedroom with a"
+						Pause
+						PRINT "nice bed in exchange. "
+						Pause
+
+						WaitKey
+
+						PRINT "You work in exchange of free acommodation."
+						Pause
+						PRINT "You wake up fully recovered next day!"
+						Pause
+
+						HP = MaxHP
+						MANA = MaxMana
+
+						COLOR 3
+						PRINT
+						PRINT "(+100% HP) (+100% MANA pts)"
+						Pause
+						COLOR 10
+							
+					END IF
+					
+
 
 					CASE 5:
 
@@ -3936,6 +4080,11 @@ B333:
 					
 					
 					END SELECT
+
+		CASE 4:
+
+			CALL BankSub
+			GOTO EndSub
 
 		CASE 8:
 
@@ -5876,6 +6025,70 @@ BarChangeLocation = 0
 
 END SUB
 
+SUB MenuCity
+
+COLOR 15, 0
+CLS
+
+PRINT
+PRINT
+PRINT
+PRINT ".           +           *                 .           .               +       . "
+PRINT "     .            :::              +        .               :::   .        *    "
+PRINT "          .    +    |        *             _                |                   "
+PRINT "     ____________ .' '.    _____/----/-\ .' './========\   / \       *       .  "
+PRINT "    //// ////// /V_.-._\  |.-.-.|===| _ |-----| u    u |  /___\           .     "
+PRINT "   // /// // ///==\ u |.  || | ||===||||| |T| |   ||   | .| u |_ _ _ _ _ _ _ _ _"
+PRINT "  ///////-\////====\==|:::::::::::::::::::::::::::::::::::|u u| U U U U U U U U "
+PRINT "  |----/\u |--|++++|..|'''''''''''::::::::::::::''''''''''|+++|+-+-+-+-+-+-+-+-+"
+PRINT "  |u u|u | |u ||||||..|              '::::::::'           |===|>=== _ _ ========"
+PRINT "  |===|  |u|==|++++|==|              .::::::::.           | T |....| V |........"
+PRINT "  |u u|u | |u ||HH||         \|/    .::::::::::.                                "
+PRINT "  |===|_.|u|_.|+HH+|_              .::::::::::::.              _                "
+PRINT "                 __(_)___         .::::::::::::::.         ___(_)__             "
+PRINT "----------------/  / \  /|       .:::::;;;:::;;:::.       |\  / \  \------------"
+PRINT "_______________/_______/ |      .::::::;;:::::;;:::.      | \_______\___________"
+PRINT " |       |     [===  =] /|     .:::::;;;::::::;;;:::.     |\ [==  = ]   |       "
+PRINT "_|_______|_____[ = == ]/ |    .:::::;;;:::::::;;;::::.    | \[ ===  ]___|_______"
+PRINT "      |       |[  === ] /|   .:::::;;;::::::::;;;:::::.   |\ [=  ===] |         "
+PRINT "______|_______|[== = =]/ |  .:::::;;;::::::::::;;;:::::.  | \[ ==  =]_|_________"
+PRINT "  |       |    [ == = ] /| .::::::;;:::::::::::;;;::::::. |\ [== == ]      |    "
+PRINT "__|_______|____[=  == ]/ |.::::::;;:::::::::::::;;;::::::.| \[  === ]______|____"
+PRINT "    |       |  [ === =] /|.::::::;;::::::::::::::;;;::::::|\ [===  =]   |       "
+PRINT "    \|/  \|/           :::::::;;;:::::::::::::::;;;::::::::::     \|/       \|/ "
+
+
+COLOR 15, 9
+
+LOCATE 1, 32
+PRINT "WELCOME TO THE CITY"
+
+LOCATE 11, 23
+PRINT "1) Sleep at the local hotel ($25 GOLD)"
+LOCATE 12, 23
+PRINT "2) Go for some beers at the local pub "
+LOCATE 13, 23
+PRINT "3) Train at the Local Fighting GYM    "
+LOCATE 14, 23
+PRINT "4) See if you can steal something     "
+LOCATE 15, 23
+PRINT "5) Talk to strangers                  "
+LOCATE 16, 23
+PRINT "6) Get out of the city                "
+PRINT
+
+LOCATE 1, 68
+COLOR 14, 0
+PRINT "Gold: "; GOLD;
+
+LOCATE 18, 34
+COLOR 15, 9
+PLAY Chime$
+INPUT "What to do? ", opcion
+
+
+END SUB
+
 SUB Music
 
 IF OptionMusic = 1 THEN
@@ -6485,15 +6698,15 @@ DO UNTIL INKEY$ = CHR$(32)     'LOOP UNTIL SPACE IS PRESSED
 
 COLOR 15
 repeatroll:
-D6 = INT(RND * 6) + 1
+d6 = INT(RND * 6) + 1
 
-IF D6 = rememberd6 THEN
+IF d6 = rememberd6 THEN
 GOTO repeatroll
 END IF
 
-rememberd6 = D6
+rememberd6 = d6
 
-SELECT CASE D6
+SELECT CASE d6
 
 	CASE 1
 	LOCATE D6DieY, D6DieX
@@ -6560,7 +6773,7 @@ LOOP
 
 LOOP
 
-d1 = D6
+d1 = d6
 
 END SUB
 
@@ -6601,6 +6814,76 @@ CALL PrintLines        '========= SUB for printing the line$() ARRAY
 
 WaitKey
 
+END SUB
+
+SUB TavernMenu
+
+	CLS
+	COLOR 6
+	LOCATE 1, 1
+	PRINT "                                                 .-===+==========-.           "
+	PRINT "                                                -******+++****++##*+..        "
+	PRINT "                                                **+********#*+*###%#%####+=--."
+	PRINT "                                                *###%#%###%%##*%#*##@%%%%%%##+  "
+	COLOR 6
+	PRINT "                                                .*##**####**#####*###- .-#%%%##."
+	COLOR 15
+	PRINT "                                                -==+*#%%%######*++==:     *%#%- "
+	PRINT "                                                #+================*%=      +%@= "
+	COLOR 6
+	PRINT "                                                ###%%%%#######%#%%##*      *#%: "
+	PRINT "                                                ###%##%%%#%%##%#%%%##.  ..%%%+  "
+	PRINT "                                                *#*%%#%###%####**#%##--+%%%%=   "
+	PRINT "                                                *##%*#%#**#+###*##%%%%%%%%@@.   "
+	PRINT "                                                *#*%#####+**#######%%#%#-.      "
+	PRINT "                                                +%#%#####**#**#%#####*.         "
+	PRINT "                                                =%#%##%%***#*##%##%##-          "
+	COLOR 15
+	PRINT "                                                :=#%%######%%##%%%#===          "
+	PRINT "                                                -#---*%%##%%%%*====#%-          "
+	COLOR 6
+	PRINT "                                                .*#%*=-======-==*%@#:           "
+	PRINT "                                                 .*##%%#%%@%#%%#=..            "
+	PRINT
+
+	LOCATE 2, 52
+	COLOR 14
+	PRINT "****+++****++##"
+	LOCATE 3, 51
+	PRINT "*******#*+*###%#%"
+
+	COLOR 6
+	LOCATE 6, 75
+	PRINT "*%#%-"
+	LOCATE 7, 76
+	PRINT "+%@= "
+
+	LOCATE 2, 1
+
+	COLOR 19
+
+	PRINT "+===============+"
+	PRINT "|    TAVERN     |"
+	PRINT "+===============+"
+
+	PRINT
+	COLOR 15, 9
+	PRINT "                                   "
+	PRINT "  1) Share stories with locals     "
+	PRINT "  2) Get drunk, start a fight      "
+	PRINT "  3) Sing a song or tell a story   "
+	PRINT "  4) Work for gold or bed          "
+	PRINT "  5) Gamble and Bet                "
+	PRINT "  6) Have some beers       [15G]   "
+	PRINT "  7) Have something to eat [20G]   "
+	PRINT "  8) Rent a bed to sleep   [25G]   "
+	PRINT "                                   "
+	PRINT
+
+	LOCATE 2, 26
+	COLOR 14, 0
+	PRINT "Gold:"; GOLD;
+	
 END SUB
 
 '============================ SCREEN TRANSITION 1 ===========================
