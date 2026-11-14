@@ -225,8 +225,8 @@ xpoints = 0
 d1 = 2
 
 turno = 0
-lugary = 5
-lugarx = 25
+lugary% = 5
+lugarx% = 25
 
 position = 0
 PRINT "Generating a random position..."
@@ -427,7 +427,7 @@ DO UNTIL x = 40
 x = x + 1
 COLOR PositionCol(position)
 
-LOCATE lugary, lugarx                'Shows normal tiles or cities.
+LOCATE lugary%, lugarx%                 'Shows normal tiles or cities.
 
 SELECT CASE position
 
@@ -522,7 +522,7 @@ SELECT CASE position
 
 	CASE PositionCity5
 
-	IF City5Exists = 5 THEN
+	IF City5Exists = 1 THEN
 
 		IF PositionCH = PositionCity5 THEN
 		COLOR 15, 4
@@ -545,7 +545,7 @@ SELECT CASE position
 
 	CASE PositionCity6
 
-	IF City6Exists = 6 THEN
+	IF City6Exists = 1 THEN
 
 		IF PositionCH = PositionCity6 THEN
 		COLOR 15, 4
@@ -576,19 +576,19 @@ END SELECT
 COLOR , 0
 
 
-lugarx = lugarx + 1
+lugarx% = lugarx% + 1
 position = position + 1
 
 LOOP
 
 Y = Y + 1
-lugary = lugary + 1
-lugarx = 25
+lugary% = lugary% + 1
+lugarx% = 25
 
 LOOP
 
-lugarx = 25
-lugary = 5
+lugarx% = 25
+lugary% = 5
 
 turno = turno + 1
 position = 0
@@ -857,174 +857,181 @@ END IF
 
 'MAP UPDATE ========================== 'AFTER THE PLAYER GIVES A NEW DIRECTION
 				       'THE MAP GETS UPDATED. IT IS GENERATED
-Y = 0                                  'FOR A SECOND TIME USING THE NEW
-DO UNTIL Y = 10                        'VARIABLES.
-x = 0
+						'FOR A SECOND TIME USING THE NEW
+						'VARIABLES.
 
-DO UNTIL x = 40
-x = x + 1
-COLOR PositionCol(position)
-IF position = PositionCH THEN
-COLOR 4
-END IF
+'DIM x%AS INTEGER, Y%AS INTEGER, position AS INTEGER
 
+Y% = 0
+DO UNTIL Y% = 10
+x% = 0
 
+	DO UNTIL x% = 40
 
-LOCATE lugary, lugarx                'Shows normal tiles or cities.
-SELECT CASE position
+		x% = x% + 1
+		COLOR PositionCol(position)
+	
+		IF position = PositionCH THEN
+	
+			COLOR 4
 
-	CASE PositionCH
-	COLOR 20, 15
-	PRINT ""
-	COLOR , 0
+		END IF
 
-	CASE PositionCity1
+	LOCATE lugary%, lugarx%                'Shows normal tiles or cities.
+	SELECT CASE position
 
-	IF PositionCH = PositionCity1 THEN
-	COLOR 15, 4
-	ELSE
-	COLOR 15, PositionCol(position)
-	END IF
+		CASE PositionCH
+		COLOR 20, 15
+		PRINT ""
+		COLOR , 0
 
-	IF City1Visited = 1 THEN
-	PRINT "C"
-	END IF
+		CASE PositionCity1
 
-	IF City1Visited = 0 THEN
-	COLOR 3, 0
-	PRINT "±"
-	END IF
-
-	COLOR , 0
-
-	CASE PositionCity2
-
-	IF City2Exists = 1 THEN
-
-		IF PositionCH = PositionCity2 THEN
+		IF PositionCH = PositionCity1 THEN
 		COLOR 15, 4
 		ELSE
 		COLOR 15, PositionCol(position)
 		END IF
 
-		IF City2Visited = 0 THEN
+		IF City1Visited = 1 THEN
+		PRINT "C"
+		END IF
+
+		IF City1Visited = 0 THEN
 		COLOR 3, 0
 		PRINT "±"
 		END IF
 
-		IF City2Visited = 1 THEN
-		PRINT "C"
+		COLOR , 0
+
+		CASE PositionCity2
+
+		IF City2Exists = 1 THEN
+
+			IF PositionCH = PositionCity2 THEN
+			COLOR 15, 4
+			ELSE
+			COLOR 15, PositionCol(position)
+			END IF
+
+			IF City2Visited = 0 THEN
+			COLOR 3, 0
+			PRINT "±"
+			END IF
+
+			IF City2Visited = 1 THEN
+			PRINT "C"
+			END IF
+			
 		END IF
-		
-	END IF
-	COLOR , 0
+		COLOR , 0
 
-	CASE PositionCity3
+		CASE PositionCity3
 
-	IF City3Exists = 1 THEN
+		IF City3Exists = 1 THEN
 
-		IF PositionCH = PositionCity3 THEN
-		COLOR 15, 4
-		ELSE
-		COLOR 15, PositionCol(position)
+			IF PositionCH = PositionCity3 THEN
+			COLOR 15, 4
+			ELSE
+			COLOR 15, PositionCol(position)
+			END IF
+
+			IF City3Visited = 0 THEN
+			COLOR 3, 0
+			PRINT "±"
+			END IF
+
+			IF City3Visited = 1 THEN
+			PRINT "C"
+			END IF
+
 		END IF
+		COLOR , 0
 
-		IF City3Visited = 0 THEN
-		COLOR 3, 0
+		CASE PositionCity4
+
+		IF City4Exists = 1 THEN
+
+			IF PositionCH = PositionCity4 THEN
+			COLOR 15, 4
+			ELSE
+			COLOR 15, PositionCol(position)
+			END IF
+
+			IF City4Visited = 0 THEN
+			COLOR 3, 0
+			PRINT "±"
+			END IF
+
+			IF City4Visited = 1 THEN
+			PRINT "C"
+			END IF
+
+		END IF
+		COLOR , 0
+
+		CASE PositionCity5
+
+		IF City5Exists = 1 THEN
+
+			IF PositionCH = PositionCity5 THEN
+			COLOR 15, 4
+			ELSE
+			COLOR 15, PositionCol(position)
+			END IF
+
+			IF City5Visited = 0 THEN
+			COLOR 3, 0
+			PRINT "±"
+			END IF
+
+			IF City5Visited = 1 THEN
+			PRINT "C"
+			END IF
+
+		END IF
+		COLOR , 0
+
+		CASE PositionCity6
+
+		IF City6Exists = 1 THEN
+
+			IF PositionCH = PositionCity6 THEN
+			COLOR 15, 4
+			ELSE
+			COLOR 15, PositionCol(position)
+			END IF
+
+			IF City6Visited = 0 THEN
+			COLOR 3, 0
+			PRINT "±"
+			END IF
+
+			IF City6Visited = 1 THEN
+			PRINT "C"
+			END IF
+
+		END IF
+		COLOR , 0
+
+		CASE ELSE
 		PRINT "±"
-		END IF
 
-		IF City3Visited = 1 THEN
-		PRINT "C"
-		END IF
+	END SELECT
 
-	END IF
-	COLOR , 0
+	lugarx% = lugarx% + 1
+	position = position + 1
 
-	CASE PositionCity4
+	LOOP
 
-	IF City4Exists = 1 THEN
-
-		IF PositionCH = PositionCity4 THEN
-		COLOR 15, 4
-		ELSE
-		COLOR 15, PositionCol(position)
-		END IF
-
-		IF City4Visited = 0 THEN
-		COLOR 3, 0
-		PRINT "±"
-		END IF
-
-		IF City4Visited = 1 THEN
-		PRINT "C"
-		END IF
-
-	END IF
-	COLOR , 0
-
-	CASE PositionCity5
-
-	IF City5Exists = 5 THEN
-
-		IF PositionCH = PositionCity5 THEN
-		COLOR 15, 4
-		ELSE
-		COLOR 15, PositionCol(position)
-		END IF
-
-		IF City5Visited = 0 THEN
-		COLOR 3, 0
-		PRINT "±"
-		END IF
-
-		IF City5Visited = 1 THEN
-		PRINT "C"
-		END IF
-
-	END IF
-	COLOR , 0
-
-	CASE PositionCity6
-
-	IF City6Exists = 6 THEN
-
-		IF PositionCH = PositionCity6 THEN
-		COLOR 15, 4
-		ELSE
-		COLOR 15, PositionCol(position)
-		END IF
-
-		IF City6Visited = 0 THEN
-		COLOR 3, 0
-		PRINT "±"
-		END IF
-
-		IF City6Visited = 1 THEN
-		PRINT "C"
-		END IF
-
-	END IF
-	COLOR , 0
-
-	CASE ELSE
-	PRINT "±"
-
-END SELECT
-
-lugarx = lugarx + 1
-position = position + 1
+	Y% = Y% + 1
+	lugary% = lugary% + 1
+	lugarx% = 25
 
 LOOP
 
-Y = Y + 1
-lugary = lugary + 1
-lugarx = 25
-
-LOOP
-
-lugarx = 25
-lugary = 5
+lugarx% = 25
+lugary% = 5
 
 position = 0
 
@@ -1126,6 +1133,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 	IF City1Visited = 0 THEN
 	CALL NewCityText
+	FindACity = 1
 	CALL CheckChallenges
 	END IF
 	
@@ -1138,6 +1146,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City2Visited = 0 THEN
 		CALL NewCityText
+		FindACity = 1
 		CALL CheckChallenges
 		END IF
 
@@ -1151,6 +1160,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City3Visited = 0 THEN
 		CALL NewCityText
+		FindACity = 1
 		CALL CheckChallenges
 		END IF
 
@@ -1164,6 +1174,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City4Visited = 0 THEN
 		CALL NewCityText
+		FindACity = 1
 		CALL CheckChallenges
 		END IF
 
@@ -1177,6 +1188,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City5Visited = 0 THEN
 		CALL NewCityText
+		FindACity = 1
 		CALL CheckChallenges
 		END IF
 	
@@ -1190,6 +1202,7 @@ SELECT CASE PositionCH        'If you get to a city don't show any events, just
 
 		IF City6Visited = 0 THEN
 		CALL NewCityText
+		FindACity = 1
 		CALL CheckChallenges
 		END IF
 
@@ -2748,13 +2761,13 @@ COLOR , 0
 OneThousandGold = 1
 END IF
 
-IF FindACity = 0 THEN
-COLOR 14, 2
-LOCATE 10, 15
-PRINT "CHALLENGE [FIND A CITY FOR THE FIRST TIME] COMPLETED!"
-COLOR , 0
-FindACity = 1
-END IF
+'IF FindACity = 0 THEN
+'COLOR 14, 2
+'LOCATE 10, 15
+'PRINT "CHALLENGE [FIND A CITY FOR THE FIRST TIME] COMPLETED!"
+'COLOR , 0
+'FindACity = 1
+'END IF
 
 IF level >= 10 AND ReachLevelTen = 0 THEN
 COLOR 14, 2
@@ -5109,7 +5122,7 @@ COLOR xcolor
 LOCATE , xloop + 0
 PRINT "²";
 xloop = xloop + 1
-row% = row% - 1
+'row% = row% - 1
 LOOP
 
 PRINT
@@ -5118,29 +5131,31 @@ PRINT
 END SUB
 
 SUB ExitAnimation
+    
+    FOR x% = 1 TO 3600
+	
+		d1% = INT(RND * 76) + 1
+		d2% = INT(RND * 23) + 1
+	
+	COLOR 4
+	
+	LOCATE d2%, d1%
+		
+		PRINT "±° °²"
+	
+	NEXT x%
 
-x = 0
-DO UNTIL x = 3600
-d1 = INT(RND * 76) + 1
-d2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 4
-LOCATE d2, d1
-PRINT "±° °²"
-LOOP
+    FOR x% = 1 TO 3600
+	
+		d1% = INT(RND * 76) + 1
+		d2% = INT(RND * 23) + 1
+		COLOR 0
+		LOCATE d2%, d1%
+		PRINT "°± °²"
+    
+    NEXT x%
 
-x = 0
-DO UNTIL x = 3600
-'RANDOMIZE TIMER
-d1 = INT(RND * 76) + 1
-d2 = INT(RND * 23) + 1
-x = x + 1
-COLOR 0
-LOCATE d2, d1
-PRINT "°± °²"
-LOOP
-
-CLS
+    CLS
 
 END SUB
 
@@ -6933,6 +6948,9 @@ CLS
 END SUB
 
 SUB Trans3 'LLUVIA ROJA INVERTIDA
+
+	DIM yloop AS LONG, RandomX AS INTEGER, RandomY AS INTEGER, RandomChar AS INTEGER
+
 yloop = 0
 
 DO UNTIL yloop = 10000   'CHANGE IF YOU WANT TO CHANGE THE TIME OF TRANS3
