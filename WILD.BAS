@@ -2790,28 +2790,6 @@ CALL GameOver
 GOTO endofsub
 END IF
 
-'CLS
-'COLOR 15, 9
-
-'PRINT "         WELCOME TO THE CITY                    "
-'PRINT
-'PRINT "1) Sleep one night at the local hotel ($25 GOLD)"
-'PRINT "2) Go for some beers at the local pub           "
-'PRINT "3) Train at the Local Fighting GYM              "
-'PRINT "4) See if you can steal something.              "
-'PRINT "5) Talk to strangers.                           "
-'PRINT "6) Get out of the city.                         "
-'PRINT
-
-'LOCATE 1, 50
-'COLOR 14, 0
-'PRINT "Gold: "; Gold;
-
-'LOCATE 10, 1
-'COLOR 15, 9
-'PLAY Chime$
-'INPUT "What to do? ", opcion
-
 MenuCity
 
 CityOpcionIni:
@@ -2855,6 +2833,7 @@ SELECT CASE opcion
      WaitKey
      
     CASE 2
+
 	COLOR , 0
 	CLS
 	COLOR 15, 5
@@ -2997,7 +2976,6 @@ SELECT CASE opcion
 
 		END SELECT
 
-
      CASE 3
 
      COLOR , 0
@@ -3092,8 +3070,6 @@ SELECT CASE opcion
      WaitKey
      
      GOTO CityOpcionIni
-
-
 
      CASE 4
 	
@@ -3203,9 +3179,14 @@ SELECT CASE opcion
 		WaitKey
 		
 	END SELECT
-     
 
      CASE 6
+
+	COLOR 10, 0
+	CALL BankSub
+
+     CASE 7
+
      COLOR 10, 0
      PRINT
      PRINT "You decide to leave the city.."
@@ -6089,18 +6070,19 @@ PRINT "4) See if you can steal something     "
 LOCATE 15, 23
 PRINT "5) Talk to strangers                  "
 LOCATE 16, 23
-PRINT "6) Get out of the city                "
+PRINT "6) Enter the Bank                     "
+LOCATE 17, 23
+PRINT "7) Get out of the city                "
 PRINT
 
 LOCATE 1, 68
 COLOR 14, 0
 PRINT "Gold: "; GOLD;
 
-LOCATE 18, 34
+LOCATE 19, 34
 COLOR 15, 9
 PLAY Chime$
 INPUT "What to do? ", opcion
-
 
 END SUB
 
@@ -6147,57 +6129,59 @@ COLOR 10
 
 IF d1 = 1 THEN
 
-DatFile$ = "neg1.dat"
-LoadTXT
-PrintLines
-
-HP = HP - 1
+	DatFile$ = "neg1.dat"
+	LoadTXT
+	PrintLines
+	COLOR 3
+	PRINT
+	PRINT "(-1 HP)"
+	HP = HP - 1
 
 END IF
 
 IF d1 = 2 THEN
 
-DatFile$ = "neg2.dat"
-LoadTXT
-PrintLines
-
-GOLD = 0
+	DatFile$ = "neg2.dat"
+	LoadTXT
+	PrintLines
+	COLOR 3
+	PRINT
+	PRINT "(GOLD = 0)"
+	GOLD = 0
 
 END IF
 
 IF d1 = 3 THEN
 
-DatFile$ = "neg3.dat"
-LoadTXT
-PrintLines
+	DatFile$ = "neg3.dat"
+	LoadTXT
+	PrintLines
+	WaitKey
+	d1 = rolld6
 
-WaitKey
+	COLOR 3
+	PRINT "Die:"; d1;
 
-d1 = rolld6
-
-COLOR 3
-PRINT "Die:"; d1;
-
-'''''''''''
+	'''''''''''
 
 	IF d1 = 1 THEN
 
-	COLOR 10
+		COLOR 10
 
-	line$(1) = "As you move forward, a chilling sight meets your gaze."
-	line$(2) = "Just a few meters ahead, coiled and ready to strike, is"
-	line$(3) = "the slithering form of a snake. Its scales glisten with"
-	line$(4) = "a malevolent sheen, and its eyes fixate on you with predatory"
-	line$(5) = "intent. Fear grips your heart, and a primal instinct urges"
-	line$(6) = "you to retreat. (-6 HP)"
-	line$(7) = "*END*"
+		line$(1) = "As you move forward, a chilling sight meets your gaze."
+		line$(2) = "Just a few meters ahead, coiled and ready to strike, is"
+		line$(3) = "the slithering form of a snake. Its scales glisten with"
+		line$(4) = "a malevolent sheen, and its eyes fixate on you with predatory"
+		line$(5) = "intent. Fear grips your heart, and a primal instinct urges"
+		line$(6) = "you to retreat. (-6 HP)"
+		line$(7) = "*END*"
 
-	PrintLines
+		PrintLines
 
-	HP = HP - 6
+		HP = HP - 6
 
-	WaitKey
-	GOTO EndOfNegative
+		WaitKey
+		GOTO EndOfNegative
 
 	END IF
 
@@ -6205,64 +6189,66 @@ PRINT "Die:"; d1;
 
 	IF d1 = 2 THEN
 
-	COLOR 10
+		COLOR 10
 
-	DatFile$ = "neg3b.dat"
-	LoadTXT
-	PrintLines
+		DatFile$ = "neg3b.dat"
+		LoadTXT
+		PrintLines
 
-	HP = HP - 3
+		HP = HP - 3
 
-	WaitKey
-	GOTO EndOfNegative
+		WaitKey
+		GOTO EndOfNegative
 
 	END IF
 
 '''''''''''
 
 	IF d1 = 3 THEN
-	COLOR 10
-	
-	line$(1) = "Scanning the surroundings for any signs of danger, you find nothing"
-	line$(2) = "that matches your initial suspicion. It appears that your fears may have"
-	line$(3) = "been unfounded, and the pain in your leg gradually diminishes. Perhaps it"
-	line$(4) = "was nothing more than a harmless encounter with a plant or a rock, causing"
-	line$(5) = "only a minor scrape or bruise. You shake off the unease that had settled"
-	line$(6) = "within you and continue walking."
-	line$(7) = "*END*"
 
-	PrintLines
+		COLOR 10
+		
+		line$(1) = "Scanning the surroundings for any signs of danger, you find nothing"
+		line$(2) = "that matches your initial suspicion. It appears that your fears may have"
+		line$(3) = "been unfounded, and the pain in your leg gradually diminishes. Perhaps it"
+		line$(4) = "was nothing more than a harmless encounter with a plant or a rock, causing"
+		line$(5) = "only a minor scrape or bruise. You shake off the unease that had settled"
+		line$(6) = "within you and continue walking."
+		line$(7) = "*END*"
 
-	WaitKey
-	GOTO EndOfNegative
+		PrintLines
+
+		WaitKey
+		GOTO EndOfNegative
+
 	END IF
 
 '''''''''''
 
 	IF d1 = 4 THEN
 
-	COLOR 10
+		COLOR 10
 
-	line$(1) = "The initial pain in your leg intensifies, causing you to wince and"
-	line$(2) = "grip your throbbing limb. The discomfort is unbearable at first, making"
-	line$(3) = "you fear the worst. However, as time passes, the sharp agony gradually"
-	line$(4) = "subsides, replaced by a dull ache. Despite the diminishing pain, a new"
-	line$(5) = "concern arises — the area around the bite begins to show signs of infection."
-	line$(6) = "*END*"
+		line$(1) = "The initial pain in your leg intensifies, causing you to wince and"
+		line$(2) = "grip your throbbing limb. The discomfort is unbearable at first, making"
+		line$(3) = "you fear the worst. However, as time passes, the sharp agony gradually"
+		line$(4) = "subsides, replaced by a dull ache. Despite the diminishing pain, a new"
+		line$(5) = "concern arises — the area around the bite begins to show signs of infection."
+		line$(6) = "*END*"
 
-	PrintLines
+		PrintLines
 
-	RANDOMIZE TIMER
+		RANDOMIZE TIMER
 
-	d1 = INT(RND * 6) + 1
+		d1 = INT(RND * 6) + 1
 
-	COLOR 3
-	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+		COLOR 3
+		PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	HP = HP - d1
+		HP = HP - d1
 
-	WaitKey
-	GOTO EndOfNegative
+		WaitKey
+		GOTO EndOfNegative
 
 	END IF
 
@@ -6270,18 +6256,18 @@ PRINT "Die:"; d1;
 
 	IF d1 = 5 THEN
 
-	COLOR 10
+		COLOR 10
 
-	line$(1) = "You cautiously examine your leg, searching for any visible signs of damage."
-	line$(2) = "- Oh... it's nothing - you mutter, trying to dismiss the discomfort that lingers"
-	line$(3) = "in your leg. Rationalizing the pain, you convince yourself that it must have been"
-	line$(4) = "a mere scrape against a rock. A small, inconsequential accident, you assure yourself."
-	line$(5) = "*END*"
+		line$(1) = "You cautiously examine your leg, searching for any visible signs of damage."
+		line$(2) = "- Oh... it's nothing - you mutter, trying to dismiss the discomfort that lingers"
+		line$(3) = "in your leg. Rationalizing the pain, you convince yourself that it must have been"
+		line$(4) = "a mere scrape against a rock. A small, inconsequential accident, you assure yourself."
+		line$(5) = "*END*"
 
-	PrintLines
+		PrintLines
 
-	WaitKey
-	GOTO EndOfNegative
+		WaitKey
+		GOTO EndOfNegative
 
 	END IF
 
@@ -6289,23 +6275,23 @@ PRINT "Die:"; d1;
 
 	IF d1 = 6 THEN
 
-	COLOR 10
+		COLOR 10
 
-	DatFile$ = "neg3f.dat"
-	LoadTXT
-	PrintLines
+		DatFile$ = "neg3f.dat"
+		LoadTXT
+		PrintLines
 
-	d1 = rolld6
+		d1 = rolld6
 
-	Pause
+		Pause
 
-	COLOR 3
-	PRINT "Die:"; d1; "| you get -"; d1; "HP."
+		COLOR 3
+		PRINT "Die:"; d1; "| you get -"; d1; "HP."
 
-	HP = HP - d1
+		HP = HP - d1
 
-	WaitKey
-	GOTO EndOfNegative
+		WaitKey
+		GOTO EndOfNegative
 
 	END IF
 
@@ -6316,13 +6302,14 @@ END IF
 
 IF d1 > 3 AND d1 < 7 THEN
 
-COLOR 10
-
-DatFile$ = "neg6.dat"
-LoadTXT
-PrintLines
-
-HP = HP - 1.5
+	COLOR 10
+	DatFile$ = "neg6.dat"
+	LoadTXT
+	PrintLines
+	COLOR 3
+	PRINT
+	PRINT "(-1.5 HP)"
+	HP = HP - 1.5
 
 END IF
 
